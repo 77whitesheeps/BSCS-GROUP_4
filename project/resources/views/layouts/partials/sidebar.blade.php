@@ -85,10 +85,16 @@
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="#" data-bs-toggle="collapse" data-bs-target="#toolsMenu" aria-expanded="{{ request()->routeIs('tools.*') ? 'true' : 'false' }}">
                         <i class="fas fa-tools"></i>
                         <span>Tools</span>
+                        <i class="fas fa-chevron-right float-end mt-1"></i>
                     </a>
+                    <div class="collapse {{ request()->routeIs('tools.*') ? 'show' : '' }}" id="toolsMenu">
+                        <ul class="list-unstyled ps-4">
+                            <li><a href="{{ route('tools.weather') }}" class="d-block py-2 {{ request()->routeIs('tools.weather') ? 'text-primary' : '' }}"><i class="fas fa-cloud-sun me-2"></i>Current Weather</a></li>
+                        </ul>
+                    </div>
                 </li>
 
                 <li>

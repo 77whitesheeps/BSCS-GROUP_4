@@ -62,5 +62,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/calculations/{id}/save', [CalculationHistoryController::class, 'save'])->name('calculations.save');
     Route::delete('/calculations/{id}', [CalculationHistoryController::class, 'destroy'])->name('calculations.destroy');
 
+    // Tools routes
+    Route::prefix('tools')->name('tools.')->group(function () {
+        Route::get('/weather', function () { return view('tools.weather'); })->name('weather');
+    });
+
 });
 
