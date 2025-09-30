@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PlantingCalculatorController;
 use App\Http\Controllers\QuincunxCalculatorController;
 use App\Http\Controllers\TriangularCalculatorController;
+use App\Http\Controllers\GardenPlannerController;
 
 // Public routes
 Route::get('/', function () {
@@ -51,7 +52,14 @@ Route::middleware('auth')->group(function () {
     
     // Triangular Calculator routes
     Route::get('/triangular-calculator', [TriangularCalculatorController::class, 'index'])->name('triangular.calculator');
-Route::post('/triangular-calculator/calculate', [TriangularCalculatorController::class, 'calculate'])->name('triangle.calculate');
+    Route::post('/triangular-calculator/calculate', [TriangularCalculatorController::class, 'calculate'])->name('triangle.calculate');
+
+    // Garden Planner routes
+    Route::get('/garden-planner', [GardenPlannerController::class, 'index'])->name('garden.planner');
+    Route::get('/garden-planner/{id}', [GardenPlannerController::class, 'show'])->name('garden.planner.show');
+    Route::post('/garden-planner/save', [GardenPlannerController::class, 'save'])->name('garden.planner.save');
+    Route::put('/garden-planner/{id}', [GardenPlannerController::class, 'update'])->name('garden.planner.update');
+    Route::delete('/garden-planner/{id}', [GardenPlannerController::class, 'delete'])->name('garden.planner.delete');
 
 });
 

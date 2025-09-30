@@ -77,8 +77,8 @@
                     </div>
                 </li>
 
-                <li>
-                    <a href="#">
+                <li class="{{ request()->routeIs('garden.planner') ? 'active' : '' }}">
+                    <a href="{{ route('garden.planner') }}">
                         <i class="fas fa-map-marked-alt"></i>
                         <span>Garden Planner</span>
                     </a>

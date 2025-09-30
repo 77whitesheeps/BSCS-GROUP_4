@@ -74,6 +74,22 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card card-dashboard text-white" style="background: linear-gradient(135deg, #6f42c1, #e83e8c);">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="card-title mb-0">{{ $data['totalPlans'] ?? 0 }}</h4>
+                            <p class="card-text mb-0">Garden Plans</p>
+                        </div>
+                        <div class="card-icon">
+                            <i class="fas fa-map fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Main Content Row -->
@@ -120,11 +136,11 @@
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <div class="d-grid">
-                                <button class="btn btn-outline-info btn-lg">
+                                <a href="{{ route('garden.planner') }}" class="btn btn-info btn-lg">
                                     <i class="fas fa-map me-2"></i>
                                     <div>Garden Planner</div>
                                     <small>Design your garden</small>
-                                </button>
+                                </a>
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
