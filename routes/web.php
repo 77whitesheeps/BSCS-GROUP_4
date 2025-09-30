@@ -11,6 +11,7 @@ use App\Http\Controllers\PlantingCalculatorController;
 use App\Http\Controllers\QuincunxCalculatorController;
 use App\Http\Controllers\TriangularCalculatorController;
 use App\Http\Controllers\GardenPlannerController;
+use App\Http\Controllers\ProfileController;
 
 // Public routes
 Route::get('/', function () {
@@ -45,11 +46,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/planting-calculator', [PlantingCalculatorController::class, 'index'])->name('planting.calculator');
     Route::post('/calculate-plants', [PlantingCalculatorController::class, 'calculate'])->name('calculate.plants');
-    
+
     // Quincunx Calculator routes
     Route::get('/quincunx-calculator', [QuincunxCalculatorController::class, 'index'])->name('quincunx.calculator');
     Route::post('/calculate-quincunx', [QuincunxCalculatorController::class, 'calculate'])->name('calculate.quincunx');
-    
+
     // Triangular Calculator routes
     Route::get('/triangular-calculator', [TriangularCalculatorController::class, 'index'])->name('triangular.calculator');
     Route::post('/triangular-calculator/calculate', [TriangularCalculatorController::class, 'calculate'])->name('triangle.calculate');
@@ -61,5 +62,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/garden-planner/{id}', [GardenPlannerController::class, 'update'])->name('garden.planner.update');
     Route::delete('/garden-planner/{id}', [GardenPlannerController::class, 'delete'])->name('garden.planner.delete');
 
+    // Profile routes
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password.update');
 });
-
