@@ -27,6 +27,10 @@ class RegistrationController extends Controller
                 'password' => Hash::make($validated['password']),
             ]);
 
-            return redirect('/register')->with('success', 'Account created successfully!');
+            // Log the user in after successful registration
+            auth()->login($user);
+            
+            // Redirect to the intended page or dashboard
+            return redirect()->route('dashboard')->with('success', 'Registration successful! Welcome!');
         }
-}
+    }

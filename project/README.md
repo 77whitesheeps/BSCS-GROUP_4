@@ -1,3 +1,29 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+# G4_APP-DEV
+
+To make this project work, do this step
+
+1. clone the project using git clone command in the htdocs folder in xampp program files if you are using xampp or in the www if you are using laragon
+    "git clone <url>"
+    then "cd G4_APP-DEV" => "cd project"
+2. run "composer install" in your terminal
+3. run this command "cp .env.example .env "
+4. then this "php artisan key:generate"
+5. then this "php artisan migrate"
+6. then this "npm install
+npm run dev"
+7. Ctrl + C to stop the process
+8. then run "php artisan serve"
+
+When pulling new data run these commands to make sure nothing will go wrong with synchronization
+
+1. "composer install" - if there is changes in composer.json
+2. "npm install" - if there is changes in package.json
+3. "php artisan migrate" - if there is data changes in database
+=======
+=======
+>>>>>>> square-planting-system
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
@@ -59,3 +85,7 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<<<<<<< HEAD
+>>>>>>> new_login-and-register_with_functionality_google
+=======
+>>>>>>> square-planting-system
