@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\LoginController;
@@ -12,7 +11,7 @@ use App\Http\Controllers\PlantingCalculatorController;
 use App\Http\Controllers\QuincunxCalculatorController;
 use App\Http\Controllers\TriangularCalculatorController;
 use App\Http\Controllers\UsageStatisticsController;
-
+use App\Http\Controllers\MonthlyReportController;
 // Public routes
 Route::get('/', function () {
     if (auth()->check()) {
@@ -20,6 +19,7 @@ Route::get('/', function () {
     }
     return redirect()->route('login');
 });
+
 Route::get('/welcome', function () {
     return view('welcome');
 });
@@ -43,7 +43,10 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 
 // Protected routes (require authentication)
 Route::middleware('auth')->group(function () {
+    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Square Planting Calculator
     Route::get('/planting-calculator', [PlantingCalculatorController::class, 'index'])->name('planting.calculator');
     Route::post('/calculate-plants', [PlantingCalculatorController::class, 'calculate'])->name('calculate.plants');
     
@@ -53,9 +56,14 @@ Route::middleware('auth')->group(function () {
     
     // Triangular Calculator routes
     Route::get('/triangular-calculator', [TriangularCalculatorController::class, 'index'])->name('triangular.calculator');
-Route::post('/triangular-calculator/calculate', [TriangularCalculatorController::class, 'calculate'])->name('triangle.calculate');
+    Route::post('/triangular-calculator/calculate', [TriangularCalculatorController::class, 'calculate'])->name('triangle.calculate');
+    
+    // Usage Statistics
+    Route::get('/usage-statistics', [UsageStatisticsController::class, 'index'])->name('usage-statistics');
+    Route::get('/api/usage-statistics', [UsageStatisticsController::class, 'getStatistics'])->name('api.usage-statistics');
 
-Route::get('/usage-statistics', [UsageStatisticsController::class, 'index'])->name('usage-statistics');
-Route::get('/api/usage-statistics', [UsageStatisticsController::class, 'getStatistics'])->name('api.usage-statistics');
 
+Route::get('/monthly-reports', [MonthlyReportController::class, 'index'])->name('monthly-reports.index');
+Route::post('/monthly-report/generate', [MonthlyReportController::class, 'generate'])->name('monthly-report.generate');
+Route::get('/monthly-report/api/{month?}', [MonthlyReportController::class, 'apiData'])->name('monthly-report.api');
 });
