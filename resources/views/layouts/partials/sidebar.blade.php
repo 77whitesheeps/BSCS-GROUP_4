@@ -70,7 +70,7 @@
                     </a>
                     <div class="collapse" id="reportsMenu">
                         <ul class="list-unstyled ps-4">
-                            <li><a href="#" class="d-block py-2"><i class="fas fa-chart-pie me-2"></i>Usage Statistics</a></li>
+                            <li><a href="{{ route('usage-statistics') }}" class="d-block py-2"><i class="fas fa-chart-pie me-2"></i>Usage Statistics</a></li>
                             <li><a href="#" class="d-block py-2"><i class="fas fa-calendar me-2"></i>Monthly Report</a></li>
                             <li><a href="#" class="d-block py-2"><i class="fas fa-print me-2"></i>Print Reports</a></li>
                         </ul>

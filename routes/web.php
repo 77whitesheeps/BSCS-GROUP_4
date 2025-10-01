@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\LoginController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PlantingCalculatorController;
 use App\Http\Controllers\QuincunxCalculatorController;
 use App\Http\Controllers\TriangularCalculatorController;
+use App\Http\Controllers\UsageStatisticsController;
 
 // Public routes
 Route::get('/', function () {
@@ -53,5 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/triangular-calculator', [TriangularCalculatorController::class, 'index'])->name('triangular.calculator');
 Route::post('/triangular-calculator/calculate', [TriangularCalculatorController::class, 'calculate'])->name('triangle.calculate');
 
-});
+Route::get('/usage-statistics', [UsageStatisticsController::class, 'index'])->name('usage-statistics');
+Route::get('/api/usage-statistics', [UsageStatisticsController::class, 'getStatistics'])->name('api.usage-statistics');
 
+});
