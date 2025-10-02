@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\PlantCalculation;
 
 class TriangularCalculatorController extends Controller
 {
@@ -11,6 +12,7 @@ class TriangularCalculatorController extends Controller
         return view('triangular-calculator', [
             'results' => null,
             'inputs' => [
+                'plantType'    => '',
                 'areaLength'   => '',
                 'areaWidth'    => '',
                 'plantSpacing' => '',
@@ -27,6 +29,7 @@ class TriangularCalculatorController extends Controller
     {
         // Validate the input
         $validated = $request->validate([
+            'plantType' => 'required|string|max:100',
             'areaLength' => 'required|numeric|min:0.01',
             'areaWidth' => 'required|numeric|min:0.01',
             'plantSpacing' => 'required|numeric|min:0.01',
@@ -89,6 +92,33 @@ class TriangularCalculatorController extends Controller
                 'spaceUtilization' => $spaceUtilization,
                 'recommendedBorderSpacingM' => round($recommendedBorderSpacingM, 2)
             ];
+
+            // Save calculation to database
+            try {
+                $calculation = PlantCalculation::create([
+                    'user_id' => auth()->id(),
+                    'plant_type' => $validated['plantType'],
+                    'calculation_name' => 'Triangular Pattern - ' . now()->format('M j, Y g:i A'),
+                    'calculation_type' => 'triangular',
+                    'area_length' => $lengthM,
+                    'area_width' => $widthM,
+                    'area_length_unit' => 'm',
+                    'area_width_unit' => 'm',
+                    'plant_spacing' => $plantSpacingM,
+                    'plant_spacing_unit' => 'm',
+                    'total_plants' => $totalPlants,
+                    'rows' => $numberOfRows,
+                    'columns' => $plantsPerRow,
+                    'effective_length' => $effectiveLength,
+                    'effective_width' => $effectiveWidth,
+                    'total_area' => round($lengthM * $widthM, 2),
+                    'border_spacing' => $borderSpacingM,
+                    'is_saved' => false,
+                ]);
+            } catch (\Exception $saveError) {
+                // Log the error but don't break the calculation
+                \Log::error('Failed to save calculation: ' . $saveError->getMessage());
+            }
 
             return view('triangular-calculator', [
                 'results' => $results,

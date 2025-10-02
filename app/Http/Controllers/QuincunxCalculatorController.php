@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\PlantCalculation;
 
 class QuincunxCalculatorController extends Controller
 {
@@ -16,6 +17,7 @@ class QuincunxCalculatorController extends Controller
        return view('quincunx-calculator', [
             'results' => null,
             'inputs'  => [
+                'plantType'    => '',
                 'areaLength'   => '',
                 'areaWidth'    => '',
                 'plantSpacing' => '',
@@ -38,6 +40,7 @@ class QuincunxCalculatorController extends Controller
     {
         // Validate the input
         $validated = $request->validate([
+            'plantType' => 'required|string|max:100',
             'areaLength' => 'required|numeric|min:0.01',
             'areaWidth' => 'required|numeric|min:0.01',
             'plantSpacing' => 'required|numeric|min:0.01',
@@ -101,6 +104,33 @@ class QuincunxCalculatorController extends Controller
 
             // Add recommended border to results
             $results['recommendedBorderSpacingM'] = round($recommendedBorderSpacingM, 2);
+
+            // Save calculation to database
+            try {
+                $calculation = PlantCalculation::create([
+                    'user_id' => auth()->id(),
+                    'plant_type' => $validated['plantType'],
+                    'calculation_name' => 'Quincunx Pattern - ' . now()->format('M j, Y g:i A'),
+                    'calculation_type' => 'quincunx',
+                    'area_length' => $lengthM,
+                    'area_width' => $widthM,
+                    'area_length_unit' => 'm',
+                    'area_width_unit' => 'm',
+                    'plant_spacing' => $plantSpacingM,
+                    'plant_spacing_unit' => 'm',
+                    'total_plants' => $results['totalPlants'],
+                    'rows' => $results['numberOfRows'] ?? 0,
+                    'columns' => $results['plantsPerRow'] ?? 0,
+                    'effective_length' => $effectiveLength,
+                    'effective_width' => $effectiveWidth,
+                    'total_area' => $results['totalArea'],
+                    'border_spacing' => $effectiveBorderSpacingM,
+                    'is_saved' => false,
+                ]);
+            } catch (\Exception $saveError) {
+                // Log the error but don't break the calculation
+                \Log::error('Failed to save calculation: ' . $saveError->getMessage());
+            }
 
             return view('quincunx-calculator', [
                 'results' => $results,

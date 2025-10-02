@@ -221,7 +221,29 @@
             </div>
         </header>
         
-        <form id="triangleForm">
+        <form id="triangleForm" action="{{ route('triangle.calculate') }}" method="POST">
+            @csrf
+            
+            <!-- Plant Type Field -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label for="plantType" class="form-label">Plant Type</label>
+                        <select class="form-select" id="plantType" name="plantType" required>
+                            <option value="">Select plant type</option>
+                            <option value="Vegetables" {{ old('plantType', $inputs['plantType'] ?? '') == 'Vegetables' ? 'selected' : '' }}>Vegetables</option>
+                            <option value="Fruits" {{ old('plantType', $inputs['plantType'] ?? '') == 'Fruits' ? 'selected' : '' }}>Fruits</option>
+                            <option value="Herbs" {{ old('plantType', $inputs['plantType'] ?? '') == 'Herbs' ? 'selected' : '' }}>Herbs</option>
+                            <option value="Flowers" {{ old('plantType', $inputs['plantType'] ?? '') == 'Flowers' ? 'selected' : '' }}>Flowers</option>
+                            <option value="Trees" {{ old('plantType', $inputs['plantType'] ?? '') == 'Trees' ? 'selected' : '' }}>Trees</option>
+                            <option value="Shrubs" {{ old('plantType', $inputs['plantType'] ?? '') == 'Shrubs' ? 'selected' : '' }}>Shrubs</option>
+                            <option value="Grains" {{ old('plantType', $inputs['plantType'] ?? '') == 'Grains' ? 'selected' : '' }}>Grains</option>
+                            <option value="Other" {{ old('plantType', $inputs['plantType'] ?? '') == 'Other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
@@ -281,7 +303,7 @@
             </div>
             
             <div class="text-center mt-4">
-                <button type="button" id="calculateBtn" class="btn btn-calculate btn-lg">Calculate</button>
+                <button type="submit" id="calculateBtn" class="btn btn-calculate btn-lg">Calculate</button>
             </div>
         </form>
         

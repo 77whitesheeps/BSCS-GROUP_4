@@ -78,6 +78,24 @@
                     <form method="POST" action="{{ route('calculate.quincunx') }}">
                         @csrf
                         <div class="space-y-4">
+                            <!-- Plant Type -->
+                            <div>
+                                <label for="plantType" class="block text-sm font-medium text-gray-700">Plant Type</label>
+                                <select id="plantType" name="plantType" 
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" 
+                                        required>
+                                    <option value="">Select plant type</option>
+                                    <option value="Vegetables" {{ old('plantType', $inputs['plantType'] ?? '') == 'Vegetables' ? 'selected' : '' }}>Vegetables</option>
+                                    <option value="Fruits" {{ old('plantType', $inputs['plantType'] ?? '') == 'Fruits' ? 'selected' : '' }}>Fruits</option>
+                                    <option value="Herbs" {{ old('plantType', $inputs['plantType'] ?? '') == 'Herbs' ? 'selected' : '' }}>Herbs</option>
+                                    <option value="Flowers" {{ old('plantType', $inputs['plantType'] ?? '') == 'Flowers' ? 'selected' : '' }}>Flowers</option>
+                                    <option value="Trees" {{ old('plantType', $inputs['plantType'] ?? '') == 'Trees' ? 'selected' : '' }}>Trees</option>
+                                    <option value="Shrubs" {{ old('plantType', $inputs['plantType'] ?? '') == 'Shrubs' ? 'selected' : '' }}>Shrubs</option>
+                                    <option value="Grains" {{ old('plantType', $inputs['plantType'] ?? '') == 'Grains' ? 'selected' : '' }}>Grains</option>
+                                    <option value="Other" {{ old('plantType', $inputs['plantType'] ?? '') == 'Other' ? 'selected' : '' }}>Other</option>
+                                </select>
+                            </div>
+                            
                             <!-- Area Dimensions -->
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
