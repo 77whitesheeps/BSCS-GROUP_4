@@ -12,35 +12,20 @@ class PlantReportController extends Controller
      */
     public function monthlyReport(): View
     {
-        // Sample data - no database model required
-        $plants = [
-            [
-                'type' => 'Tomato',
-                'date_planted' => '2024-01-15',
-                'number_of_plants' => 45
-            ],
-            [
-                'type' => 'Lettuce',
-                'date_planted' => '2024-01-18',
-                'number_of_plants' => 32
-            ],
-            [
-                'type' => 'Carrot',
-                'date_planted' => '2024-01-20',
-                'number_of_plants' => 28
-            ],
-            [
-                'type' => 'Basil',
-                'date_planted' => '2024-01-22',
-                'number_of_plants' => 15
-            ],
-            [
-                'type' => 'Rose',
-                'date_planted' => '2024-01-25',
-                'number_of_plants' => 12
-            ]
-        ];
-
+        // Start with empty data - will be populated via JavaScript
+        $plants = [];
+        
         return view('reports.monthly-plants', compact('plants'));
+    }
+    
+    /**
+     * Display print report summary
+     */
+    public function printReport(): View
+    {
+        // Start with empty data for print version
+        $plants = [];
+        
+        return view('reports.print-plant-report', compact('plants'));
     }
 }

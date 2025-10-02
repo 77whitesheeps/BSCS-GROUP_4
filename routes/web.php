@@ -12,6 +12,8 @@ use App\Http\Controllers\QuincunxCalculatorController;
 use App\Http\Controllers\TriangularCalculatorController;
 use App\Http\Controllers\UsageStatisticsController;
 use App\Http\Controllers\MonthlyReportController;
+use App\Http\Controllers\PlantReportController;
+
 // Public routes
 Route::get('/', function () {
     if (auth()->check()) {
@@ -66,4 +68,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/monthly-reports', [MonthlyReportController::class, 'index'])->name('monthly-reports.index');
 Route::post('/monthly-report/generate', [MonthlyReportController::class, 'generate'])->name('monthly-report.generate');
 Route::get('/monthly-report/api/{month?}', [MonthlyReportController::class, 'apiData'])->name('monthly-report.api');
+
+// Print report route  
+Route::get('/print-report', [PlantReportController::class, 'printReport'])->name('print.report');
 });
