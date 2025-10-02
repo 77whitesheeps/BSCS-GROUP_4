@@ -381,11 +381,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="text-center mt-3">
-                    {{-- Remove this button group --}}
-                    {{-- <button class="btn btn-primary me-2">Export PDF</button>
-                    <button class="btn btn-success">Export CSV</button> --}}
-                </div>
+                
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="plantSpacing" class="form-label">

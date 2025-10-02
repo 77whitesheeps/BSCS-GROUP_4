@@ -88,13 +88,13 @@
             background-color: var(--light-color);
             border-radius: 8px;
             padding: 1.5rem;
-margin-top: 2rem;
+            margin-top: 2rem;
         }
         
         .result-value {
             font-weight: bold;
             color: var(--primary-color);
-font-size: 1.2rem;
+            font-size: 1.2rem;
         }
         
         .visualization {
@@ -389,14 +389,27 @@ font-size: 1.2rem;
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        .pattern-explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+        
+        .row-details {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        
+        .row-detail-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
     </style>
-    
-    <div class="text-center mt-4">
-        <a href="{{ route('dashboard') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
-        </a>
-    </div>
-</body>
+</head>
+<body>
     <div class="container calculator-container">
         <div class="header text-center">
             <h1>Quincunx Planting System Calculator</h1>
@@ -528,26 +541,6 @@ font-size: 1.2rem;
                 </button>
                 <button type="button" class="example-button" onclick="setExample('garden')">
                     <i class="bi bi-flower1"></i> Herb Garden (5m × 3m, 0.5m spacing)
-            @section('scripts')
-            <script>
-                // Add the CalculatorUsageLogger class definition here
-                {{ $userCode }}
-                
-                document.getElementById('quincunxForm').addEventListener('submit', function(e) {
-                    // ... existing calculation code ...
-                    
-                    // After successful calculation
-                    const formData = window.calculatorUsageLogger.extractFormData('quincunxForm');
-                    window.calculatorUsageLogger.logUsage('quincunx', formData, {
-                        totalPlants: result.totalPlants,
-                        totalArea: result.totalArea
-                    });
-                });
-            </script>
-            @endsection
-        </div>
-    </div>
-</body>
                 </button>
                 <button type="button" class="example-button" onclick="setExample('vineyard')">
                     <i class="bi bi-grapes"></i> Vineyard (20m × 15m, 2.5m spacing)

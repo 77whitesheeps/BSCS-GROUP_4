@@ -451,10 +451,7 @@
                 <i class="bi bi-arrow-clockwise"></i> Reset Form
             </button>
             <button type="button" id="backBtn" class="btn btn-back">
-                    <i class="bi bi-arrow-left"></i> Back to Dashboard
-                    <a href="{{ route('dashboard') }}" class="btn btn-plant">
-                    <i class="fas fa-home me-2"></i>
-                    </a>
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
             </button>
         </div>
         
@@ -848,7 +845,7 @@
             // Show results container
             document.getElementById('resultsContainer').style.display = 'block';
             
-// Show visualization controls
+            // Show visualization controls
             document.getElementById('visualizationControls').style.display = 'flex';
             
             // Show legend
