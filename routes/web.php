@@ -12,6 +12,9 @@ use App\Http\Controllers\QuincunxCalculatorController;
 use App\Http\Controllers\TriangularCalculatorController;
 use App\Http\Controllers\MonthlyReportController;
 use App\Http\Controllers\PlantReportController;
+use App\Http\Controllers\GardenPlannerController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CalculationHistoryController;
 
 // Public routes
 Route::get('/', function () {
@@ -50,11 +53,11 @@ Route::middleware('auth')->group(function () {
     // Square Planting Calculator
     Route::get('/planting-calculator', [PlantingCalculatorController::class, 'index'])->name('planting.calculator');
     Route::post('/calculate-plants', [PlantingCalculatorController::class, 'calculate'])->name('calculate.plants');
-    
+
     // Quincunx Calculator routes
     Route::get('/quincunx-calculator', [QuincunxCalculatorController::class, 'index'])->name('quincunx.calculator');
     Route::post('/calculate-quincunx', [QuincunxCalculatorController::class, 'calculate'])->name('calculate.quincunx');
-    
+
     // Triangular Calculator routes
     Route::get('/triangular-calculator', [TriangularCalculatorController::class, 'index'])->name('triangular.calculator');
     Route::post('/triangular-calculator/calculate', [TriangularCalculatorController::class, 'calculate'])->name('triangle.calculate');
@@ -66,4 +69,29 @@ Route::get('/monthly-report/api/{month?}', [MonthlyReportController::class, 'api
 
 // Print report route  
 Route::get('/print-report', [PlantReportController::class, 'printReport'])->name('print.report');
+});
+
+    // Calculation History routes
+    Route::get('/calculations/history', [CalculationHistoryController::class, 'index'])->name('calculations.history');
+    Route::get('/calculations/saved', [CalculationHistoryController::class, 'saved'])->name('calculations.saved');
+    Route::get('/calculations/export', [CalculationHistoryController::class, 'exportPage'])->name('calculations.export');
+    Route::post('/calculations/export', [CalculationHistoryController::class, 'export']);
+    Route::post('/calculations/{id}/save', [CalculationHistoryController::class, 'save'])->name('calculations.save');
+    Route::delete('/calculations/{id}', [CalculationHistoryController::class, 'destroy'])->name('calculations.destroy');
+
+    // Tools routes
+    Route::prefix('tools')->name('tools.')->group(function () {
+        Route::get('/weather', function () { return view('tools.weather'); })->name('weather');
+    });
+
+    // Garden Planner routes
+    Route::get('/garden-planner', [GardenPlannerController::class, 'index'])->name('garden.planner');
+    Route::get('/garden-planner/{id}', [GardenPlannerController::class, 'show'])->name('garden.planner.show');
+    Route::post('/garden-planner/save', [GardenPlannerController::class, 'save'])->name('garden.planner.save');
+    Route::put('/garden-planner/{id}', [GardenPlannerController::class, 'update'])->name('garden.planner.update');
+    Route::delete('/garden-planner/{id}', [GardenPlannerController::class, 'delete'])->name('garden.planner.delete');
+
+    // Profile routes
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password.update');
 });

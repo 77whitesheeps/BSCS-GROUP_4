@@ -15,6 +15,7 @@ class PlantCalculation extends Model
         'area_length',
         'area_width',
         'plant_spacing',
+        'plant_spacing_unit',
         'row_spacing',
         'border_spacing',
         'total_plants',
@@ -24,6 +25,15 @@ class PlantCalculation extends Model
         'planting_density',
         'space_utilization',
         'input_units'
+        'rows',
+        'columns',
+        'effective_length',
+        'effective_width',
+        'total_area',
+        'calculation_name',
+        'calculation_type',
+        'notes',
+        'is_saved',
     ];
 
     protected $casts = [
@@ -38,6 +48,12 @@ class PlantCalculation extends Model
         'effective_area' => 'decimal:2',
         'planting_density' => 'decimal:2',
         'space_utilization' => 'decimal:2',
+        'effective_length' => 'decimal:2',
+        'effective_width' => 'decimal:2',
+        'total_area' => 'decimal:4',
+        'is_saved' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function user()
