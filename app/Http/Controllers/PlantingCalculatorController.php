@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\PlantCalculation;
+use App\Models\PlantCalculation; // Import the PlantCalculation model
+use Illuminate\Support\Facades\Auth; // Import Auth facade
 
 class PlantingCalculatorController extends Controller
 {

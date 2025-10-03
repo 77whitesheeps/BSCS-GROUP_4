@@ -1,4 +1,4 @@
-<aside class="main-sidebar">
+x<aside class="main-sidebar">
     <div class="sidebar-content">
         <!-- User Panel -->
         @auth
@@ -70,9 +70,7 @@
                     </a>
                     <div class="collapse" id="reportsMenu">
                         <ul class="list-unstyled ps-4">
-                            <li><a href="#" class="d-block py-2"><i class="fas fa-chart-pie me-2"></i>Usage Statistics</a></li>
-                            <li><a href="#" class="d-block py-2"><i class="fas fa-calendar me-2"></i>Monthly Report</a></li>
-                            <li><a href="#" class="d-block py-2"><i class="fas fa-print me-2"></i>Print Reports</a></li>
+                                            <li><a href="{{ route('monthly-reports.index') }}" class="d-block py-2"><i class="fas fa-calendar me-2"></i>Monthly Report</a></li>
                         </ul>
                     </div>
                 </li>

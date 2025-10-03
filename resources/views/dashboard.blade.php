@@ -356,3 +356,15 @@
 </style>
 @endpush
 @endsection
+
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('print.report') }}">
+        <i class="fas fa-print"></i>
+        Print Plant Report
+    </a>
+</li>
+
+<a href="{{ route('monthly-reports.index') }}" class="quick-action-button bg-blue-500 hover:bg-blue-600">
+    <i class="fas fa-chart-bar mr-2"></i>
+    {{ __('Monthly Reports') }}
+</a>
