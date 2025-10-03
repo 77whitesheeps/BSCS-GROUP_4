@@ -14,6 +14,7 @@
             --accent-color: #8bc34a;
             --dark-color: #1b5e20; 
             --light-color: #c8e6c9; 
+            --warning-color: #ff9800;
         }
         
         body {
@@ -28,7 +29,7 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             margin: 2rem auto;
             padding: 2rem;
-            max-width: 1000px;
+            max-width: 1100px;
         }
         
         .header {
@@ -146,6 +147,14 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+            
+            .spacing-inputs {
+                flex-direction: column;
+            }
+            
+            .export-buttons {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -215,7 +224,13 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="areaLength" class="form-label">Area Length</label>
+                        <label for="areaLength" class="form-label">
+                            Area Length
+                            <span class="info-tooltip">
+                                <i class="bi bi-info-circle info-icon"></i>
+                                <span class="tooltip-text">The total length of your planting area</span>
+                            </span>
+                        </label>
                         <div class="input-group">
                             <input type="number" class="form-control" id="areaLength" name="areaLength" step="0.01" min="0.01" required value="{{ old('areaLength', isset($inputs) ? $inputs['areaLength'] : '10') }}">
                             <select class="form-select" id="lengthUnit" name="lengthUnit">
@@ -228,7 +243,13 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="areaWidth" class="form-label">Area Width</label>
+                        <label for="areaWidth" class="form-label">
+                            Area Width
+                            <span class="info-tooltip">
+                                <i class="bi bi-info-circle info-icon"></i>
+                                <span class="tooltip-text">The total width of your planting area</span>
+                            </span>
+                        </label>
                         <div class="input-group">
                             <input type="number" class="form-control" id="areaWidth" name="areaWidth" step="0.01" min="0.01" required value="{{ old('areaWidth', isset($inputs) ? $inputs['areaWidth'] : '8') }}">
                             <select class="form-select" id="widthUnit" name="widthUnit">
@@ -243,7 +264,13 @@
                 
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="plantSpacing" class="form-label">Plant Spacing</label>
+                        <label for="plantSpacing" class="form-label">
+                            Plant Spacing
+                            <span class="info-tooltip">
+                                <i class="bi bi-info-circle info-icon"></i>
+                                <span class="tooltip-text">Distance between plants in the same row and between rows (square pattern)</span>
+                            </span>
+                        </label>
                         <div class="spacing-inputs">
                             <div class="spacing-input">
                                 <label class="form-label small">Between Plants</label>
@@ -263,7 +290,13 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="borderSpacing" class="form-label">Border Spacing</label>
+                        <label for="borderSpacing" class="form-label">
+                            Border Spacing
+                            <span class="info-tooltip">
+                                <i class="bi bi-info-circle info-icon"></i>
+                                <span class="tooltip-text">Space to leave around the edges of the planting area</span>
+                            </span>
+                        </label>
                         <div class="input-group">
                             <input type="number" class="form-control" id="borderSpacing" name="borderSpacing" step="0.01" min="0" value="{{ old('borderSpacing', isset($inputs) ? $inputs['borderSpacing'] : '0.5') }}" required>
                             <select class="form-select" id="borderUnit" name="borderUnit">
@@ -331,6 +364,30 @@
                         <div class="result-value">{{ $results['spaceUtilization'] }}%</div>
                     </div>
                 </div>
+                <div class="result-card">
+                    <div class="card-label">Effective Area</div>
+                    <div class="card-value" id="effectiveArea">0 m²</div>
+                </div>
+                <div class="result-card">
+                    <div class="card-label">Planting Density</div>
+                    <div class="card-value" id="plantingDensity">0 plants/m²</div>
+                </div>
+                <div class="result-card">
+                    <div class="card-label">Space Utilization</div>
+                    <div class="card-value" id="spaceUtilization">0%</div>
+                </div>
+            </div>
+            
+            <div class="export-buttons">
+                <button type="button" id="exportPdfBtn" class="btn btn-outline-primary">
+                    <i class="bi bi-file-earmark-pdf"></i> Export as PDF
+                </button>
+                <button type="button" id="exportCsvBtn" class="btn btn-outline-primary">
+                    <i class="bi bi-file-earmark-spreadsheet"></i> Export as CSV
+                </button>
+                <button type="button" id="printBtn" class="btn btn-outline-primary">
+                    <i class="bi bi-printer"></i> Print Results
+                </button>
             </div>
         </div>
 
