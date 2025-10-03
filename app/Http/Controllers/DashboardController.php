@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PlantCalculation;
+use App\Models\GardenPlan;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -14,12 +15,15 @@ class DashboardController extends Controller
         
         // Get user's calculation statistics
         $userCalculations = PlantCalculation::where('user_id', $user->id);
-        
+        $userGardenPlans = GardenPlan::where('user_id', $user->id);
+
         $data = [
             'totalCalculations' => $userCalculations->count(),
             'plantTypes' => $userCalculations->whereNotNull('plant_type')->distinct('plant_type')->count('plant_type'),
             'plantsCalculated' => $userCalculations->sum('total_plants'),
             'totalAreaPlanned' => $this->formatArea($userCalculations->sum('total_area')),
+            'totalPlans' => $userGardenPlans->count(),
+            'totalGardenAreaPlanned' => $this->formatArea($userGardenPlans->sum('total_area')),
             'recentCalculations' => PlantCalculation::where('user_id', $user->id)
                                                    ->latest()
                                                    ->limit(5)

@@ -24,7 +24,7 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-                
+
                 <li class="{{ request()->routeIs('planting.calculator') ? 'active' : '' }}">
                     <a href="{{ route('planting.calculator') }}">
                         <i class="fas fa-calculator"></i>
@@ -77,8 +77,8 @@
                     </div>
                 </li>
 
-                <li>
-                    <a href="#">
+                <li class="{{ request()->routeIs('garden.planner') ? 'active' : '' }}">
+                    <a href="{{ route('garden.planner') }}">
                         <i class="fas fa-map-marked-alt"></i>
                         <span>Garden Planner</span>
                     </a>
@@ -105,8 +105,7 @@
                     </a>
                     <div class="collapse" id="settingsMenu">
                         <ul class="list-unstyled ps-4">
-                            <li><a href="#" class="d-block py-2"><i class="fas fa-user me-2"></i>Profile</a></li>
-                            <li><a href="#" class="d-block py-2"><i class="fas fa-key me-2"></i>Change Password</a></li>
+                            <li><a href="{{ route('profile.edit') }}" class="d-block py-2"><i class="fas fa-user me-2"></i>Profile</a></li>
                             <li><a href="#" class="d-block py-2"><i class="fas fa-sliders-h me-2"></i>Preferences</a></li>
                         </ul>
                     </div>
