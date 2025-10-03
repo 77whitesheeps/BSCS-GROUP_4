@@ -459,22 +459,111 @@
                         </div>
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="areaWidth" class="form-label">
-                            Area Width
-                            <span class="info-tooltip">
-                                <i class="bi bi-info-circle info-icon"></i>
-                                <span class="tooltip-text">The total width of your planting area</span>
-                            </span>
-                        </label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" id="areaWidth" name="areaWidth" step="0.01" min="0.01" required value="8">
-                            <select class="form-select" id="widthUnit" name="widthUnit">
-                                <option value="m" selected>Meters (m)</option>
-                                <option value="ft">Feet (ft)</option>
-                                <option value="cm">Centimeters (cm)</option>
-                                <option value="in">Inches (in)</option>
-                            </select>
+                    <form method="POST" action="{{ route('calculate.quincunx') }}">
+                        @csrf
+                        <div class="space-y-4">
+                            <!-- Plant Type -->
+                            <div>
+                                <label for="plantType" class="block text-sm font-medium text-gray-700">Plant Type</label>
+                                <select id="plantType" name="plantType" 
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" 
+                                        required>
+                                    <option value="">Select plant type</option>
+                                    <option value="Vegetables" {{ old('plantType', $inputs['plantType'] ?? '') == 'Vegetables' ? 'selected' : '' }}>Vegetables</option>
+                                    <option value="Fruits" {{ old('plantType', $inputs['plantType'] ?? '') == 'Fruits' ? 'selected' : '' }}>Fruits</option>
+                                    <option value="Herbs" {{ old('plantType', $inputs['plantType'] ?? '') == 'Herbs' ? 'selected' : '' }}>Herbs</option>
+                                    <option value="Flowers" {{ old('plantType', $inputs['plantType'] ?? '') == 'Flowers' ? 'selected' : '' }}>Flowers</option>
+                                    <option value="Trees" {{ old('plantType', $inputs['plantType'] ?? '') == 'Trees' ? 'selected' : '' }}>Trees</option>
+                                    <option value="Shrubs" {{ old('plantType', $inputs['plantType'] ?? '') == 'Shrubs' ? 'selected' : '' }}>Shrubs</option>
+                                    <option value="Grains" {{ old('plantType', $inputs['plantType'] ?? '') == 'Grains' ? 'selected' : '' }}>Grains</option>
+                                    <option value="Other" {{ old('plantType', $inputs['plantType'] ?? '') == 'Other' ? 'selected' : '' }}>Other</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Area Dimensions -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="areaLength" class="block text-sm font-medium text-gray-700">Area Length</label>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="areaLength" name="areaLength" step="0.01" min="0.01" 
+                                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" 
+                                               value="{{ old('areaLength', $inputs['areaLength'] ?? '') }}" 
+                                               placeholder="10" required>
+                                        <select name="lengthUnit" class="mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                            <option value="m" {{ (old('lengthUnit', $inputs['lengthUnit'] ?? '') == 'm') ? 'selected' : '' }}>m</option>
+                                            <option value="ft" {{ (old('lengthUnit', $inputs['lengthUnit'] ?? '') == 'ft') ? 'selected' : '' }}>ft</option>
+                                            <option value="cm" {{ (old('lengthUnit', $inputs['lengthUnit'] ?? '') == 'cm') ? 'selected' : '' }}>cm</option>
+                                            <option value="in" {{ (old('lengthUnit', $inputs['lengthUnit'] ?? '') == 'in') ? 'selected' : '' }}>in</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="areaWidth" class="block text-sm font-medium text-gray-700">Area Width</label>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="areaWidth" name="areaWidth" step="0.01" min="0.01" 
+                                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" 
+                                               value="{{ old('areaWidth', $inputs['areaWidth'] ?? '') }}" 
+                                               placeholder="8" required>
+                                        <select name="widthUnit" class="mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                            <option value="m" {{ (old('widthUnit', $inputs['widthUnit'] ?? '') == 'm') ? 'selected' : '' }}>m</option>
+                                            <option value="ft" {{ (old('widthUnit', $inputs['widthUnit'] ?? '') == 'ft') ? 'selected' : '' }}>ft</option>
+                                            <option value="cm" {{ (old('widthUnit', $inputs['widthUnit'] ?? '') == 'cm') ? 'selected' : '' }}>cm</option>
+                                            <option value="in" {{ (old('widthUnit', $inputs['widthUnit'] ?? '') == 'in') ? 'selected' : '' }}>in</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Spacing -->
+                            <div>
+                                <label for="plantSpacing" class="block text-sm font-medium text-gray-700">Plant Spacing</label>
+                                <div class="flex gap-2">
+                                    <input type="number" id="plantSpacing" name="plantSpacing" step="0.01" min="0.01" 
+                                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" 
+                                           value="{{ old('plantSpacing', $inputs['plantSpacing'] ?? '') }}" 
+                                           placeholder="1.5" required>
+                                    <select name="spacingUnit" class="mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                        <option value="m" {{ (old('spacingUnit', $inputs['spacingUnit'] ?? '') == 'm') ? 'selected' : '' }}>m</option>
+                                        <option value="ft" {{ (old('spacingUnit', $inputs['spacingUnit'] ?? '') == 'ft') ? 'selected' : '' }}>ft</option>
+                                        <option value="cm" {{ (old('spacingUnit', $inputs['spacingUnit'] ?? '') == 'cm') ? 'selected' : '' }}>cm</option>
+                                        <option value="in" {{ (old('spacingUnit', $inputs['spacingUnit'] ?? '') == 'in') ? 'selected' : '' }}>in</option>
+                                    </select>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Distance between plant centers</p>
+                            </div>
+
+                            <!-- Border Spacing -->
+                            <div>
+                                <label for="borderSpacing" class="block text-sm font-medium text-gray-700">Border Spacing</label>
+                                <div class="flex gap-2">
+                                    <input type="number" id="borderSpacing" name="borderSpacing" step="0.01" min="0" 
+                                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" 
+                                           value="{{ old('borderSpacing', $inputs['borderSpacing'] ?? 0) }}" 
+                                           placeholder="0">
+                                    <select name="borderUnit" class="mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                        <option value="m" {{ (old('borderUnit', $inputs['borderUnit'] ?? '') == 'm') ? 'selected' : '' }}>m</option>
+                                        <option value="ft" {{ (old('borderUnit', $inputs['borderUnit'] ?? '') == 'ft') ? 'selected' : '' }}>ft</option>
+                                        <option value="cm" {{ (old('borderUnit', $inputs['borderUnit'] ?? '') == 'cm') ? 'selected' : '' }}>cm</option>
+                                        <option value="in" {{ (old('borderUnit', $inputs['borderUnit'] ?? '') == 'in') ? 'selected' : '' }}>in</option>
+                                    </select>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Space to leave around the edges of the area</p>
+                            </div>
+
+                            <button type="submit" 
+                                    class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200">
+                                Calculate Quincunx Layout
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Quick Examples -->
+                    <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                        <h3 class="font-semibold text-blue-800 mb-2">Quick Examples:</h3>
+                        <div class="space-y-2 text-sm">
+                            <button onclick="setExample('orchard')" class="text-blue-600 hover:underline block">🍎 Apple Orchard (10m × 8m, 3m spacing)</button>
+                            <button onclick="setExample('garden')" class="text-blue-600 hover:underline block">🌿 Herb Garden (5m × 3m, 0.5m spacing)</button>
+                            <button onclick="setExample('vineyard')" class="text-blue-600 hover:underline block">🍇 Vineyard (20m × 15m, 2.5m spacing)</button>
                         </div>
                     </div>
                 </div>

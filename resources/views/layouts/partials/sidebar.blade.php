@@ -48,16 +48,16 @@
                 </li>
 
                 <li>
-                    <a href="#" data-bs-toggle="collapse" data-bs-target="#calculationsMenu" aria-expanded="false">
+                    <a href="#" data-bs-toggle="collapse" data-bs-target="#calculationsMenu" aria-expanded="{{ request()->routeIs('calculations.*') ? 'true' : 'false' }}">
                         <i class="fas fa-chart-line"></i>
                         <span>Calculations</span>
                         <i class="fas fa-chevron-right float-end mt-1"></i>
                     </a>
-                    <div class="collapse" id="calculationsMenu">
+                    <div class="collapse {{ request()->routeIs('calculations.*') ? 'show' : '' }}" id="calculationsMenu">
                         <ul class="list-unstyled ps-4">
-                            <li><a href="#" class="d-block py-2"><i class="fas fa-history me-2"></i>History</a></li>
-                            <li><a href="#" class="d-block py-2"><i class="fas fa-save me-2"></i>Saved Calculations</a></li>
-                            <li><a href="#" class="d-block py-2"><i class="fas fa-download me-2"></i>Export</a></li>
+                            <li><a href="{{ route('calculations.history') }}" class="d-block py-2 {{ request()->routeIs('calculations.history') ? 'text-primary' : '' }}"><i class="fas fa-history me-2"></i>History</a></li>
+                            <li><a href="{{ route('calculations.saved') }}" class="d-block py-2 {{ request()->routeIs('calculations.saved') ? 'text-primary' : '' }}"><i class="fas fa-save me-2"></i>Saved Calculations</a></li>
+                            <li><a href="{{ route('calculations.export') }}" class="d-block py-2 {{ request()->routeIs('calculations.export') ? 'text-primary' : '' }}"><i class="fas fa-download me-2"></i>Export</a></li>
                         </ul>
                     </div>
                 </li>
@@ -85,10 +85,16 @@
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="#" data-bs-toggle="collapse" data-bs-target="#toolsMenu" aria-expanded="{{ request()->routeIs('tools.*') ? 'true' : 'false' }}">
                         <i class="fas fa-tools"></i>
                         <span>Tools</span>
+                        <i class="fas fa-chevron-right float-end mt-1"></i>
                     </a>
+                    <div class="collapse {{ request()->routeIs('tools.*') ? 'show' : '' }}" id="toolsMenu">
+                        <ul class="list-unstyled ps-4">
+                            <li><a href="{{ route('tools.weather') }}" class="d-block py-2 {{ request()->routeIs('tools.weather') ? 'text-primary' : '' }}"><i class="fas fa-cloud-sun me-2"></i>Current Weather</a></li>
+                        </ul>
+                    </div>
                 </li>
 
                 <li>

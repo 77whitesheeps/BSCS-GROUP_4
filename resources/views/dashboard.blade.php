@@ -129,11 +129,11 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <div class="d-grid">
-                                <button class="btn btn-outline-primary btn-lg">
+                                <a href="{{ route('calculations.history') }}" class="btn btn-outline-primary btn-lg">
                                     <i class="fas fa-history me-2"></i>
                                     <div>Recent Calculations</div>
                                     <small>View calculation history</small>
-                                </button>
+                                </a>
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
@@ -147,7 +147,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <div class="d-grid">
-                                <button class="btn btn-outline-secondary btn-lg">
+                                <button class="btn btn-outline-secondary btn-lg tools-btn" onclick="window.location.href='{{ route('tools.weather') }}'" style="cursor: pointer; transition: all 0.3s ease;">
                                     <i class="fas fa-tools me-2"></i>
                                     <div>Tools</div>
                                     <small>Additional tools</small>
@@ -316,6 +316,26 @@
 .btn-lg small {
     font-size: 0.8rem;
     opacity: 0.8;
+}
+
+/* Tools button specific styles */
+.tools-btn:hover {
+    background-color: var(--plant-green) !important;
+    border-color: var(--plant-green) !important;
+    color: white !important;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.tools-btn:hover .fas {
+    animation: wiggle 0.6s ease-in-out;
+}
+
+@keyframes wiggle {
+    0%, 7%, 14%, 21%, 28% { transform: rotate(0deg); }
+    3.5%, 10.5%, 17.5%, 24.5% { transform: rotate(-3deg); }
+    7%, 14%, 21% { transform: rotate(3deg); }
+    28% { transform: rotate(0deg); }
 }
 </style>
 @endpush
