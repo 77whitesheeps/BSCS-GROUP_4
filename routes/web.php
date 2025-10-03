@@ -12,6 +12,7 @@ use App\Http\Controllers\QuincunxCalculatorController;
 use App\Http\Controllers\TriangularCalculatorController;
 use App\Http\Controllers\GardenPlannerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CalculationHistoryController;
 
 // Public routes
 Route::get('/', function () {
@@ -54,6 +55,19 @@ Route::middleware('auth')->group(function () {
     // Triangular Calculator routes
     Route::get('/triangular-calculator', [TriangularCalculatorController::class, 'index'])->name('triangular.calculator');
     Route::post('/triangular-calculator/calculate', [TriangularCalculatorController::class, 'calculate'])->name('triangle.calculate');
+
+    // Calculation History routes
+    Route::get('/calculations/history', [CalculationHistoryController::class, 'index'])->name('calculations.history');
+    Route::get('/calculations/saved', [CalculationHistoryController::class, 'saved'])->name('calculations.saved');
+    Route::get('/calculations/export', [CalculationHistoryController::class, 'exportPage'])->name('calculations.export');
+    Route::post('/calculations/export', [CalculationHistoryController::class, 'export']);
+    Route::post('/calculations/{id}/save', [CalculationHistoryController::class, 'save'])->name('calculations.save');
+    Route::delete('/calculations/{id}', [CalculationHistoryController::class, 'destroy'])->name('calculations.destroy');
+
+    // Tools routes
+    Route::prefix('tools')->name('tools.')->group(function () {
+        Route::get('/weather', function () { return view('tools.weather'); })->name('weather');
+    });
 
     // Garden Planner routes
     Route::get('/garden-planner', [GardenPlannerController::class, 'index'])->name('garden.planner');

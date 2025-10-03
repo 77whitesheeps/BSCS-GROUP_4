@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Square Planting System Calculator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color:  #2e7d32;
+            --primary-color: #2e7d32;
             --secondary-color: #4caf50;
             --accent-color: #8bc34a;
             --dark-color: #1b5e20; 
             --light-color: #c8e6c9; 
+            --warning-color: #ff9800;
         }
         
         body {
@@ -26,23 +29,12 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             margin: 2rem auto;
             padding: 2rem;
-            max-width: 1000px;
+            max-width: 1100px;
         }
         
         .header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-        }
-        
-        .form-label {
-            font-weight: 500;
-            color: var(--dark-color);
-        }
-        
-        .input-group {
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 1rem;
             margin-bottom: 1.2rem;
         }
         
@@ -58,83 +50,53 @@
             border-color: var(--dark-color);
         }
         
-        .results-container {
+        .form-label {
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+        
+        .input-group-text {
             background-color: var(--light-color);
-            border-radius: 8px;
+            border-color: #ced4da;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+        }
+        
+        .results-container {
+            background: linear-gradient(135deg, var(--light-color), #e8f5e8);
+            border-radius: 10px;
             padding: 1.5rem;
-            margin-top: 2rem;
+            margin-top: 1.5rem;
+        }
+        
+        .result-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
         .result-value {
-            font-weight: bold;
+            font-size: 1.25rem;
+            font-weight: 700;
             color: var(--primary-color);
-            font-size: 1.2rem;
         }
         
-        .visualization {
-            background-color: white;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-top: 2rem;
-            height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #ddd;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .square-pattern {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .plant {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: var(--secondary-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
-            transform: translate(-50%, -50%);
-            z-index: 2;
-            font-size: 0.7rem;
-        }
-        
-        .grid-lines {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        
-        .grid-line {
-            position: absolute;
-            background-color: rgba(0, 0, 0, 0.1);
-        }
-        
-        .grid-line.vertical {
-            width: 1px;
-            height: 100%;
-        }
-        
-        .grid-line.horizontal {
-            height: 1px;
-            width: 100%;
+        .result-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
         }
         
         .spacing-inputs {
             display: flex;
-            gap: 10px;
+            gap: 1rem;
         }
         
         .spacing-input {
@@ -142,100 +104,159 @@
         }
         
         .auto-border-info {
-            font-size: 0.85rem;
-            color: #6c757d;
-            margin-top: 5px;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
         }
         
-        .visualization-info {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.8rem;
+        .visualization-container {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .plant-dot {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .plant-dot:hover {
+            transform: scale(1.2);
             z-index: 10;
         }
         
-        .pattern-legend {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
-            justify-content: center;
+        .plant-row {
+            animation: fadeInUp 0.6s ease forwards;
         }
         
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.8rem;
+        .plant-row:nth-child(even) {
+            animation-delay: 0.1s;
         }
         
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: var(--secondary-color);
+        .plant-row:nth-child(odd) {
+            animation-delay: 0.2s;
         }
         
-        footer {
-            text-align: center;
-            margin-top: 2rem;
-            padding: 1rem;
-            color: #6c757d;
-        }
-        
-        @media (max-width: 768px) {
-            .calculator-container {
-                padding: 1rem;
-                margin: 1rem;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
             
-            .visualization {
-                height: 200px;
+            .spacing-inputs {
+                flex-direction: column;
             }
             
-            .plant {
-                width: 15px;
-                height: 15px;
-                font-size: 0.5rem;
+            .export-buttons {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
     <div class="container calculator-container">
-        <div class="header text-center">
-            <h1>Square Planting System Calculator</h1>
-            <p class="mb-0">Optimize your planting layout with square spacing pattern</p>
+        <div class="header">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h1 class="mb-1">🌱 Square Planting System Calculator</h1>
+                    <p class="text-muted mb-0">Optimize your planting layout with square spacing pattern</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="button" onclick="resetForm()" class="btn btn-outline-secondary">
+                        Reset
+                    </button>
+                    <a href="{{ route('dashboard') }}" class="btn btn-success">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
         </div>
-        
-        <form id="squareForm">
+
+        <!-- Success/Error Messages -->
+        @if(isset($success))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>{{ $success }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <ul class="mb-0">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        <!-- Calculator Form -->
+        <form method="POST" action="{{ route('calculate.plants') }}" id="plantingForm">
+            @csrf
+            
+            <!-- Plant Type Field -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label for="plantType" class="form-label">Plant Type</label>
+                        <select class="form-select" id="plantType" name="plantType" required>
+                            <option value="">Select plant type</option>
+                            <option value="Vegetables" {{ old('plantType', isset($inputs) ? $inputs['plantType'] : '') == 'Vegetables' ? 'selected' : '' }}>Vegetables</option>
+                            <option value="Fruits" {{ old('plantType', isset($inputs) ? $inputs['plantType'] : '') == 'Fruits' ? 'selected' : '' }}>Fruits</option>
+                            <option value="Herbs" {{ old('plantType', isset($inputs) ? $inputs['plantType'] : '') == 'Herbs' ? 'selected' : '' }}>Herbs</option>
+                            <option value="Flowers" {{ old('plantType', isset($inputs) ? $inputs['plantType'] : '') == 'Flowers' ? 'selected' : '' }}>Flowers</option>
+                            <option value="Trees" {{ old('plantType', isset($inputs) ? $inputs['plantType'] : '') == 'Trees' ? 'selected' : '' }}>Trees</option>
+                            <option value="Shrubs" {{ old('plantType', isset($inputs) ? $inputs['plantType'] : '') == 'Shrubs' ? 'selected' : '' }}>Shrubs</option>
+                            <option value="Grains" {{ old('plantType', isset($inputs) ? $inputs['plantType'] : '') == 'Grains' ? 'selected' : '' }}>Grains</option>
+                            <option value="Other" {{ old('plantType', isset($inputs) ? $inputs['plantType'] : '') == 'Other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="areaLength" class="form-label">Area Length</label>
+                        <label for="areaLength" class="form-label">
+                            Area Length
+                            <span class="info-tooltip">
+                                <i class="bi bi-info-circle info-icon"></i>
+                                <span class="tooltip-text">The total length of your planting area</span>
+                            </span>
+                        </label>
                         <div class="input-group">
-                            <input type="number" class="form-control" id="areaLength" name="areaLength" step="0.01" min="0.01" required value="10">
+                            <input type="number" class="form-control" id="areaLength" name="areaLength" step="0.01" min="0.01" required value="{{ old('areaLength', isset($inputs) ? $inputs['areaLength'] : '10') }}">
                             <select class="form-select" id="lengthUnit" name="lengthUnit">
-                                <option value="m" selected>Meters (m)</option>
-                                <option value="ft">Feet (ft)</option>
-                                <option value="cm">Centimeters (cm)</option>
-                                <option value="in">Inches (in)</option>
+                                <option value="m" {{ old('lengthUnit', isset($inputs) ? $inputs['lengthUnit'] : 'm') == 'm' ? 'selected' : '' }}>Meters (m)</option>
+                                <option value="ft" {{ old('lengthUnit', isset($inputs) ? $inputs['lengthUnit'] : 'm') == 'ft' ? 'selected' : '' }}>Feet (ft)</option>
+                                <option value="cm" {{ old('lengthUnit', isset($inputs) ? $inputs['lengthUnit'] : 'm') == 'cm' ? 'selected' : '' }}>Centimeters (cm)</option>
+                                <option value="in" {{ old('lengthUnit', isset($inputs) ? $inputs['lengthUnit'] : 'm') == 'in' ? 'selected' : '' }}>Inches (in)</option>
                             </select>
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="areaWidth" class="form-label">Area Width</label>
+                        <label for="areaWidth" class="form-label">
+                            Area Width
+                            <span class="info-tooltip">
+                                <i class="bi bi-info-circle info-icon"></i>
+                                <span class="tooltip-text">The total width of your planting area</span>
+                            </span>
+                        </label>
                         <div class="input-group">
-                            <input type="number" class="form-control" id="areaWidth" name="areaWidth" step="0.01" min="0.01" required value="8">
+                            <input type="number" class="form-control" id="areaWidth" name="areaWidth" step="0.01" min="0.01" required value="{{ old('areaWidth', isset($inputs) ? $inputs['areaWidth'] : '8') }}">
                             <select class="form-select" id="widthUnit" name="widthUnit">
-                                <option value="m" selected>Meters (m)</option>
-                                <option value="ft">Feet (ft)</option>
-                                <option value="cm">Centimeters (cm)</option>
-                                <option value="in">Inches (in)</option>
+                                <option value="m" {{ old('widthUnit', isset($inputs) ? $inputs['widthUnit'] : 'm') == 'm' ? 'selected' : '' }}>Meters (m)</option>
+                                <option value="ft" {{ old('widthUnit', isset($inputs) ? $inputs['widthUnit'] : 'm') == 'ft' ? 'selected' : '' }}>Feet (ft)</option>
+                                <option value="cm" {{ old('widthUnit', isset($inputs) ? $inputs['widthUnit'] : 'm') == 'cm' ? 'selected' : '' }}>Centimeters (cm)</option>
+                                <option value="in" {{ old('widthUnit', isset($inputs) ? $inputs['widthUnit'] : 'm') == 'in' ? 'selected' : '' }}>Inches (in)</option>
                             </select>
                         </div>
                     </div>
@@ -243,19 +264,25 @@
                 
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="plantSpacing" class="form-label">Plant Spacing</label>
+                        <label for="plantSpacing" class="form-label">
+                            Plant Spacing
+                            <span class="info-tooltip">
+                                <i class="bi bi-info-circle info-icon"></i>
+                                <span class="tooltip-text">Distance between plants in the same row and between rows (square pattern)</span>
+                            </span>
+                        </label>
                         <div class="spacing-inputs">
                             <div class="spacing-input">
                                 <label class="form-label small">Between Plants</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="plantSpacing" name="plantSpacing" step="0.01" min="0.01" required value="1.5">
+                                    <input type="number" class="form-control" id="plantSpacing" name="plantSpacing" step="0.01" min="0.01" required value="{{ old('plantSpacing', isset($inputs) ? $inputs['plantSpacing'] : '0.3') }}">
                                     <span class="input-group-text">m</span>
                                 </div>
                             </div>
                             <div class="spacing-input">
                                 <label class="form-label small">Between Rows</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="rowSpacing" name="rowSpacing" step="0.01" min="0.01" required value="1.5">
+                                    <input type="number" class="form-control" id="rowSpacing" name="rowSpacing" step="0.01" min="0.01" required value="{{ old('rowSpacing', isset($inputs) ? $inputs['rowSpacing'] : '0.3') }}">
                                     <span class="input-group-text">m</span>
                                 </div>
                             </div>
@@ -263,18 +290,24 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="borderSpacing" class="form-label">Border Spacing</label>
+                        <label for="borderSpacing" class="form-label">
+                            Border Spacing
+                            <span class="info-tooltip">
+                                <i class="bi bi-info-circle info-icon"></i>
+                                <span class="tooltip-text">Space to leave around the edges of the planting area</span>
+                            </span>
+                        </label>
                         <div class="input-group">
-                            <input type="number" class="form-control" id="borderSpacing" name="borderSpacing" step="0.01" min="0" value="0.5" required>
+                            <input type="number" class="form-control" id="borderSpacing" name="borderSpacing" step="0.01" min="0" value="{{ old('borderSpacing', isset($inputs) ? $inputs['borderSpacing'] : '0.5') }}" required>
                             <select class="form-select" id="borderUnit" name="borderUnit">
-                                <option value="m" selected>Meters (m)</option>
-                                <option value="ft">Feet (ft)</option>
-                                <option value="cm">Centimeters (cm)</option>
-                                <option value="in">Inches (in)</option>
+                                <option value="m" {{ old('borderUnit', isset($inputs) ? $inputs['borderUnit'] : 'm') == 'm' ? 'selected' : '' }}>Meters (m)</option>
+                                <option value="ft" {{ old('borderUnit', isset($inputs) ? $inputs['borderUnit'] : 'm') == 'ft' ? 'selected' : '' }}>Feet (ft)</option>
+                                <option value="cm" {{ old('borderUnit', isset($inputs) ? $inputs['borderUnit'] : 'm') == 'cm' ? 'selected' : '' }}>Centimeters (cm)</option>
+                                <option value="in" {{ old('borderUnit', isset($inputs) ? $inputs['borderUnit'] : 'm') == 'in' ? 'selected' : '' }}>Inches (in)</option>
                             </select>
                         </div>
                         <div class="auto-border-info">
-                            <input type="checkbox" id="autoBorder" checked> 
+                            <input type="checkbox" id="autoBorder" name="autoBorder" value="1" {{ old('autoBorder', isset($inputs) ? $inputs['autoBorder'] : true) ? 'checked' : '' }}> 
                             <label for="autoBorder">Auto-calculate border spacing based on plant spacing</label>
                         </div>
                     </div>
@@ -282,214 +315,205 @@
             </div>
             
             <div class="text-center mt-4">
-                <button type="button" id="calculateBtn" class="btn btn-calculate btn-lg">Calculate</button>
+                <button type="submit" class="btn btn-success btn-calculate btn-lg">
+                    <i class="fas fa-calculator me-2"></i>Calculate Plants
+                </button>
             </div>
         </form>
         
-        <div class="results-container" id="resultsContainer" style="display: none;">
-            <h3 class="mb-4">Calculation Results</h3>
+        <!-- Results Section -->
+        @if(isset($results))
+        <div class="results-container">
+            <h3 class="text-center mb-4">🌱 Calculation Results</h3>
             <div class="row">
-                <div class="col-md-6">
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span>Number of Plants:</span>
-                        <span class="result-value" id="totalPlants">0</span>
-                    </div>
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span>Plants per Row:</span>
-                        <span class="result-value" id="plantsPerRow">0</span>
-                    </div>
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span>Number of Rows:</span>
-                        <span class="result-value" id="numberOfRows">0</span>
+                <div class="col-md-4">
+                    <div class="result-card text-center">
+                        <div class="result-label">Total Plants</div>
+                        <div class="result-value">{{ number_format($results['totalPlants']) }}</div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span>Effective Area:</span>
-                        <span class="result-value" id="effectiveArea">0 m²</span>
+                <div class="col-md-4">
+                    <div class="result-card text-center">
+                        <div class="result-label">Plants per Row</div>
+                        <div class="result-value">{{ $results['plantsPerRow'] }}</div>
                     </div>
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span>Planting Density:</span>
-                        <span class="result-value" id="plantingDensity">0 plants/m²</span>
-                    </div>
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span>Space Utilization:</span>
-                        <span class="result-value" id="spaceUtilization">0%</span>
+                </div>
+                <div class="col-md-4">
+                    <div class="result-card text-center">
+                        <div class="result-label">Number of Rows</div>
+                        <div class="result-value">{{ $results['numberOfRows'] }}</div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="visualization" id="visualization">
-            <div class="text-center text-muted">
-                <p>Visualization will appear here after calculation</p>
-                <p class="small">The square pattern arranges plants in straight rows and columns</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="result-card text-center">
+                        <div class="result-label">Effective Area</div>
+                        <div class="result-value">{{ $results['effectiveArea'] }}m²</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="result-card text-center">
+                        <div class="result-label">Plant Density</div>
+                        <div class="result-value">{{ $results['plantingDensity'] }}/m²</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="result-card text-center">
+                        <div class="result-label">Space Utilization</div>
+                        <div class="result-value">{{ $results['spaceUtilization'] }}%</div>
+                    </div>
+                </div>
+                <div class="result-card">
+                    <div class="card-label">Effective Area</div>
+                    <div class="card-value" id="effectiveArea">0 m²</div>
+                </div>
+                <div class="result-card">
+                    <div class="card-label">Planting Density</div>
+                    <div class="card-value" id="plantingDensity">0 plants/m²</div>
+                </div>
+                <div class="result-card">
+                    <div class="card-label">Space Utilization</div>
+                    <div class="card-value" id="spaceUtilization">0%</div>
+                </div>
+            </div>
+            
+            <div class="export-buttons">
+                <button type="button" id="exportPdfBtn" class="btn btn-outline-primary">
+                    <i class="bi bi-file-earmark-pdf"></i> Export as PDF
+                </button>
+                <button type="button" id="exportCsvBtn" class="btn btn-outline-primary">
+                    <i class="bi bi-file-earmark-spreadsheet"></i> Export as CSV
+                </button>
+                <button type="button" id="printBtn" class="btn btn-outline-primary">
+                    <i class="bi bi-printer"></i> Print Results
+                </button>
             </div>
         </div>
-        
-        <div class="pattern-legend" id="patternLegend" style="display: none;">
-            <div class="legend-item">
-                <div class="legend-color"></div>
-                <span>Plant position</span>
+
+        <!-- Visualization Area -->
+        <div class="visualization-container mt-4">
+            <h4 class="mb-3">Plant Layout Visualization</h4>
+            <div class="visualization" id="visualization" style="min-height: 300px; border: 2px solid #28a745; border-radius: 8px; position: relative; background: linear-gradient(45deg, #f0f8f0 25%, #e8f5e8 25%, #e8f5e8 50%, #f0f8f0 50%, #f0f8f0 75%, #e8f5e8 75%), linear-gradient(45deg, #f0f8f0 25%, #e8f5e8 25%, #e8f5e8 50%, #f0f8f0 50%, #f0f8f0 75%, #e8f5e8 75%); background-size: 20px 20px; background-position: 0 0, 10px 10px; padding: 20px;">
+                <div class="text-center mb-3">
+                    <h5 class="text-success">{{ $results['totalPlants'] }} Plants Layout</h5>
+                    <p class="small text-muted">{{ $results['plantsPerRow'] }} plants per row × {{ $results['numberOfRows'] }} rows</p>
+                </div>
+                
+                <div class="plant-grid mx-auto" style="max-width: 600px; max-height: 400px; overflow: auto; border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px;">
+                    @php
+                        // Show the full grid - no artificial limits like other calculators
+                        $totalRows = $results['numberOfRows'];
+                        $totalCols = $results['plantsPerRow'];
+                        
+                        // Calculate appropriate dot size based on available space and number of plants
+                        $maxWidth = 580; // Available width minus padding
+                        $maxHeight = 380; // Available height minus padding
+                        
+                        $dotSize = min(
+                            floor($maxWidth / ($totalCols + 1)), // Space based on width
+                            floor($maxHeight / ($totalRows + 1)), // Space based on height
+                            20 // Maximum dot size
+                        );
+                        $dotSize = max($dotSize, 4); // Minimum dot size
+                        
+                        $gapX = max($dotSize * 0.3, 2);
+                        $gapY = max($dotSize * 0.3, 2);
+                    @endphp
+                    
+                    <div class="grid-container" style="display: flex; flex-direction: column; gap: {{ $gapY }}px; align-items: center; justify-content: center;">
+                        @for($row = 0; $row < $totalRows; $row++)
+                            <div class="plant-row" style="display: flex; gap: {{ $gapX }}px; align-items: center;">
+                                @for($col = 0; $col < $totalCols; $col++)
+                                    @if($row % 2 == 0)
+                                        <!-- Regular Row - Green dots -->
+                                        <div class="plant-dot" style="width: {{ $dotSize }}px; height: {{ $dotSize }}px; background: #28a745; border-radius: 50%; border: 1px solid #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-shrink: 0;"></div>
+                                    @else
+                                        <!-- Offset Row - Blue dots -->
+                                        <div class="plant-dot" style="width: {{ $dotSize }}px; height: {{ $dotSize }}px; background: #007bff; border-radius: 50%; border: 1px solid #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-shrink: 0;"></div>
+                                    @endif
+                                @endfor
+                            </div>
+                        @endfor
+                    </div>
+                    
+                    <!-- Full grid information -->
+                    <p class="text-center text-muted small mt-3">
+                        Complete layout: {{ $totalCols }} × {{ $totalRows }} = {{ $results['totalPlants'] }} plants
+                    </p>
+                    
+                    <!-- Legend -->
+                    <div class="mt-3 d-flex justify-content-center gap-3">
+                        <div class="d-flex align-items-center gap-1">
+                            <div style="width: 12px; height: 12px; background: #28a745; border-radius: 50%; border: 1px solid #fff;"></div>
+                            <small class="text-muted">Regular Row</small>
+                        </div>
+                        <div class="d-flex align-items-center gap-1">
+                            <div style="width: 12px; height: 12px; background: #007bff; border-radius: 50%; border: 1px solid #fff;"></div>
+                            <small class="text-muted">Offset Row</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layout-details mt-3 text-center">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <small class="text-muted">Plant Spacing</small>
+                            <p class="mb-1"><strong>{{ $results['plantSpacing'] }}m</strong></p>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">Row Spacing</small>
+                            <p class="mb-1"><strong>{{ $results['rowSpacing'] }}m</strong></p>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">Effective Area</small>
+                            <p class="mb-1"><strong>{{ $results['effectiveArea'] }}m²</strong></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        @else
+        <div class="visualization-container mt-4">
+            <h4 class="mb-3">Plant Layout Visualization</h4>
+            <div class="visualization" id="visualization" style="min-height: 300px; border: 2px dashed #ccc; border-radius: 8px; position: relative; background: #f8f9fa;">
+                <div class="text-center text-muted p-5">
+                    <i class="fas fa-calculator fa-3x mb-3"></i>
+                    <p>Visualization will appear here after calculation</p>
+                    <p class="small">The square pattern arranges plants in straight rows and columns</p>
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
     
-    <footer>
-        <p>Square Planting System Calculator &copy; {{ date('Y') }}</p>
-    </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.getElementById('calculateBtn').addEventListener('click', function() {
-            // Get input values
-            const areaLength = parseFloat(document.getElementById('areaLength').value);
-            const areaWidth = parseFloat(document.getElementById('areaWidth').value);
-            const plantSpacing = parseFloat(document.getElementById('plantSpacing').value);
-            const rowSpacing = parseFloat(document.getElementById('rowSpacing').value);
-            let borderSpacing = parseFloat(document.getElementById('borderSpacing').value);
-            const autoBorder = document.getElementById('autoBorder').checked;
-            
-            // Validate inputs
-            if (areaLength <= 0 || areaWidth <= 0 || plantSpacing <= 0 || rowSpacing <= 0 || borderSpacing < 0) {
-                alert('Please enter valid positive values for all fields.');
-                return;
-            }
-            
-            // Auto-calculate border spacing if enabled
-            if (autoBorder) {
-                borderSpacing = Math.max(plantSpacing, rowSpacing) / 2;
-                document.getElementById('borderSpacing').value = borderSpacing.toFixed(2);
-            }
-            
-            if (borderSpacing * 2 >= areaLength || borderSpacing * 2 >= areaWidth) {
-                alert('Border spacing is too large. It must be less than half of the area length and width.');
-                return;
-            }
-            
-            // Calculate planting layout
-            const effectiveLength = areaLength - 2 * borderSpacing;
-            const effectiveWidth = areaWidth - 2 * borderSpacing;
-            
-            // Calculate plants per row and number of rows with square pattern
-            const plantsPerRow = Math.floor(effectiveLength / plantSpacing) + 1;
-            const numberOfRows = Math.floor(effectiveWidth / rowSpacing) + 1;
-            
-            // Calculate total plants
-            const totalPlants = plantsPerRow * numberOfRows;
-            
-            // Calculate other metrics
-            const effectiveArea = effectiveLength * effectiveWidth;
-            const plantingDensity = totalPlants / effectiveArea;
-            const spaceUtilization = (totalPlants * Math.PI * Math.pow(Math.min(plantSpacing, rowSpacing)/4, 2)) / effectiveArea * 100;
-            
-            // Update results
-            document.getElementById('totalPlants').textContent = totalPlants;
-            document.getElementById('plantsPerRow').textContent = plantsPerRow;
-            document.getElementById('numberOfRows').textContent = numberOfRows;
-            document.getElementById('effectiveArea').textContent = effectiveArea.toFixed(2) + ' m²';
-            document.getElementById('plantingDensity').textContent = plantingDensity.toFixed(2) + ' plants/m²';
-            document.getElementById('spaceUtilization').textContent = spaceUtilization.toFixed(1) + '%';
-            
-            // Show results container
-            document.getElementById('resultsContainer').style.display = 'block';
-            
-            // Show legend
-            document.getElementById('patternLegend').style.display = 'flex';
-            
-            // Generate visualization
-            generateVisualization(plantsPerRow, numberOfRows, plantSpacing, rowSpacing, borderSpacing, effectiveLength, effectiveWidth);
-        });
-        
-        function generateVisualization(plantsPerRow, numberOfRows, plantSpacing, rowSpacing, borderSpacing, effectiveLength, effectiveWidth) {
-            const visualization = document.getElementById('visualization');
-            visualization.innerHTML = '';
-            
-            // Create container for the pattern
-            const container = document.createElement('div');
-            container.className = 'square-pattern';
-            visualization.appendChild(container);
-            
-            // Calculate scaling factors to fit visualization
-            const visWidth = visualization.clientWidth - 40;
-            const visHeight = visualization.clientHeight - 40;
-            
-            const scaleX = visWidth / effectiveLength;
-            const scaleY = visHeight / effectiveWidth;
-            const scale = Math.min(scaleX, scaleY);
-            
-            // Calculate scaled values
-            const scaledPlantSpacing = plantSpacing * scale;
-            const scaledRowSpacing = rowSpacing * scale;
-            
-            // Add grid lines for better visualization of the pattern
-            const gridLines = document.createElement('div');
-            gridLines.className = 'grid-lines';
-            
-            // Add horizontal lines (rows)
-            for (let row = 0; row <= numberOfRows; row++) {
-                const yPos = row * scaledRowSpacing;
-                if (yPos <= visHeight) {
-                    const line = document.createElement('div');
-                    line.className = 'grid-line horizontal';
-                    line.style.top = yPos + 'px';
-                    gridLines.appendChild(line);
-                }
-            }
-            
-            // Add vertical lines (columns)
-            for (let col = 0; col <= plantsPerRow; col++) {
-                const xPos = col * scaledPlantSpacing;
-                if (xPos <= visWidth) {
-                    const line = document.createElement('div');
-                    line.className = 'grid-line vertical';
-                    line.style.left = xPos + 'px';
-                    gridLines.appendChild(line);
-                }
-            }
-            
-            container.appendChild(gridLines);
-            
-            // Add plants - only show a representative pattern (max 6x6 grid)
-            const maxRowsToShow = Math.min(numberOfRows, 6);
-            const maxColsToShow = Math.min(plantsPerRow, 6);
-            
-            for (let row = 0; row < maxRowsToShow; row++) {
-                const yPos = row * scaledRowSpacing;
-                
-                for (let col = 0; col < maxColsToShow; col++) {
-                    const xPos = col * scaledPlantSpacing;
-                    
-                    const plant = document.createElement('div');
-                    plant.className = 'plant';
-                    plant.style.left = xPos + 'px';
-                    plant.style.top = yPos + 'px';
-                    
-                    container.appendChild(plant);
-                }
-            }
-            
-            // Add info text about the pattern
-            const infoText = document.createElement('div');
-            infoText.className = 'visualization-info';
-            infoText.innerHTML = `Showing ${maxRowsToShow} rows × ${maxColsToShow} plants pattern`;
-            container.appendChild(infoText);
+        function resetForm() {
+            document.getElementById('plantingForm').reset();
+            // Reset to default values
+            document.getElementById('areaLength').value = '10';
+            document.getElementById('areaWidth').value = '8';
+            document.getElementById('plantSpacing').value = '0.3';
+            document.getElementById('rowSpacing').value = '0.3';
+            document.getElementById('borderSpacing').value = '0.5';
+            document.getElementById('autoBorder').checked = true;
         }
-        
-        // Auto-border functionality
+
+        // Auto border calculation
         document.getElementById('autoBorder').addEventListener('change', function() {
-            const borderInput = document.getElementById('borderSpacing');
-            borderInput.disabled = this.checked;
-            
             if (this.checked) {
-                const plantSpacing = parseFloat(document.getElementById('plantSpacing').value) || 1.5;
-                const rowSpacing = parseFloat(document.getElementById('rowSpacing').value) || 1.5;
-                const borderSpacing = Math.max(plantSpacing, rowSpacing) / 2;
-                borderInput.value = borderSpacing.toFixed(2);
+                const plantSpacing = parseFloat(document.getElementById('plantSpacing').value) || 0.3;
+                document.getElementById('borderSpacing').value = plantSpacing;
             }
         });
-        
-        // Initialize auto-border state
-        document.getElementById('autoBorder').dispatchEvent(new Event('change'));
+
+        // Update border spacing when plant spacing changes
+        document.getElementById('plantSpacing').addEventListener('input', function() {
+            if (document.getElementById('autoBorder').checked) {
+                document.getElementById('borderSpacing').value = this.value;
+            }
+        });
     </script>
 </body>
 </html>
