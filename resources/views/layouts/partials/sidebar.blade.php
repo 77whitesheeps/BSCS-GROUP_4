@@ -1,4 +1,4 @@
-x<aside class="main-sidebar">
+<aside class="main-sidebar">
     <div class="sidebar-content">
         <!-- User Panel -->
         @auth
@@ -25,33 +25,28 @@ x<aside class="main-sidebar">
                     </a>
                 </li>
 
-                <li class="{{ request()->routeIs('planting.calculator') ? 'active' : '' }}">
-                    <a href="{{ route('planting.calculator') }}">
+                <li>
+                    <a href="#" data-bs-toggle="collapse" data-bs-target="#plantingCalculatorMenu" aria-expanded="{{ request()->routeIs('planting.calculator') || request()->routeIs('quincunx.calculator') || request()->routeIs('triangular.calculator') ? 'true' : 'false' }}">
                         <i class="fas fa-calculator"></i>
                         <span>Planting Calculator</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
                     </a>
-                </li>
-
-                <li>
-                    <a href="#" data-bs-toggle="collapse" data-bs-target="#plantsMenu" aria-expanded="false">
-                        <i class="fas fa-seedling"></i>
-                        <span>Plants</span>
-                        <i class="fas fa-chevron-right float-end mt-1"></i>
-                    </a>
-                    <div class="collapse" id="plantsMenu">
+                    <div class="collapse {{ request()->routeIs('planting.calculator') || request()->routeIs('quincunx.calculator') || request()->routeIs('triangular.calculator') ? 'show' : '' }}" id="plantingCalculatorMenu">
                         <ul class="list-unstyled ps-4">
-                            <li><a href="#" class="d-block py-2"><i class="fas fa-plus-circle me-2"></i>Add Plant</a></li>
-                            <li><a href="#" class="d-block py-2"><i class="fas fa-list me-2"></i>Plant Library</a></li>
-                            <li><a href="#" class="d-block py-2"><i class="fas fa-chart-bar me-2"></i>Plant Statistics</a></li>
+                            <li><a href="{{ route('planting.calculator') }}" class="d-block py-2 {{ request()->routeIs('planting.calculator') ? 'text-primary' : '' }}"><i class="fas fa-th me-2"></i>Square</a></li>
+                            <li><a href="{{ route('quincunx.calculator') }}" class="d-block py-2 {{ request()->routeIs('quincunx.calculator') ? 'text-primary' : '' }}"><i class="fas fa-th-large me-2"></i>Quincunx</a></li>
+                            <li><a href="{{ route('triangular.calculator') }}" class="d-block py-2 {{ request()->routeIs('triangular.calculator') ? 'text-primary' : '' }}"><i class="fas fa-play me-2"></i>Triangular</a></li>
                         </ul>
                     </div>
                 </li>
+
+
 
                 <li>
                     <a href="#" data-bs-toggle="collapse" data-bs-target="#calculationsMenu" aria-expanded="{{ request()->routeIs('calculations.*') ? 'true' : 'false' }}">
                         <i class="fas fa-chart-line"></i>
                         <span>Calculations</span>
-                        <i class="fas fa-chevron-right float-end mt-1"></i>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
                     </a>
                     <div class="collapse {{ request()->routeIs('calculations.*') ? 'show' : '' }}" id="calculationsMenu">
                         <ul class="list-unstyled ps-4">
@@ -66,7 +61,7 @@ x<aside class="main-sidebar">
                     <a href="#" data-bs-toggle="collapse" data-bs-target="#reportsMenu" aria-expanded="false">
                         <i class="fas fa-file-alt"></i>
                         <span>Reports</span>
-                        <i class="fas fa-chevron-right float-end mt-1"></i>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
                     </a>
                     <div class="collapse" id="reportsMenu">
                         <ul class="list-unstyled ps-4">
@@ -86,7 +81,7 @@ x<aside class="main-sidebar">
                     <a href="#" data-bs-toggle="collapse" data-bs-target="#toolsMenu" aria-expanded="{{ request()->routeIs('tools.*') ? 'true' : 'false' }}">
                         <i class="fas fa-tools"></i>
                         <span>Tools</span>
-                        <i class="fas fa-chevron-right float-end mt-1"></i>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
                     </a>
                     <div class="collapse {{ request()->routeIs('tools.*') ? 'show' : '' }}" id="toolsMenu">
                         <ul class="list-unstyled ps-4">
@@ -99,7 +94,7 @@ x<aside class="main-sidebar">
                     <a href="#" data-bs-toggle="collapse" data-bs-target="#settingsMenu" aria-expanded="false">
                         <i class="fas fa-cog"></i>
                         <span>Settings</span>
-                        <i class="fas fa-chevron-right float-end mt-1"></i>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
                     </a>
                     <div class="collapse" id="settingsMenu">
                         <ul class="list-unstyled ps-4">
@@ -147,12 +142,12 @@ x<aside class="main-sidebar">
     margin: 0 10px;
 }
 
-.sidebar-menu li a[data-bs-toggle="collapse"] .fa-chevron-right {
+.sidebar-menu li a[data-bs-toggle="collapse"] .fa-chevron-down {
     transition: transform 0.3s ease;
 }
 
-.sidebar-menu li a[data-bs-toggle="collapse"][aria-expanded="true"] .fa-chevron-right {
-    transform: rotate(90deg);
+.sidebar-menu li a[data-bs-toggle="collapse"][aria-expanded="true"] .fa-chevron-down {
+    transform: rotate(180deg);
 }
 
 .user-panel {

@@ -154,7 +154,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <div class="d-grid">
-                                <button class="btn btn-outline-warning btn-lg">
+                                <button class="btn btn-outline-warning btn-lg" onclick="window.location.href='{{ route('monthly-reports.index') }}'" style="cursor: pointer; transition: all 0.3s ease;">
                                     <i class="fas fa-chart-bar me-2"></i>
                                     <div>Reports</div>
                                     <small>Generate reports</small>
@@ -356,15 +356,3 @@
 </style>
 @endpush
 @endsection
-
-<li class="nav-item">
-    <a class="nav-link" href="{{ route('print.report') }}">
-        <i class="fas fa-print"></i>
-        Print Plant Report
-    </a>
-</li>
-
-<a href="{{ route('monthly-reports.index') }}" class="quick-action-button bg-blue-500 hover:bg-blue-600">
-    <i class="fas fa-chart-bar mr-2"></i>
-    {{ __('Monthly Reports') }}
-</a>

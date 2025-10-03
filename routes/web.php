@@ -69,7 +69,6 @@ Route::get('/monthly-report/api/{month?}', [MonthlyReportController::class, 'api
 
 // Print report route  
 Route::get('/print-report', [PlantReportController::class, 'printReport'])->name('print.report');
-});
 
     // Calculation History routes
     Route::get('/calculations/history', [CalculationHistoryController::class, 'index'])->name('calculations.history');

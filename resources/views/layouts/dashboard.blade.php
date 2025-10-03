@@ -292,21 +292,3 @@
 </body>
 </html>
 
-<a href="{{ route('monthly-reports.index') }}" class="nav-link">
-    <i class="fas fa-chart-bar me-2"></i>
-    Monthly Reports
-</a>
-
-<!-- Quick Actions -->
-<div class="col-lg-8 mb-4">
-    <div class="card card-dashboard">
-        <div class="card-header bg-white border-0">
-            <h5 class="card-title mb-0">
-                <i class="fas fa-bolt text-warning me-2"></i>Quick Actions
-            </h5>
-        </div>
-        <div class="card-body">
-            // ... user-provided Quick Actions code ...
-        </div>
-    </div>
-</div>
