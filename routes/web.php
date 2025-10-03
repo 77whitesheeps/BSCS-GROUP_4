@@ -10,7 +10,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PlantingCalculatorController;
 use App\Http\Controllers\QuincunxCalculatorController;
 use App\Http\Controllers\TriangularCalculatorController;
-use App\Http\Controllers\UsageStatisticsController;
 use App\Http\Controllers\MonthlyReportController;
 use App\Http\Controllers\PlantReportController;
 
@@ -60,11 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/triangular-calculator', [TriangularCalculatorController::class, 'index'])->name('triangular.calculator');
     Route::post('/triangular-calculator/calculate', [TriangularCalculatorController::class, 'calculate'])->name('triangle.calculate');
     
-    // Usage Statistics
-    Route::get('/usage-statistics', [UsageStatisticsController::class, 'index'])->name('usage-statistics');
-    Route::get('/api/usage-statistics', [UsageStatisticsController::class, 'getStatistics'])->name('api.usage-statistics');
-
-
+    // (Removed: Usage Statistics routes)
 Route::get('/monthly-reports', [MonthlyReportController::class, 'index'])->name('monthly-reports.index');
 Route::post('/monthly-report/generate', [MonthlyReportController::class, 'generate'])->name('monthly-report.generate');
 Route::get('/monthly-report/api/{month?}', [MonthlyReportController::class, 'apiData'])->name('monthly-report.api');
