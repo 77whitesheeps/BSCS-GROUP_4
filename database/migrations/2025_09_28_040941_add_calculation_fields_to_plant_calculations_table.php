@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('plant_calculations', function (Blueprint $table) {
-            $table->string('calculation_type')->default('square')->after('calculation_name');
-            $table->boolean('is_saved')->default(false)->after('notes');
+            // The calculation_type column already exists, so we'll add other fields
+            $table->string('calculation_name')->nullable()->after('user_id');
+            $table->text('notes')->nullable();
+            $table->boolean('is_saved')->default(false);
             $table->index(['user_id', 'created_at']);
             $table->index(['user_id', 'is_saved']);
             $table->index(['user_id', 'calculation_type']);
@@ -26,7 +28,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('plant_calculations', function (Blueprint $table) {
-            $table->dropColumn(['calculation_type', 'is_saved']);
+            $table->dropColumn(['calculation_name', 'notes', 'is_saved']);
             $table->dropIndex(['user_id', 'created_at']);
             $table->dropIndex(['user_id', 'is_saved']);
             $table->dropIndex(['user_id', 'calculation_type']);
