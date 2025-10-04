@@ -6,6 +6,7 @@
     <title>Triangular Planting System Calculator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="{{ asset('assets/css/dark-theme.css') }}" rel="stylesheet">
     <style>
         :root {
             --primary-color:  #2e7d32;
@@ -438,7 +439,7 @@
         }
     </style>
 </head>
-<body>
+<body class="{{ auth()->check() && auth()->user()->theme === 'dark' ? 'dark-theme' : '' }}">
     <div class="container calculator-container">
         <div class="header text-center">
             <h1>Triangular Planting System Calculator</h1>

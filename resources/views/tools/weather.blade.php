@@ -212,8 +212,8 @@
                 <!-- Gardening Tips -->
                 <div class="row">
                     <div class="col-12">
-                        <div class="card shadow">
-                            <div class="card-header bg-success text-white">
+                        <div class="card card-dashboard shadow">
+                            <div class="card-header">
                                 <h5 class="mb-0"><i class="fas fa-seedling me-2"></i>Gardening Tips Based on Current Weather</h5>
                             </div>
                             <div class="card-body">

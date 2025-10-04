@@ -99,13 +99,13 @@
                     <div class="collapse" id="settingsMenu">
                         <ul class="list-unstyled ps-4">
                             <li><a href="{{ route('profile.edit') }}" class="d-block py-2"><i class="fas fa-user me-2"></i>Profile</a></li>
-                            <li><a href="#" class="d-block py-2"><i class="fas fa-sliders-h me-2"></i>Preferences</a></li>
+                            <li><a href="{{ route('preferences') }}" class="d-block py-2"><i class="fas fa-sliders-h me-2"></i>Preferences</a></li>
                         </ul>
                     </div>
                 </li>
 
-                <li>
-                    <a href="#">
+                <li class="{{ request()->routeIs('help.support') ? 'active' : '' }}">
+                    <a href="{{ route('help.support') }}">
                         <i class="fas fa-question-circle"></i>
                         <span>Help & Support</span>
                     </a>

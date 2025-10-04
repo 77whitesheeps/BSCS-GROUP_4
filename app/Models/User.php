@@ -21,6 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'email_notifications',
+        'theme',
+        'default_garden_size',
+        'auto_save_calculations',
+        'export_format',
     ];
 
     /**

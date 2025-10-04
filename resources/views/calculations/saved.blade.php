@@ -13,7 +13,7 @@
     <!-- Header -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card border-0 shadow-sm">
+            <div class="card card-dashboard">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-md-8">
@@ -39,8 +39,8 @@
         @if($savedCalculations->count() > 0)
             @foreach($savedCalculations as $calculation)
                 <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-header bg-white border-0 d-flex justify-content-between align-items-start">
+                    <div class="card card-dashboard h-100">
+                        <div class="card-header border-0 d-flex justify-content-between align-items-start">
                             <div>
                                 <h6 class="mb-1">{{ $calculation->calculation_name }}</h6>
                                 <small class="text-muted">
@@ -99,7 +99,7 @@
                             @endif
                         </div>
                         
-                        <div class="card-footer bg-white border-0">
+                        <div class="card-footer border-0">
                             <div class="btn-group w-100">
                                 <button type="button" class="btn btn-outline-primary" onclick="viewDetails({{ $calculation->id }})">
                                     <i class="fas fa-eye"></i> View
@@ -117,7 +117,7 @@
             @endforeach
         @else
             <div class="col-12">
-                <div class="card border-0 shadow-sm">
+                <div class="card card-dashboard">
                     <div class="card-body text-center py-5">
                         <i class="fas fa-save fa-4x text-muted mb-4"></i>
                         <h4>No Saved Calculations</h4>
@@ -138,7 +138,7 @@
     @if($savedCalculations->hasPages())
         <div class="row">
             <div class="col-12">
-                <div class="card border-0 shadow-sm">
+                <div class="card card-dashboard">
                     <div class="card-body">
                         {{ $savedCalculations->links() }}
                     </div>

@@ -14,7 +14,7 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="card card-dashboard">
-                <div class="card-header bg-white border-0">
+                <div class="card-header">
                     <h5 class="card-title mb-0">
                         <i class="fas fa-map text-success me-2"></i>Design Your Garden
                     </h5>
@@ -31,7 +31,7 @@
         <!-- Plan Form -->
         <div class="col-lg-8 mb-4">
             <div class="card card-dashboard">
-                <div class="card-header bg-white border-0">
+                <div class="card-header">
                     <h5 class="card-title mb-0">
                         <i class="fas fa-plus-circle text-primary me-2"></i>Create New Plan
                     </h5>
@@ -96,7 +96,7 @@
         <!-- Existing Plans -->
         <div class="col-lg-4 mb-4">
             <div class="card card-dashboard">
-                <div class="card-header bg-white border-0">
+                <div class="card-header">
                     <h5 class="card-title mb-0">
                         <i class="fas fa-list text-info me-2"></i>Your Plans
                     </h5>

@@ -15,6 +15,7 @@ use App\Http\Controllers\PlantReportController;
 use App\Http\Controllers\GardenPlannerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalculationHistoryController;
+use App\Http\Controllers\HelpController;
 
 // Public routes
 Route::get('/', function () {
@@ -92,5 +93,10 @@ Route::get('/print-report', [PlantReportController::class, 'printReport'])->name
 
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/preferences', [ProfileController::class, 'preferences'])->name('preferences');
+    Route::post('/preferences', [ProfileController::class, 'updatePreferences'])->name('preferences.update');
     Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password.update');
+
+    // Help routes
+    Route::get('/help', [HelpController::class, 'index'])->name('help.support');
 });

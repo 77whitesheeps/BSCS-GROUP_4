@@ -12,7 +12,10 @@
     
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
+
+    <!-- Dark Theme CSS -->
+    <link href="{{ asset('assets/css/dark-theme.css') }}" rel="stylesheet">
+
     <!-- Custom CSS -->
     <style>
         :root {
@@ -22,10 +25,26 @@
             --sidebar-width: 250px;
             --header-height: 60px;
             --footer-height: 50px;
+            /* Light theme colors */
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --sidebar-bg: #ffffff;
+            --border-color: #dee2e6;
+        }
+
+        /* Dark theme colors */
+        .dark-theme {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --card-bg: #2d2d2d;
+            --sidebar-bg: #2d2d2d;
+            --border-color: #404040;
         }
 
         body {
-            background-color: #f8f9fa;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
@@ -54,6 +73,16 @@
         .main-header .navbar-nav .dropdown-menu {
             border: none;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .main-header .navbar-nav .dropdown-menu .dropdown-item {
+            color: var(--text-color);
+        }
+
+        .main-header .navbar-nav .dropdown-menu .dropdown-item:hover {
+            background: var(--bg-color);
         }
 
         /* Sidebar Styles */
@@ -63,8 +92,8 @@
             left: 0;
             width: var(--sidebar-width);
             height: calc(100vh - var(--header-height));
-            background: white;
-            border-right: 1px solid #dee2e6;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
             overflow-y: auto;
             z-index: 1020;
             transition: all 0.3s ease;
@@ -81,13 +110,13 @@
         }
 
         .sidebar-menu li {
-            border-bottom: 1px solid #f1f3f4;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .sidebar-menu li a {
             display: block;
             padding: 15px 20px;
-            color: #495057;
+            color: var(--text-color);
             text-decoration: none;
             transition: all 0.3s ease;
         }
@@ -122,12 +151,12 @@
             margin-left: var(--sidebar-width);
             margin-top: 0;
             height: var(--footer-height);
-            background: white;
-            border-top: 1px solid #dee2e6;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #6c757d;
+            color: var(--text-color);
             font-size: 0.9rem;
             transition: all 0.3s ease;
         }
@@ -166,6 +195,8 @@
             border: none;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: var(--card-bg);
+            color: var(--text-color);
             transition: transform 0.2s ease;
         }
 
@@ -188,11 +219,27 @@
         .alert-dismissible .btn-close {
             padding: 0.5rem 0.5rem;
         }
+
+        /* Breadcrumb Styles */
+        .breadcrumb {
+            background: transparent;
+            margin-bottom: 1.5rem;
+            padding: 0;
+        }
+
+        .breadcrumb-item a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-color);
+        }
     </style>
     
     @stack('styles')
 </head>
-<body>
+<body class="{{ auth()->check() && auth()->user()->theme === 'dark' ? 'dark-theme' : '' }}">
     <!-- Header -->
     @include('layouts.partials.header')
 

@@ -13,7 +13,7 @@
     <!-- Header with Stats -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card border-0 shadow-sm">
+            <div class="card card-dashboard">
                 <div class="card-body">
                     <div class="row">
                         <!-- Total Calculations -->
@@ -76,7 +76,7 @@
     <!-- Filters -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card border-0 shadow-sm">
+            <div class="card card-dashboard">
                 <div class="card-body">
                     <form method="GET" action="{{ route('calculations.history') }}" class="row g-3">
                         <div class="col-md-3">
@@ -122,8 +122,8 @@
     <!-- Calculations List -->
     <div class="row">
         <div class="col-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+            <div class="card card-dashboard">
+                <div class="card-header border-0 d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">
                         <i class="fas fa-history me-2"></i>Recent Calculations
                     </h5>
@@ -197,7 +197,7 @@
                         </div>
                         
                         <!-- Pagination -->
-                        <div class="card-footer bg-white">
+                        <div class="card-footer">
                             {{ $calculations->links() }}
                         </div>
                     @else

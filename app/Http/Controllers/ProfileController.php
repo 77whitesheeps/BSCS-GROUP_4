@@ -15,6 +15,37 @@ class ProfileController extends Controller
         return view('profile.userprofile', compact('user'));
     }
 
+    #show user preferences
+    public function preferences()
+    {
+        $user = Auth::user();
+        return view('profile.preferences', compact('user'));
+    }
+
+    #update preferences
+    public function updatePreferences(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'email_notifications' => 'boolean',
+            'theme' => 'string|in:light,dark',
+            'default_garden_size' => 'string|in:square_meters,acres',
+            'auto_save_calculations' => 'boolean',
+            'export_format' => 'string|in:pdf,csv,excel',
+        ]);
+
+        $user->update($request->only([
+            'email_notifications',
+            'theme',
+            'default_garden_size',
+            'auto_save_calculations',
+            'export_format',
+        ]));
+
+        return back()->with('success', 'Preferences updated successfully.');
+    }
+
     #update password
     public function changePassword(Request $request)
     {

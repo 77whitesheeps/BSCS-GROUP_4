@@ -14,7 +14,7 @@
     <!-- Header -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card border-0 shadow-sm">
+            <div class="card card-dashboard">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-md-8">
@@ -43,7 +43,7 @@
     <div class="row">
         <!-- Export Options -->
         <div class="col-md-4 mb-4">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="card card-dashboard h-100">
                 <div class="card-header bg-success text-white">
                     <h5 class="mb-0">
                         <i class="fas fa-cog"></i> Export Options
@@ -215,7 +215,7 @@
         
         <!-- Preview Area -->
         <div class="col-md-8">
-            <div class="card border-0 shadow-sm">
+            <div class="card card-dashboard">
                 <div class="card-header">
                     <h5 class="mb-0">
                         <i class="fas fa-table"></i> Data Preview
@@ -237,7 +237,7 @@
     <!-- Export History -->
     <div class="row mt-4">
         <div class="col-12">
-            <div class="card border-0 shadow-sm">
+            <div class="card card-dashboard">
                 <div class="card-header">
                     <h5 class="mb-0">
                         <i class="fas fa-history"></i> Recent Exports
