@@ -49,7 +49,7 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 // Protected routes (require authentication)
 Route::middleware('auth')->group(function () {
     // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     
     // Square Planting Calculator
     Route::get('/planting-calculator', [PlantingCalculatorController::class, 'index'])->name('planting.calculator');

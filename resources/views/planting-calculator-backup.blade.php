@@ -7,87 +7,109 @@
     <title>Square Planting System Calculator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-            </div>
-        </div>
-
-        <!-- Success/Error Messages -->
-        @if(isset($success))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle me-2"></i>{{ $success }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        @if($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                <ul class="mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endifg System Calculator</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color:  #2e7d32;
+            --primary-color: #2e7d32;
             --secondary-color: #4caf50;
             --accent-color: #8bc34a;
-            --dark-color: #1b5e20; 
-            --light-color: #c8e6c9; 
+            --dark-color: #1b5e20;
+            --light-color: #c8e6c9;
+            --success-light: #d4edda;
+            --danger-light: #f8d7da;
         }
         
         body {
             background-color: #f8f9fa;
             color: #333;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
         }
         
         .calculator-container {
             background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
             margin: 2rem auto;
             padding: 2rem;
             max-width: 1000px;
+            transition: all 0.3s ease;
         }
         
         .header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 1.5rem;
-            border-radius: 8px;
+            padding: 1.8rem;
+            border-radius: 12px;
             margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            margin-bottom: 0;
         }
         
         .form-label {
-            font-weight: 500;
+            font-weight: 600;
             color: var(--dark-color);
+            margin-bottom: 0.5rem;
         }
         
         .input-group {
             margin-bottom: 1.2rem;
         }
         
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ced4da;
+            transition: all 0.2s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(139, 195, 74, 0.25);
+        }
+        
         .btn-calculate {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
-            padding: 0.5rem 2rem;
+            padding: 0.75rem 2.5rem;
             font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
         .btn-calculate:hover {
             background-color: var(--dark-color);
             border-color: var(--dark-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-outline-secondary {
+            border-radius: 8px;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-secondary:hover {
+            transform: translateY(-1px);
         }
         
         .results-container {
             background-color: var(--light-color);
-            border-radius: 8px;
-            padding: 1.5rem;
+            border-radius: 12px;
+            padding: 1.8rem;
             margin-top: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--primary-color);
         }
         
         .result-value {
@@ -96,18 +118,27 @@
             font-size: 1.2rem;
         }
         
+        .results-container h3 {
+            color: var(--dark-color);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+        }
+        
         .visualization {
             background-color: white;
-            border-radius: 8px;
-            padding: 1.5rem;
+            border-radius: 12px;
+            padding: 1.8rem;
             margin-top: 2rem;
-            height: 300px;
+            height: 350px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid #ddd;
+            border: 2px solid #e9ecef;
             overflow: hidden;
             position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
         
         .square-pattern {
@@ -118,8 +149,8 @@
         
         .plant {
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             background-color: var(--secondary-color);
             border-radius: 50%;
             display: flex;
@@ -127,10 +158,16 @@
             justify-content: center;
             color: white;
             font-weight: bold;
-            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16);
             transform: translate(-50%, -50%);
             z-index: 2;
             font-size: 0.7rem;
+            transition: all 0.3s ease;
+        }
+        
+        .plant:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+            z-index: 3;
         }
         
         .grid-lines {
@@ -159,7 +196,7 @@
         
         .spacing-inputs {
             display: flex;
-            gap: 10px;
+            gap: 15px;
         }
         
         .spacing-input {
@@ -169,24 +206,30 @@
         .auto-border-info {
             font-size: 0.85rem;
             color: #6c757d;
-            margin-top: 5px;
+            margin-top: 8px;
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
         }
         
         .visualization-info {
             position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 5px 10px;
-            border-radius: 4px;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 15px;
+            border-radius: 6px;
             font-size: 0.8rem;
             z-index: 10;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         .pattern-legend {
             display: flex;
             gap: 15px;
-            margin-top: 10px;
+            margin-top: 15px;
             justify-content: center;
         }
         
@@ -207,24 +250,92 @@
         footer {
             text-align: center;
             margin-top: 2rem;
-            padding: 1rem;
+            padding: 1.5rem;
             color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .alert {
+            border-radius: 10px;
+            border: none;
+            padding: 1rem 1.5rem;
+        }
+        
+        .alert-success {
+            background-color: var(--success-light);
+            color: #155724;
+        }
+        
+        .alert-danger {
+            background-color: var(--danger-light);
+            color: #721c24;
+        }
+        
+        .alert ul {
+            margin-bottom: 0;
+        }
+        
+        .plant-grid {
+            position: relative;
+        }
+        
+        .plant-dot {
+            transition: all 0.3s ease;
+        }
+        
+        .plant-dot:hover {
+            transform: scale(1.2);
+            z-index: 2;
+        }
+        
+        .layout-details {
+            background-color: rgba(248, 249, 250, 0.8);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .card {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
         
         @media (max-width: 768px) {
             .calculator-container {
-                padding: 1rem;
+                padding: 1.5rem;
                 margin: 1rem;
             }
             
+            .header {
+                padding: 1.5rem;
+            }
+            
             .visualization {
-                height: 200px;
+                height: 250px;
+                padding: 1rem;
             }
             
             .plant {
-                width: 15px;
-                height: 15px;
-                font-size: 0.5rem;
+                width: 18px;
+                height: 18px;
+                font-size: 0.6rem;
+            }
+            
+            .spacing-inputs {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn-calculate {
+                width: 100%;
+                margin-bottom: 1rem;
             }
         }
     </style>
@@ -234,25 +345,45 @@
         <div class="header">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h1 class="mb-1">🌱 Square Planting System Calculator</h1>
-                    <p class="text-muted mb-0">Optimize your planting layout with square spacing pattern</p>
+                    <h1 class="mb-2">🌱 Square Planting System Calculator</h1>
+                    <p class="mb-0">Optimize your planting layout with square spacing pattern</p>
                 </div>
                 <div class="d-flex gap-2">
-                    <button type="button" onclick="resetForm()" class="btn btn-outline-secondary">
-                        Reset
+                    <button type="button" onclick="resetForm()" class="btn btn-outline-light">
+                        <i class="fas fa-redo-alt me-1"></i> Reset
                     </button>
-                    <a href="{{ route('dashboard') }}" class="btn btn-success">
-                        ← Back to Dashboard
+                    <a href="{{ route('dashboard') }}" class="btn btn-light">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
                     </a>
                 </div>
             </div>
         </div>
         
+        <!-- Success/Error Messages -->
+        @if(isset($success))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>{{ $success }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <ul class="mb-0">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        
         <form id="squareForm" action="{{ route('calculate.plants') }}" method="POST">
             @csrf
             <div class="row">
                 <div class="col-md-6">
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="areaLength" class="form-label">Area Length</label>
                         <div class="input-group">
                             <input type="number" class="form-control" id="areaLength" name="areaLength" step="0.01" min="0.01" required value="{{ old('areaLength', isset($inputs) ? $inputs['areaLength'] : '10') }}">
@@ -265,7 +396,7 @@
                         </div>
                     </div>
                     
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="areaWidth" class="form-label">Area Width</label>
                         <div class="input-group">
                             <input type="number" class="form-control" id="areaWidth" name="areaWidth" step="0.01" min="0.01" required value="{{ old('areaWidth', isset($inputs) ? $inputs['areaWidth'] : '8') }}">
@@ -280,27 +411,27 @@
                 </div>
                 
                 <div class="col-md-6">
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="plantSpacing" class="form-label">Plant Spacing</label>
                         <div class="spacing-inputs">
                             <div class="spacing-input">
                                 <label class="form-label small">Between Plants</label>
                                 <div class="input-group">
-                                                                <input type="number" class="form-control" id="plantSpacing" name="plantSpacing" step="0.01" min="0.01" required value="{{ old('plantSpacing', isset($inputs) ? $inputs['plantSpacing'] : '0.3') }}">
+                                    <input type="number" class="form-control" id="plantSpacing" name="plantSpacing" step="0.01" min="0.01" required value="{{ old('plantSpacing', isset($inputs) ? $inputs['plantSpacing'] : '0.3') }}">
                                     <span class="input-group-text">m</span>
                                 </div>
                             </div>
                             <div class="spacing-input">
                                 <label class="form-label small">Between Rows</label>
                                 <div class="input-group">
-                                                                <input type="number" class="form-control" id="rowSpacing" name="rowSpacing" step="0.01" min="0.01" required value="{{ old('rowSpacing', isset($inputs) ? $inputs['rowSpacing'] : '0.3') }}">
+                                    <input type="number" class="form-control" id="rowSpacing" name="rowSpacing" step="0.01" min="0.01" required value="{{ old('rowSpacing', isset($inputs) ? $inputs['rowSpacing'] : '0.3') }}">
                                     <span class="input-group-text">m</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="borderSpacing" class="form-label">Border Spacing</label>
                         <div class="input-group">
                             <input type="number" class="form-control" id="borderSpacing" name="borderSpacing" step="0.01" min="0" value="{{ old('borderSpacing', isset($inputs) ? $inputs['borderSpacing'] : '0.5') }}" required>
@@ -312,54 +443,60 @@
                             </select>
                         </div>
                         <div class="auto-border-info">
-                            <input type="checkbox" id="autoBorder" name="autoBorder" value="1" {{ old('autoBorder', isset($inputs) ? $inputs['autoBorder'] : true) ? 'checked' : '' }}> 
-                            <label for="autoBorder">Auto-calculate border spacing based on plant spacing</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="autoBorder" name="autoBorder" value="1" {{ old('autoBorder', isset($inputs) ? $inputs['autoBorder'] : true) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="autoBorder">
+                                    Auto-calculate border spacing based on plant spacing
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             
             <div class="text-center mt-4">
-                <button type="submit" id="calculateBtn" class="btn btn-calculate btn-lg">Calculate</button>
+                <button type="submit" id="calculateBtn" class="btn btn-calculate btn-lg">
+                    <i class="fas fa-calculator me-2"></i> Calculate
+                </button>
             </div>
         </form>
         
         @if(isset($results))
         <div class="results-container mt-4">
-            <h3 class="mb-4">Calculation Results</h3>
+            <h3 class="mb-4"><i class="fas fa-chart-bar me-2"></i>Calculation Results</h3>
             <div class="row">
                 <div class="col-md-6">
                     <div class="d-flex justify-content-between border-bottom py-2">
-                        <span>Number of Plants:</span>
+                        <span><i class="fas fa-seedling me-2 text-success"></i>Number of Plants:</span>
                         <span class="result-value">{{ $results['totalPlants'] }}</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
-                        <span>Plants per Row:</span>
+                        <span><i class="fas fa-list me-2 text-success"></i>Plants per Row:</span>
                         <span class="result-value">{{ $results['plantsPerRow'] }}</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
-                        <span>Number of Rows:</span>
+                        <span><i class="fas fa-bars me-2 text-success"></i>Number of Rows:</span>
                         <span class="result-value">{{ $results['numberOfRows'] }}</span>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="d-flex justify-content-between border-bottom py-2">
-                        <span>Effective Area:</span>
+                        <span><i class="fas fa-ruler-combined me-2 text-success"></i>Effective Area:</span>
                         <span class="result-value">{{ $results['effectiveArea'] }} m²</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
-                        <span>Planting Density:</span>
+                        <span><i class="fas fa-chart-pie me-2 text-success"></i>Planting Density:</span>
                         <span class="result-value">{{ $results['plantingDensity'] }} plants/m²</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
-                        <span>Space Utilization:</span>
+                        <span><i class="fas fa-percentage me-2 text-success"></i>Space Utilization:</span>
                         <span class="result-value">{{ $results['spaceUtilization'] }}%</span>
                     </div>
                 </div>
             </div>
             
             <div class="alert alert-success mt-3">
-                <strong>Calculation completed successfully!</strong> Results saved to your history.
+                <i class="fas fa-check-circle me-2"></i><strong>Calculation completed successfully!</strong> Results saved to your history.
             </div>
         </div>
         @endif
@@ -367,8 +504,8 @@
         <!-- Visualization Area -->
         @if(isset($results))
         <div class="visualization-container mt-4">
-            <h4 class="mb-3">Plant Layout Visualization</h4>
-            <div class="visualization" id="visualization" style="min-height: 300px; border: 2px solid #28a745; border-radius: 8px; position: relative; background: #f8f9fa; padding: 20px;">
+            <h4 class="mb-3"><i class="fas fa-project-diagram me-2"></i>Plant Layout Visualization</h4>
+            <div class="visualization" id="visualization">
                 <div class="text-center mb-3">
                     <h5 class="text-success">{{ $results['totalPlants'] }} Plants Layout</h5>
                     <p class="small text-muted">{{ $results['plantsPerRow'] }} plants per row × {{ $results['numberOfRows'] }} rows</p>
@@ -418,8 +555,8 @@
         </div>
         @else
         <div class="visualization-container mt-4">
-            <h4 class="mb-3">Plant Layout Visualization</h4>
-            <div class="visualization" id="visualization" style="min-height: 300px; border: 2px dashed #ccc; border-radius: 8px; position: relative; background: #f8f9fa;">
+            <h4 class="mb-3"><i class="fas fa-project-diagram me-2"></i>Plant Layout Visualization</h4>
+            <div class="visualization" id="visualization">
                 <div class="text-center text-muted p-5">
                     <i class="fas fa-calculator fa-3x mb-3"></i>
                     <p>Visualization will appear here after calculation</p>
@@ -434,94 +571,16 @@
         <p>Square Planting System Calculator &copy; {{ date('Y') }}</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        <script>
-        // Auto-border functionality
-        document.getElementById('autoBorder').addEventListener('change', function() {
-        
-        function generateVisualization(plantsPerRow, numberOfRows, plantSpacing, rowSpacing, borderSpacing, effectiveLength, effectiveWidth) {
-            const visualization = document.getElementById('visualization');
-            visualization.innerHTML = '';
-            
-            // Create container for the pattern
-            const container = document.createElement('div');
-            container.className = 'square-pattern';
-            visualization.appendChild(container);
-            
-            // Calculate scaling factors to fit visualization
-            const visWidth = visualization.clientWidth - 40;
-            const visHeight = visualization.clientHeight - 40;
-            
-            const scaleX = visWidth / effectiveLength;
-            const scaleY = visHeight / effectiveWidth;
-            const scale = Math.min(scaleX, scaleY);
-            
-            // Calculate scaled values
-            const scaledPlantSpacing = plantSpacing * scale;
-            const scaledRowSpacing = rowSpacing * scale;
-            
-            // Add grid lines for better visualization of the pattern
-            const gridLines = document.createElement('div');
-            gridLines.className = 'grid-lines';
-            
-            // Add horizontal lines (rows)
-            for (let row = 0; row <= numberOfRows; row++) {
-                const yPos = row * scaledRowSpacing;
-                if (yPos <= visHeight) {
-                    const line = document.createElement('div');
-                    line.className = 'grid-line horizontal';
-                    line.style.top = yPos + 'px';
-                    gridLines.appendChild(line);
-                }
-            }
-            
-            // Add vertical lines (columns)
-            for (let col = 0; col <= plantsPerRow; col++) {
-                const xPos = col * scaledPlantSpacing;
-                if (xPos <= visWidth) {
-                    const line = document.createElement('div');
-                    line.className = 'grid-line vertical';
-                    line.style.left = xPos + 'px';
-                    gridLines.appendChild(line);
-                }
-            }
-            
-            container.appendChild(gridLines);
-            
-            // Add plants - only show a representative pattern (max 6x6 grid)
-            const maxRowsToShow = Math.min(numberOfRows, 6);
-            const maxColsToShow = Math.min(plantsPerRow, 6);
-            
-            for (let row = 0; row < maxRowsToShow; row++) {
-                const yPos = row * scaledRowSpacing;
-                
-                for (let col = 0; col < maxColsToShow; col++) {
-                    const xPos = col * scaledPlantSpacing;
-                    
-                    const plant = document.createElement('div');
-                    plant.className = 'plant';
-                    plant.style.left = xPos + 'px';
-                    plant.style.top = yPos + 'px';
-                    
-                    container.appendChild(plant);
-                }
-            }
-            
-            // Add info text about the pattern
-            const infoText = document.createElement('div');
-            infoText.className = 'visualization-info';
-            infoText.innerHTML = `Showing ${maxRowsToShow} rows × ${maxColsToShow} plants pattern`;
-            container.appendChild(infoText);
-        }
-        
         // Auto-border functionality
         document.getElementById('autoBorder').addEventListener('change', function() {
             const borderInput = document.getElementById('borderSpacing');
             borderInput.disabled = this.checked;
             
             if (this.checked) {
-                const plantSpacing = parseFloat(document.getElementById('plantSpacing').value) || 1.5;
-                const rowSpacing = parseFloat(document.getElementById('rowSpacing').value) || 1.5;
+                const plantSpacing = parseFloat(document.getElementById('plantSpacing').value) || 0.3;
+                const rowSpacing = parseFloat(document.getElementById('rowSpacing').value) || 0.3;
                 const borderSpacing = Math.max(plantSpacing, rowSpacing) / 2;
                 borderInput.value = borderSpacing.toFixed(2);
             }
@@ -537,6 +596,21 @@
             // Re-trigger auto-border functionality
             document.getElementById('autoBorder').dispatchEvent(new Event('change'));
         }
+        
+        // Add subtle animations to form elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const formElements = document.querySelectorAll('.form-control, .form-select, .btn');
+            
+            formElements.forEach(element => {
+                element.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focus');
+                });
+                
+                element.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('focus');
+                });
+            });
+        });
     </script>
 </body>
 </html>

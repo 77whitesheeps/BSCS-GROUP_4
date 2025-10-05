@@ -9,7 +9,8 @@ class AddPlantTypeToPlantCalculationsTable extends Migration
     public function up()
     {
         Schema::table('plant_calculations', function (Blueprint $table) {
-            $table->string('plant_type')->nullable();
+            // Remove or comment out the following line to prevent duplicate column error
+            // $table->string('plant_type')->nullable();
         });
     }
 
