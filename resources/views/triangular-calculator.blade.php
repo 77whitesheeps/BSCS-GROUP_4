@@ -84,8 +84,7 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
-        .btn-calculate:hover {
+.btn-calculate:hover {
             background-color: var(--dark-color);
             border-color: var(--dark-color);
             transform: translateY(-2px);
@@ -396,9 +395,7 @@
                     <button type="button" onclick="resetForm()" class="btn btn-outline-light">
                         <i class="fas fa-redo-alt me-1"></i> Reset
                     </button>
-                    <a href="#" class="btn btn-light">
-                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
-                    </a>
+                    <a href="{{ route('dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
                 </div>
             </div>
         </div>
