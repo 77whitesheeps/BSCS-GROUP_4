@@ -110,17 +110,6 @@
                         <span>Help & Support</span>
                     </a>
                 </li>
-
-                <!-- Logout for Mobile -->
-                <li class="d-lg-none border-top">
-                    <form method="POST" action="{{ route('logout') }}" class="m-0">
-                        @csrf
-                        <button type="submit" class="btn btn-link text-start w-100 border-0 bg-transparent p-3">
-                            <i class="fas fa-sign-out-alt me-2"></i>
-                            <span>Logout</span>
-                        </button>
-                    </form>
-                </li>
             </ul>
         </nav>
     </div>

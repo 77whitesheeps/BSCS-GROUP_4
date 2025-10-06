@@ -12,8 +12,6 @@
         </a>
 
         <!-- Mobile Sidebar Toggle -->
-        <button class="navbar-toggler d-lg-none mobile-sidebar-toggle" type="button">
-            <i class="fas fa-bars text-white"></i>
         </button>
 
         <!-- Right Side Navbar -->
