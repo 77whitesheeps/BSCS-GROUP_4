@@ -12,18 +12,18 @@ class DashboardController extends Controller
     public function index()
     {
         $user = auth()->user();
-        
+
         // Get user's calculation statistics
         $userCalculations = PlantCalculation::where('user_id', $user->id);
         $userGardenPlans = GardenPlan::where('user_id', $user->id);
 
         $data = [
-            'totalCalculations' => $userCalculations->count(),
-            'plantTypes' => $userCalculations->whereNotNull('plant_type')->distinct('plant_type')->count('plant_type'),
-            'plantsCalculated' => $userCalculations->sum('total_plants'),
-            'totalAreaPlanned' => $this->formatArea($userCalculations->sum('total_area')),
-            'totalPlans' => $userGardenPlans->count(),
-            'totalGardenAreaPlanned' => $this->formatArea($userGardenPlans->sum('total_area')),
+            'totalCalculations' => $user->total_calculations,
+            'plantTypes' => $user->total_plant_types,
+            'plantsCalculated' => $user->total_plants_calculated,
+            'totalAreaPlanned' => $this->formatArea($user->total_area_planned),
+            'totalPlans' => $user->total_plans,
+            'totalGardenAreaPlanned' => $this->formatArea($user->total_garden_area_planned),
             'recentCalculations' => PlantCalculation::where('user_id', $user->id)
                                                    ->latest()
                                                    ->limit(5)

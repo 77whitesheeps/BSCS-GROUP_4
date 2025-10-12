@@ -45,18 +45,26 @@ class QuincunxCalculatorController extends Controller
             'areaLength' => 'required|numeric|min:0.01',
             'areaWidth' => 'required|numeric|min:0.01',
             'plantSpacing' => 'required|numeric|min:0.01',
+            'rowSpacing' => 'required|numeric|min:0.01',
             'borderSpacing' => 'required|numeric|min:0',
             'lengthUnit' => 'required|in:m,ft,cm,in',
             'widthUnit' => 'required|in:m,ft,cm,in',
             'spacingUnit' => 'required|in:m,ft,cm,in',
+            'rowSpacingUnit' => 'required|in:m,ft,cm,in',
             'borderUnit' => 'required|in:m,ft,cm,in',
         ], [
             'areaLength.required' => 'Area length is required.',
             'areaLength.min' => 'Area length must be greater than 0.',
             'plantSpacing.min' => 'Plant spacing must be greater than 0.',
+            'rowSpacing.min' => 'Row spacing must be greater than 0.',
+            'borderSpacing.required' => 'Border spacing is required.',
+            'spacingUnit.required' => 'Spacing unit is required.',
+            'rowSpacingUnit.required' => 'Row spacing unit is required.',
         ]);
 
         try {
+            \Log::info('Quincunx calculation started for user: ' . auth()->id());
+
             // Convert all to meters for calculation
             $conversionRates = [
                 'm' => 1,
@@ -68,10 +76,11 @@ class QuincunxCalculatorController extends Controller
             $lengthM = $validated['areaLength'] * $conversionRates[$validated['lengthUnit']];
             $widthM = $validated['areaWidth'] * $conversionRates[$validated['widthUnit']];
             $plantSpacingM = $validated['plantSpacing'] * $conversionRates[$validated['spacingUnit']];
+            $rowSpacingM = $validated['rowSpacing'] * $conversionRates[$validated['rowSpacingUnit']];
             $borderSpacingM = $validated['borderSpacing'] * $conversionRates[$validated['borderUnit']];
 
-            // Calculate the recommended minimum border spacing (half of plant spacing)
-            $recommendedBorderSpacingM = $plantSpacingM / 2;
+            // Calculate the recommended minimum border spacing (half of max spacing)
+            $recommendedBorderSpacingM = max($plantSpacingM, $rowSpacingM) / 2;
 
             // Use the greater of the user's border input or the recommended value
             $effectiveBorderSpacingM = max($borderSpacingM, $recommendedBorderSpacingM);
@@ -94,7 +103,7 @@ class QuincunxCalculatorController extends Controller
             }
 
             // Calculate quincunx pattern properly
-            $results = $this->calculateQuincunxPattern($effectiveLength, $effectiveWidth, $plantSpacingM);
+            $results = $this->calculateQuincunxPattern($effectiveLength, $effectiveWidth, $plantSpacingM, $rowSpacingM);
             
             // Add area information
             $results['effectiveArea'] = round($effectiveLength * $effectiveWidth, 2);
@@ -106,31 +115,46 @@ class QuincunxCalculatorController extends Controller
             // Add recommended border to results
             $results['recommendedBorderSpacingM'] = round($recommendedBorderSpacingM, 2);
 
+            // Update user totals after calculation
+            $user = Auth::user();
+            $user->total_calculations += 1;
+            $user->total_plants_calculated += $results['totalPlants'];
+            $user->total_area_planned += $results['totalArea'];
+            $user->save();
+
             // Save calculation to database
+            \Log::info('Attempting to save quincunx calculation for user: ' . auth()->id());
             try {
                 $calculation = PlantCalculation::create([
                     'user_id' => auth()->id(),
-                    'plant_type' => $validated['plantType'],
                     'calculation_name' => 'Quincunx Pattern - ' . now()->format('M j, Y g:i A'),
                     'calculation_type' => 'quincunx',
+                    'plant_type' => $validated['plantType'],
                     'area_length' => $lengthM,
                     'area_width' => $widthM,
-                    'area_length_unit' => 'm',
-                    'area_width_unit' => 'm',
                     'plant_spacing' => $plantSpacingM,
-                    'plant_spacing_unit' => 'm',
-                    'total_plants' => $results['totalPlants'],
-                    'rows' => $results['numberOfRows'] ?? 0,
-                    'columns' => $results['plantsPerRow'] ?? 0,
-                    'effective_length' => $effectiveLength,
-                    'effective_width' => $effectiveWidth,
-                    'total_area' => $results['totalArea'],
+                    'row_spacing' => $rowSpacingM,
                     'border_spacing' => $effectiveBorderSpacingM,
+                    'total_plants' => $results['totalPlants'],
+                    'plants_per_row' => $results['plantsPerRow'] ?? 0,
+                    'number_of_rows' => $results['numberOfRows'] ?? 0,
+                    'effective_area' => $results['effectiveArea'],
+                    'planting_density' => $results['plantingDensity'],
+                    'space_utilization' => $results['efficiency'] ?? 0,
+                    'input_units' => json_encode([
+                        'length_unit' => $validated['lengthUnit'],
+                        'width_unit' => $validated['widthUnit'],
+                        'spacing_unit' => $validated['spacingUnit'],
+                        'row_spacing_unit' => $validated['rowSpacingUnit'],
+                        'border_unit' => $validated['borderUnit']
+                    ]),
+                    'total_area' => $results['totalArea'],
                     'is_saved' => false,
                 ]);
+                \Log::info('Quincunx calculation saved successfully with ID: ' . $calculation->id);
             } catch (\Exception $saveError) {
                 // Log the error but don't break the calculation
-                \Log::error('Failed to save calculation: ' . $saveError->getMessage());
+                \Log::error('Failed to save quincunx calculation: ' . $saveError->getMessage());
             }
 
             return view('quincunx-calculator', [
@@ -150,40 +174,38 @@ class QuincunxCalculatorController extends Controller
      *
      * @param  float  $length
      * @param  float  $width
-     * @param  float  $spacing
+     * @param  float  $plantSpacing
+     * @param  float  $rowSpacing
      * @return array
      */
-    private function calculateQuincunxPattern($length, $width, $spacing)
+    private function calculateQuincunxPattern($length, $width, $plantSpacing, $rowSpacing)
     {
-        // Row spacing for quincunx pattern (triangular spacing)
-        $rowSpacing = $spacing * sqrt(3) / 2;
-        
         // Calculate number of rows that fit
         $numberOfRows = floor($width / $rowSpacing) + 1;
-        
+
         // Horizontal offset for alternating rows
-        $horizontalOffset = $spacing / 2;
-        
+        $horizontalOffset = $plantSpacing / 2;
+
         $totalPlants = 0;
         $rowDetails = [];
-        
+
         for ($row = 0; $row < $numberOfRows; $row++) {
             $isOffsetRow = $row % 2 == 1;
-            
+
             // Calculate available length for this row
             $availableLength = $isOffsetRow ? $length - $horizontalOffset : $length;
-            
+
             // Skip if not enough space for even one plant
             if ($availableLength < 0) {
                 continue;
             }
-            
+
             // Plants in this row
-            $plantsInRow = floor($availableLength / $spacing) + 1;
-            
+            $plantsInRow = floor($availableLength / $plantSpacing) + 1;
+
             // Ensure at least one plant if there's any space
             $plantsInRow = max(0, $plantsInRow);
-            
+
             $totalPlants += $plantsInRow;
             $rowDetails[] = [
                 'row' => $row + 1,
@@ -191,15 +213,16 @@ class QuincunxCalculatorController extends Controller
                 'offset' => $isOffsetRow
             ];
         }
-        
+
         // Calculate theoretical vs actual efficiency
-        $theoreticalDensity = 2 / (sqrt(3) * pow($spacing, 2)); // Plants per square meter in perfect quincunx
+        $theoreticalDensity = 2 / (sqrt(3) * pow($plantSpacing, 2)); // Plants per square meter in perfect quincunx
         $actualDensity = $totalPlants / ($length * $width);
         $efficiency = ($actualDensity / $theoreticalDensity) * 100;
-        
+
         return [
             'totalPlants' => (int) $totalPlants,
             'numberOfRows' => (int) $numberOfRows,
+            'plantsPerRow' => $numberOfRows > 0 ? round($totalPlants / $numberOfRows, 1) : 0,
             'rowSpacing' => round($rowSpacing, 3),
             'efficiency' => round($efficiency, 1),
             'averagePlantsPerRow' => $numberOfRows > 0 ? round($totalPlants / $numberOfRows, 1) : 0,

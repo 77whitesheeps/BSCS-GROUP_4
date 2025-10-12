@@ -120,7 +120,7 @@
                 <div class="card-body">
                     <div class="row text-center">
                         <div class="col-6">
-                            <div class="stat-number">{{ $user->plantCalculations->count() ?? 0 }}</div>
+                            <div class="stat-number">{{ $user->total_calculations ?? 0 }}</div>
                             <small class="text-muted">Calculations</small>
                         </div>
                         <div class="col-6">
