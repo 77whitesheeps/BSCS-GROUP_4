@@ -90,6 +90,10 @@ Route::get('/print-report', [PlantReportController::class, 'printReport'])->name
     Route::post('/garden-planner/save', [GardenPlannerController::class, 'save'])->name('garden.planner.save');
     Route::put('/garden-planner/{id}', [GardenPlannerController::class, 'update'])->name('garden.planner.update');
     Route::delete('/garden-planner/{id}', [GardenPlannerController::class, 'delete'])->name('garden.planner.delete');
+    // Enhanced garden planner features
+    Route::post('/garden-planner/{id}/import-calculation', [GardenPlannerController::class, 'importCalculation'])->name('garden.planner.import-calculation');
+    Route::patch('/garden-planner/{id}/task-status', [GardenPlannerController::class, 'updateTaskStatus'])->name('garden.planner.task-status');
+    Route::get('/garden-planner/statistics', [GardenPlannerController::class, 'getStatistics'])->name('garden.planner.statistics');
 
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
