@@ -26,7 +26,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['email_notifications', 'theme', 'language', 'default_garden_size', 'auto_save_calculations', 'export_format']);
+            $table->dropColumn(['email_notifications', 'theme', 'default_garden_size', 'auto_save_calculations', 'export_format']);
         });
     }
 };

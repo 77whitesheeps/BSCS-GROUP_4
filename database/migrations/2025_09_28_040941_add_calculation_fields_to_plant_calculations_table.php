@@ -28,9 +28,12 @@ return new class extends Migration
     public function down()
     {
         Schema::table('plant_calculations', function (Blueprint $table) {
-            // Drop foreign key first (replace 'fk_name' with your actual foreign key name)
-            $table->dropForeign(['user_id']); // or $table->dropForeign('plant_calculations_user_id_foreign');
-            // Now drop the index
+            // Drop the columns added in the up() method
+            $table->dropColumn(['calculation_name', 'notes', 'is_saved']);
+            
+            // Drop the indexes added in the up() method
+            $table->dropIndex(['user_id', 'created_at']);
+            $table->dropIndex(['user_id', 'is_saved']);
             $table->dropIndex(['user_id', 'calculation_type']);
         });
     }
