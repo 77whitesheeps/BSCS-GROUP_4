@@ -3,17 +3,23 @@ If using Laragon, go to:
 C:\laragon\www
 If using XAMPP, go to:
 C:\xampp\htdocs
+
 Step 2: Clone the Repository
 Open your terminal inside the folder (www or htdocs) and run:
 git clone https://github.com/77whitesheeps/G4_APP-DEV.git
+
 Step 3: Navigate to the Project Directory
 cd G4_APP-DEV
+
 Step 4: Install Dependencies
 composer install
+
 Step 5: Create the Environment File:
 cp .env.example .env
+
 Step 6: Generate the Application Key: 
 php artisan key:generate
+
 Step 7: Configure the .env File
 Open the newly created .env file and update the following lines:
 DB_CONNECTION=mysql
@@ -33,6 +39,7 @@ MAIL_PASSWORD=uzokbffhnyrecfoj
 MAIL_FROM_ADDRESS="plantomatic50@gmail.com"
 MAIL_FROM_NAME="Plant_o_matic"
 MAIL_ENCRYPTION=tls
+
 
 Step 8: Run the Database Migrations:
 php artisan migrate
