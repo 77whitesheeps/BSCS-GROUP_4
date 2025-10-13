@@ -544,6 +544,7 @@ font-weight: 700;
         <p>Square Planting System Calculator &copy; 2023</p>
     </footer>
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Plant type recommendations
@@ -610,6 +611,29 @@ font-weight: 700;
             document.getElementById('autoBorder').dispatchEvent(new Event('change'));
         }
         
+        // Function to save calculation to server
+        function saveCalculationToServer(data) {
+            fetch('/calculate-plants', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Calculation saved successfully');
+                } else {
+                    console.error('Failed to save calculation:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving calculation:', error);
+            });
+        }
+
         // Calculate button handler
         document.getElementById('calculateBtn').addEventListener('click', function() {
             // Get form values
@@ -619,7 +643,7 @@ font-weight: 700;
             const rowSpacing = parseFloat(document.getElementById('rowSpacing').value);
             const borderSpacing = parseFloat(document.getElementById('borderSpacing').value);
             const plantType = document.getElementById('plantType').value;
-            
+
             // Validate inputs
             const errors = [];
             if (!areaLength || areaLength <= 0) errors.push("Area length must be a positive number");
@@ -627,7 +651,7 @@ font-weight: 700;
             if (!plantSpacing || plantSpacing <= 0) errors.push("Plant spacing must be a positive number");
             if (!rowSpacing || rowSpacing <= 0) errors.push("Row spacing must be a positive number");
             if (!borderSpacing || borderSpacing < 0) errors.push("Border spacing must be a non-negative number");
-            
+
             if (errors.length > 0) {
                 // Show errors
                 document.getElementById('errorList').innerHTML = errors.map(error => `<li>${error}</li>`).join('');
@@ -636,11 +660,11 @@ font-weight: 700;
                 document.getElementById('resultsContainer').classList.add('d-none');
                 return;
             }
-            
+
             // Calculate results
             const effectiveLength = areaLength - (2 * borderSpacing);
             const effectiveWidth = areaWidth - (2 * borderSpacing);
-            
+
             // Ensure effective dimensions are positive
             if (effectiveLength <= 0 || effectiveWidth <= 0) {
                 errors.push("Border spacing is too large for the given area dimensions");
@@ -650,14 +674,14 @@ font-weight: 700;
                 document.getElementById('resultsContainer').classList.add('d-none');
                 return;
             }
-            
+
             const plantsPerRow = Math.floor(effectiveLength / plantSpacing);
             const numberOfRows = Math.floor(effectiveWidth / rowSpacing);
             const totalPlants = plantsPerRow * numberOfRows;
             const effectiveArea = effectiveLength * effectiveWidth;
             const plantingDensity = totalPlants / effectiveArea;
             const spaceUtilization = (totalPlants * plantSpacing * rowSpacing) / (areaLength * areaWidth) * 100;
-            
+
             // Update results
             document.getElementById('totalPlants').textContent = totalPlants;
             document.getElementById('plantsPerRow').textContent = plantsPerRow;
@@ -665,14 +689,28 @@ font-weight: 700;
             document.getElementById('effectiveArea').textContent = effectiveArea.toFixed(2) + ' m²';
             document.getElementById('plantingDensity').textContent = plantingDensity.toFixed(2) + ' plants/m²';
             document.getElementById('spaceUtilization').textContent = spaceUtilization.toFixed(1) + '%';
-            
+
             // Show results
             document.getElementById('resultsContainer').classList.remove('d-none');
             document.getElementById('successAlert').classList.remove('d-none');
             document.getElementById('errorAlert').classList.add('d-none');
-            
+
             // Update visualization
             updateVisualization(plantsPerRow, numberOfRows, plantType);
+
+            // Save calculation to server
+            saveCalculationToServer({
+                plantType: plantType,
+                areaLength: areaLength,
+                areaWidth: areaWidth,
+                plantSpacing: plantSpacing,
+                rowSpacing: rowSpacing,
+                borderSpacing: borderSpacing,
+                lengthUnit: document.getElementById('lengthUnit').value,
+                widthUnit: document.getElementById('widthUnit').value,
+                borderUnit: document.getElementById('borderUnit').value,
+                autoBorder: document.getElementById('autoBorder').checked ? 1 : 0
+            });
         });
         
         // Function to update visualization

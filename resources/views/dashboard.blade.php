@@ -214,9 +214,9 @@
                     </div>
                     
                     <div class="text-center mt-3">
-                        <button class="btn btn-outline-primary btn-sm">
+                        <a href="{{ route('calculations.history') }}" class="btn btn-outline-primary btn-sm">
                             View All Activity
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

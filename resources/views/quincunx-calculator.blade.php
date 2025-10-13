@@ -390,20 +390,27 @@
         </div>
         
         <!-- Success/Error Messages -->
-        <div class="alert alert-success alert-dismissible fade show d-none" role="alert" id="successAlert">
-            <i class="fas fa-check-circle me-2"></i>Calculation completed successfully!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
-        <div class="alert alert-danger alert-dismissible fade show d-none" role="alert" id="errorAlert">
-            <i class="fas fa-exclamation-circle me-2"></i>
-            <ul class="mb-0" id="errorList">
-                <!-- Errors will be populated here -->
-            </ul>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+        @if($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <ul class="mb-0">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         
-        <form id="quincunxForm">
+        <form id="quincunxForm" action="{{ route('calculate.quincunx') }}" method="POST">
+            @csrf
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-4">
@@ -456,14 +463,24 @@
                                 <label class="form-label small">Between Plants</label>
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="plantSpacing" name="plantSpacing" step="0.01" min="0.01" required value="0.3">
-                                    <span class="input-group-text">m</span>
+                                    <select class="form-select" id="spacingUnit" name="spacingUnit">
+                                        <option value="m" selected>Meters (m)</option>
+                                        <option value="ft">Feet (ft)</option>
+                                        <option value="cm">Centimeters (cm)</option>
+                                        <option value="in">Inches (in)</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="spacing-input">
                                 <label class="form-label small">Between Rows</label>
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="rowSpacing" name="rowSpacing" step="0.01" min="0.01" required value="0.3">
-                                    <span class="input-group-text">m</span>
+                                    <select class="form-select" id="rowSpacingUnit" name="rowSpacingUnit">
+                                        <option value="m" selected>Meters (m)</option>
+                                        <option value="ft">Feet (ft)</option>
+                                        <option value="cm">Centimeters (cm)</option>
+                                        <option value="in">Inches (in)</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -511,50 +528,50 @@
             </div>
             
             <div class="text-center mt-4">
-                <button type="button" id="calculateBtn" class="btn btn-calculate btn-lg">
+                <button type="submit" id="calculateBtn" class="btn btn-calculate btn-lg">
                     <i class="fas fa-calculator me-2"></i> Calculate
                 </button>
             </div>
         </form>
         
-        <div class="results-container mt-4 d-none" id="resultsContainer">
+        <div class="results-container mt-4 @if(!$results) d-none @endif" id="resultsContainer">
             <h3 class="mb-4"><i class="fas fa-chart-bar me-2"></i>Calculation Results</h3>
             <div class="row">
                 <div class="col-md-6">
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-seedling me-2 text-success"></i>Number of Plants:</span>
-                        <span class="result-value" id="totalPlants">0</span>
+                        <span class="result-value" id="totalPlants">{{ $results['totalPlants'] ?? 0 }}</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-list me-2 text-success"></i>Plants per Row:</span>
-                        <span class="result-value" id="plantsPerRow">0</span>
+                        <span class="result-value" id="plantsPerRow">{{ $results['plantsPerRow'] ?? 0 }}</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-bars me-2 text-success"></i>Number of Rows:</span>
-                        <span class="result-value" id="numberOfRows">0</span>
+                        <span class="result-value" id="numberOfRows">{{ $results['numberOfRows'] ?? 0 }}</span>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-ruler-combined me-2 text-success"></i>Effective Area:</span>
-                        <span class="result-value" id="effectiveArea">0 m²</span>
+                        <span class="result-value" id="effectiveArea">{{ number_format($results['effectiveArea'] ?? 0, 2) }} m²</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-chart-pie me-2 text-success"></i>Planting Density:</span>
-                        <span class="result-value" id="plantingDensity">0 plants/m²</span>
+                        <span class="result-value" id="plantingDensity">{{ number_format($results['plantingDensity'] ?? 0, 2) }} plants/m²</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-percentage me-2 text-success"></i>Space Utilization:</span>
-                        <span class="result-value" id="spaceUtilization">0%</span>
+                        <span class="result-value" id="spaceUtilization">{{ number_format($results['spaceUtilization'] ?? 0, 1) }}%</span>
                     </div>
                 </div>
             </div>
-            
+
             <div class="row mt-3">
                 <div class="col-12">
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-leaf me-2 text-success"></i>Pattern Efficiency:</span>
-                        <span class="result-value" id="patternEfficiency">0%</span>
+                        <span class="result-value" id="patternEfficiency">{{ $results['efficiency'] ?? 0 }}%</span>
                     </div>
                     <small class="text-muted">Compared to square planting pattern</small>
                 </div>
@@ -569,11 +586,19 @@
         <div class="visualization-container mt-4">
             <h4 class="mb-3"><i class="fas fa-project-diagram me-2"></i>Plant Layout Visualization</h4>
             <div class="visualization" id="visualization">
-                <div class="text-center text-muted p-5">
-                    <i class="fas fa-calculator fa-3x mb-3"></i>
-                    <p>Visualization will appear here after calculation</p>
-                    <p class="small">The quincunx pattern arranges plants in a staggered formation</p>
-                </div>
+                @if($results)
+                    <div class="text-center text-muted p-5">
+                        <i class="fas fa-calculator fa-3x mb-3"></i>
+                        <p>Visualization would show {{ $results['totalPlants'] }} plants in quincunx pattern</p>
+                        <p class="small">The quincunx pattern arranges plants in a staggered formation</p>
+                    </div>
+                @else
+                    <div class="text-center text-muted p-5">
+                        <i class="fas fa-calculator fa-3x mb-3"></i>
+                        <p>Visualization will appear here after calculation</p>
+                        <p class="small">The quincunx pattern arranges plants in a staggered formation</p>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -599,13 +624,16 @@
         // Auto-border functionality
         document.getElementById('autoBorder').addEventListener('change', function() {
             const borderInput = document.getElementById('borderSpacing');
-            borderInput.disabled = this.checked;
             
             if (this.checked) {
+                borderInput.readOnly = true;
                 const plantSpacing = parseFloat(document.getElementById('plantSpacing').value) || 0.3;
                 const rowSpacing = parseFloat(document.getElementById('rowSpacing').value) || 0.3;
-                const borderSpacing = Math.max(plantSpacing, rowSpacing) / 2;
-                borderInput.value = borderSpacing.toFixed(2);
+                const borderSpacingValue = Math.max(plantSpacing, rowSpacing) / 2;
+                borderInput.value = borderSpacingValue.toFixed(2);
+            } else {
+                borderInput.readOnly = false;
+                borderInput.value = '0.5'; // Default value when unchecked
             }
         });
         

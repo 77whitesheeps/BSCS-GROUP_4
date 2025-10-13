@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PlantCalculation extends Model
 {
@@ -33,6 +34,7 @@ class PlantCalculation extends Model
         'calculation_name',
         'notes',
         'is_saved',
+        'plant_type',
     ];
 
     protected $casts = [
@@ -57,8 +59,29 @@ class PlantCalculation extends Model
         'updated_at' => 'datetime',
     ];
 
+    protected static function booted()
+    {
+        static::created(function ($calculation) {
+            $calculation->updateUserTotals();
+        });
+
+        static::updated(function ($calculation) {
+            $calculation->updateUserTotals();
+        });
+
+        static::deleted(function ($calculation) {
+            $calculation->updateUserTotals();
+        });
+    }
+
+    public function updateUserTotals()
+    {
+        $this->user->updateUserTotals();
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
 }

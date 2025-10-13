@@ -19,7 +19,7 @@ class PlantingCalculatorController extends Controller
     }
 
     /**
-     * Process the calculation (if you want server-side processing too)
+     * Process the calculation (AJAX endpoint for saving calculations)
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
@@ -49,9 +49,10 @@ class PlantingCalculatorController extends Controller
 
         // Check if border spacing is too large
         if ($borderSpacing * 2 >= $areaLength || $borderSpacing * 2 >= $areaWidth) {
-            return back()->withErrors([
-                'borderSpacing' => 'Border spacing is too large. It must be less than half of the area length and width.'
-            ])->withInput();
+            return response()->json([
+                'success' => false,
+                'message' => 'Border spacing is too large. It must be less than half of the area length and width.'
+            ], 422);
         }
 
         // Calculate planting layout
@@ -79,28 +80,45 @@ class PlantingCalculatorController extends Controller
                 'calculation_type' => 'square',
                 'area_length' => $areaLength,
                 'area_width' => $areaWidth,
-                'area_length_unit' => 'm',
-                'area_width_unit' => 'm',
                 'plant_spacing' => $plantSpacing,
-                'plant_spacing_unit' => 'm',
-                // Note: row_spacing is not saved as it's the same as plant_spacing for square pattern
-                'total_plants' => $totalPlants,
-                'rows' => $numberOfRows,
-                'columns' => $plantsPerRow,
-                'effective_length' => $effectiveLength,
-                'effective_width' => $effectiveWidth,
-                'total_area' => round($areaLength * $areaWidth, 2),
+                'row_spacing' => $rowSpacing,
                 'border_spacing' => $borderSpacing,
+                'total_plants' => $totalPlants,
+                'plants_per_row' => $plantsPerRow,
+                'number_of_rows' => $numberOfRows,
+                'effective_area' => round($effectiveArea, 2),
+                'planting_density' => round($plantingDensity, 2),
+                'space_utilization' => round($spaceUtilization, 1),
+                'total_area' => round($areaLength * $areaWidth, 2),
+                'input_units' => json_encode([
+                    'length_unit' => $validated['lengthUnit'],
+                    'width_unit' => $validated['widthUnit'],
+                    'border_unit' => $validated['borderUnit'],
+                    'auto_border' => $validated['autoBorder']
+                ]),
                 'is_saved' => false,
             ];
-            
+
             // Log the data being saved for debugging
             logger()->info('Saving Square calculation data:', $calculationData);
-            
+
             $calculation = PlantCalculation::create($calculationData);
-            
+
             logger()->info('Square calculation saved successfully with ID: ' . $calculation->id);
-            
+
+            // Update user totals
+            $user = Auth::user();
+            $user->total_calculations += 1;
+            $user->total_plants_calculated += $totalPlants;
+            $user->total_area_planned += round($areaLength * $areaWidth, 2);
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Calculation saved successfully',
+                'calculation_id' => $calculation->id
+            ]);
+
         } catch (\Exception $saveError) {
             // Log the error with more details
             logger()->error('Failed to save Square calculation: ' . $saveError->getMessage(), [
@@ -108,29 +126,11 @@ class PlantingCalculatorController extends Controller
                 'trace' => $saveError->getTraceAsString(),
                 'data' => $calculationData ?? []
             ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to save calculation: ' . $saveError->getMessage()
+            ], 500);
         }
-
-        // Prepare results array for the view
-        $results = [
-            'totalPlants' => $totalPlants,
-            'plantsPerRow' => $plantsPerRow,
-            'numberOfRows' => $numberOfRows,
-            'effectiveArea' => round($effectiveArea, 2),
-            'plantingDensity' => round($plantingDensity, 2),
-            'spaceUtilization' => round($spaceUtilization, 1),
-            'effectiveLength' => round($effectiveLength, 2),
-            'effectiveWidth' => round($effectiveWidth, 2),
-            'areaLength' => $areaLength,
-            'areaWidth' => $areaWidth,
-            'plantSpacing' => $plantSpacing,
-            'rowSpacing' => $rowSpacing,
-            'borderSpacing' => $borderSpacing
-        ];
-
-        return view('planting-calculator', [
-            'results' => $results,
-            'inputs' => $validated,
-            'success' => 'Calculation completed successfully! Results saved to history.'
-        ]);
     }
 }
