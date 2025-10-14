@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Socialite;
+use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,7 +15,8 @@ class GoogleController extends Controller
 
     public function handleGoogleCallback()
     {
-        $googleUser = Socialite::driver('google')->stateless()->user();
+        // Use the normal (stateful) flow so Laravel session/state is preserved
+        $googleUser = Socialite::driver('google')->user();
 
         $user = User::firstOrCreate(
             ['email' => $googleUser->getEmail()],
@@ -27,7 +28,7 @@ class GoogleController extends Controller
 
     Auth::login($user);
 
-    // Redirect to login view with success message
-    return redirect('/login')->with('success', 'Logged in successfully with Google!');
+    // Redirect to dashboard after successful login
+    return redirect()->route('dashboard')->with('success', 'Logged in successfully with Google!');
     }
 }
