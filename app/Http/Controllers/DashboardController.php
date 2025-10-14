@@ -13,17 +13,37 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        // Get user's calculation statistics
+        // Get real-time calculation statistics directly from database
         $userCalculations = PlantCalculation::where('user_id', $user->id);
         $userGardenPlans = GardenPlan::where('user_id', $user->id);
 
+        // Calculate real-time totals
+        $totalCalculations = $userCalculations->count();
+        $plantTypes = $userCalculations->whereNotNull('plant_type')
+                                      ->distinct('plant_type')
+                                      ->count('plant_type');
+        $plantsCalculated = $userCalculations->sum('total_plants') ?? 0;
+        $totalAreaPlanned = $userCalculations->sum('total_area') ?? 0;
+        $totalPlans = $userGardenPlans->count();
+        $totalGardenAreaPlanned = $userGardenPlans->sum('total_area') ?? 0;
+
+        // Update user totals in background to keep them in sync
+        $user->update([
+            'total_calculations' => $totalCalculations,
+            'total_plant_types' => $plantTypes,
+            'total_plants_calculated' => $plantsCalculated,
+            'total_area_planned' => $totalAreaPlanned,
+            'total_plans' => $totalPlans,
+            'total_garden_area_planned' => $totalGardenAreaPlanned,
+        ]);
+
         $data = [
-            'totalCalculations' => $user->total_calculations,
-            'plantTypes' => $user->total_plant_types,
-            'plantsCalculated' => $user->total_plants_calculated,
-            'totalAreaPlanned' => $this->formatArea($user->total_area_planned),
-            'totalPlans' => $user->total_plans,
-            'totalGardenAreaPlanned' => $this->formatArea($user->total_garden_area_planned),
+            'totalCalculations' => $totalCalculations,
+            'plantTypes' => $plantTypes,
+            'plantsCalculated' => $plantsCalculated,
+            'totalAreaPlanned' => $this->formatArea($totalAreaPlanned),
+            'totalPlans' => $totalPlans,
+            'totalGardenAreaPlanned' => $this->formatArea($totalGardenAreaPlanned),
             'recentCalculations' => PlantCalculation::where('user_id', $user->id)
                                                    ->latest()
                                                    ->limit(5)

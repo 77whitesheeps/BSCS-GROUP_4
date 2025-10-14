@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Triangular Planting System Calculator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -775,6 +776,19 @@ background-color: rgba(248, 249, 250, 0.8);
             
             // Update visualization
             updateVisualization(plantsPerRow, numberOfRows, plantType, pattern, plantSpacing);
+            
+            // Save calculation to server
+            saveCalculationToServer({
+                plantType: plantType,
+                areaLength: areaLength,
+                areaWidth: areaWidth,
+                plantSpacing: plantSpacing,
+                borderSpacing: borderSpacing,
+                lengthUnit: document.getElementById('lengthUnit').value,
+                widthUnit: document.getElementById('widthUnit').value,
+                spacingUnit: 'm', // Triangular calculator uses fixed meter units for spacing
+                borderUnit: document.getElementById('borderUnit').value
+            });
         });
         
         // Function to update visualization with circle icons
@@ -884,6 +898,29 @@ background-color: rgba(248, 249, 250, 0.8);
                 </div>
             `;
             plantGrid.appendChild(summary);
+        }
+        
+        // Function to save calculation to server
+        function saveCalculationToServer(data) {
+            fetch('/triangular-calculator/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Triangular calculation saved successfully');
+                } else {
+                    console.error('Failed to save triangular calculation:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving triangular calculation:', error);
+            });
         }
         
         // Add subtle animations to form elements

@@ -96,12 +96,26 @@ class QuincunxCalculatorController extends Controller
 
             // Validation for effective area
             if ($effectiveLength <= 0 || $effectiveWidth <= 0) {
+                if ($request->wantsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Border spacing is too large for the given area dimensions. A minimum of ' . round($recommendedBorderSpacingM, 2) . ' m is recommended.'
+                    ], 400);
+                }
+                
                 return back()->withErrors([
                     'border_spacing' => 'Border spacing is too large for the given area dimensions. A minimum of ' . round($recommendedBorderSpacingM, 2) . ' m is recommended.'
                 ])->withInput();
             }
 
             if ($plantSpacingM >= $effectiveLength || $plantSpacingM >= $effectiveWidth) {
+                if ($request->wantsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Plant spacing is too large for the effective planting area.'
+                    ], 400);
+                }
+                
                 return back()->withErrors([
                     'plant_spacing' => 'Plant spacing is too large for the effective planting area.'
                 ])->withInput();
@@ -147,27 +161,24 @@ class QuincunxCalculatorController extends Controller
                 'is_saved' => false,
             ];
 
-            DB::transaction(function () use ($calculationData, $validated, $results, $user) {
-                // Check if this is a new plant type for the user
-                $isNewPlantType = PlantCalculation::where('user_id', $user->id)
-                                                  ->where('plant_type', $validated['plantType'])
-                                                  ->doesntExist();
-
+            $calculation = DB::transaction(function () use ($calculationData) {
                 // Save calculation
                 $calculation = PlantCalculation::create($calculationData);
                 Log::info('Quincunx calculation saved successfully with ID: ' . $calculation->id);
 
-                // Update user totals
-                $user->total_calculations += 1;
-                $user->total_plants_calculated += $results['totalPlants'];
-                $user->total_area_planned += $results['totalArea'];
-
-                if ($isNewPlantType) {
-                    $user->total_plant_types += 1;
-                }
-                
-                $user->save();
+                // User totals will be updated automatically via model events
+                return $calculation;
             });
+
+            // Return JSON response for AJAX requests
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Quincunx calculation saved successfully',
+                    'calculation_id' => $calculation->id,
+                    'results' => $results
+                ]);
+            }
 
             return view('quincunx-calculator', [
                 'results' => $results,
@@ -176,6 +187,14 @@ class QuincunxCalculatorController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Failed to process Quincunx calculation: ' . $e->getMessage());
+            
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An error occurred during calculation and saving. Please try again.'
+                ], 500);
+            }
+            
             return back()->withErrors([
                 'calculation' => 'An error occurred during calculation and saving. Please try again.'
             ])->withInput();

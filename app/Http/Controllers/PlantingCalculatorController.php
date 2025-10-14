@@ -103,12 +103,7 @@ class PlantingCalculatorController extends Controller
                 'is_saved' => false,
             ];
 
-            $calculation = DB::transaction(function () use ($calculationData, $validated, $totalPlants, $areaLength, $areaWidth, $user) {
-                // Check if this is a new plant type for the user BEFORE creating the new record
-                $isNewPlantType = PlantCalculation::where('user_id', $user->id)
-                                                  ->where('plant_type', $validated['plantType'])
-                                                  ->doesntExist();
-
+            $calculation = DB::transaction(function () use ($calculationData) {
                 // Log the data being saved for debugging
                 logger()->info('Saving Square calculation data:', $calculationData);
 
@@ -116,17 +111,7 @@ class PlantingCalculatorController extends Controller
 
                 logger()->info('Square calculation saved successfully with ID: ' . $calculation->id);
 
-                // Update user totals
-                $user->total_calculations += 1;
-                $user->total_plants_calculated += $totalPlants;
-                $user->total_area_planned += round($areaLength * $areaWidth, 2);
-                
-                if ($isNewPlantType) {
-                    $user->total_plant_types += 1;
-                }
-
-                $user->save();
-
+                // User totals will be updated automatically via model events
                 return $calculation;
             });
 

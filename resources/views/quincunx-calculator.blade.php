@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Quincunx Planting System Calculator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -754,6 +755,21 @@ transform: translateY(-2px);
             
             // Update visualization
             updateVisualization(plantsPerRow, numberOfRows, plantType, pattern);
+            
+            // Save calculation to server
+            saveCalculationToServer({
+                plantType: plantType,
+                areaLength: areaLength,
+                areaWidth: areaWidth,
+                plantSpacing: plantSpacing,
+                rowSpacing: rowSpacing,
+                borderSpacing: borderSpacing,
+                lengthUnit: document.getElementById('lengthUnit').value,
+                widthUnit: document.getElementById('widthUnit').value,
+                spacingUnit: document.getElementById('spacingUnit').value,
+                rowSpacingUnit: document.getElementById('rowSpacingUnit').value,
+                borderUnit: document.getElementById('borderUnit').value
+            });
         });
         
         // Function to update visualization
@@ -823,6 +839,29 @@ transform: translateY(-2px);
             visualizationHTML += `</div>`;
             
             visualization.innerHTML = visualizationHTML;
+        }
+        
+        // Function to save calculation to server
+        function saveCalculationToServer(data) {
+            fetch('/calculate-quincunx', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Quincunx calculation saved successfully');
+                } else {
+                    console.error('Failed to save quincunx calculation:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving quincunx calculation:', error);
+            });
         }
         
         // Add subtle animations to form elements

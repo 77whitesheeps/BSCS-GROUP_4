@@ -16,7 +16,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h4 class="card-title mb-0">{{ $data['totalCalculations'] ?? 156 }}</h4>
+                            <h4 class="card-title mb-0">{{ $data['totalCalculations'] }}</h4>
                             <p class="card-text mb-0">Total Calculations</p>
                         </div>
                         <div class="card-icon">
@@ -32,7 +32,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h4 class="card-title mb-0">{{ $data['plantTypes'] ?? 23 }}</h4>
+                            <h4 class="card-title mb-0">{{ $data['plantTypes'] }}</h4>
                             <p class="card-text mb-0">Plant Types</p>
                         </div>
                         <div class="card-icon">
@@ -48,7 +48,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h4 class="card-title mb-0">{{ number_format($data['plantsCalculated'] ?? 12450) }}</h4>
+                            <h4 class="card-title mb-0">{{ number_format($data['plantsCalculated']) }}</h4>
                             <p class="card-text mb-0">Plants Calculated</p>
                         </div>
                         <div class="card-icon">
@@ -64,7 +64,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h4 class="card-title mb-0">{{ $data['totalAreaPlanned'] ?? '8.5 ha' }}</h4>
+                            <h4 class="card-title mb-0">{{ $data['totalAreaPlanned'] }}</h4>
                             <p class="card-text mb-0">Total Area Planned</p>
                         </div>
                         <div class="card-icon">
@@ -80,7 +80,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h4 class="card-title mb-0">{{ $data['totalPlans'] ?? 0 }}</h4>
+                            <h4 class="card-title mb-0">{{ $data['totalPlans'] }}</h4>
                             <p class="card-text mb-0">Garden Plans</p>
                         </div>
                         <div class="card-icon">

@@ -81,6 +81,13 @@ class TriangularCalculatorController extends Controller
             $effectiveWidth = max(0, $widthM - 2 * $effectiveBorderSpacingM);
 
             if ($effectiveLength <= 0 || $effectiveWidth <= 0 || $plantSpacingM <= 0) {
+                if ($request->wantsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Invalid input values. Please check your measurements. A minimum border of ' . round($recommendedBorderSpacingM, 2) . ' m is recommended.'
+                    ], 400);
+                }
+                
                 return back()->withErrors([
                     'border_spacing' => 'Invalid input values. Please check your measurements. A minimum border of ' . round($recommendedBorderSpacingM, 2) . ' m is recommended.'
                 ])->withInput();
@@ -135,27 +142,24 @@ class TriangularCalculatorController extends Controller
                 'is_saved' => false,
             ];
 
-            DB::transaction(function () use ($calculationData, $validated, $totalPlants, $lengthM, $widthM, $user) {
-                // Check if this is a new plant type for the user
-                $isNewPlantType = PlantCalculation::where('user_id', $user->id)
-                                                  ->where('plant_type', $validated['plantType'])
-                                                  ->doesntExist();
-                
+            $calculation = DB::transaction(function () use ($calculationData) {
                 // Save calculation
                 $calculation = PlantCalculation::create($calculationData);
                 Log::info('Triangular calculation saved successfully with ID: ' . $calculation->id);
 
-                // Update user totals
-                $user->total_calculations += 1;
-                $user->total_plants_calculated += $totalPlants;
-                $user->total_area_planned += round($lengthM * $widthM, 2);
-
-                if ($isNewPlantType) {
-                    $user->total_plant_types += 1;
-                }
-
-                $user->save();
+                // User totals will be updated automatically via model events
+                return $calculation;
             });
+
+            // Return JSON response for AJAX requests
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Triangular calculation saved successfully',
+                    'calculation_id' => $calculation->id,
+                    'results' => $results
+                ]);
+            }
 
             return view('triangular-calculator', [
                 'results' => $results,
@@ -164,6 +168,14 @@ class TriangularCalculatorController extends Controller
             
         } catch (\Exception $e) {
             Log::error('Failed to process Triangular calculation: ' . $e->getMessage());
+            
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An error occurred during calculation and saving. Please try again.'
+                ], 500);
+            }
+            
             return back()->withErrors('An error occurred during calculation and saving. Please try again.')->withInput();
         }
     }

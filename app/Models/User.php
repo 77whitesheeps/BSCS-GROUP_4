@@ -84,15 +84,19 @@ class User extends Authenticatable
      */
     public function updateUserTotals()
     {
-        $calculations = $this->plantCalculations;
-        $plans = $this->gardenPlans;
+        // Get fresh data from database to avoid stale model relationships
+        $calculations = PlantCalculation::where('user_id', $this->id)->get();
+        $plans = GardenPlan::where('user_id', $this->id)->get();
 
         $this->total_calculations = $calculations->count();
-        $this->total_plant_types = $calculations->whereNotNull('plant_type')->unique('plant_type')->count();
-        $this->total_plants_calculated = $calculations->sum('total_plants');
-        $this->total_area_planned = $calculations->sum('total_area');
+        $this->total_plant_types = $calculations->whereNotNull('plant_type')
+                                               ->pluck('plant_type')
+                                               ->unique()
+                                               ->count();
+        $this->total_plants_calculated = $calculations->sum('total_plants') ?? 0;
+        $this->total_area_planned = $calculations->sum('total_area') ?? 0;
         $this->total_plans = $plans->count();
-        $this->total_garden_area_planned = $plans->sum('total_area');
+        $this->total_garden_area_planned = $plans->sum('total_area') ?? 0;
 
         $this->save();
     }
