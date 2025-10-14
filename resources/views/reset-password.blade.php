@@ -17,14 +17,16 @@
                     </div>
                     @if($errors->any())
                         <div class="alert alert-danger">
-                            {{ $errors->first() }}
+                            @foreach($errors->all() as $error)
+                                <div>{{ $error }}</div>
+                            @endforeach
                         </div>
                     @endif
                     <form method="POST" action="{{ url('/reset-password') }}">
                         @csrf
                         <input type="hidden" name="token" value="{{ $token }}">
                         <div class="form-group">
-                            <input type="email" name="email" class="form-control form-control-user" placeholder="Email Address" required>
+                            <input type="email" name="email" class="form-control form-control-user" placeholder="Email Address" value="{{ request('email') ?? old('email') }}" required>
                         </div>
                         <div class="form-group">
                             <input type="password" name="password" class="form-control form-control-user" placeholder="New Password" required>

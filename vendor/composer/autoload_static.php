@@ -2545,8 +2545,6 @@ class ComposerStaticInit086877c3db2343c56833f7fd7e9d8030
         'Illuminate\\Hashing\\BcryptHasher' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Hashing/BcryptHasher.php',
         'Illuminate\\Hashing\\HashManager' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Hashing/HashManager.php',
         'Illuminate\\Hashing\\HashServiceProvider' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Hashing/HashServiceProvider.php',
-        'Illuminate\\Http\\Client\\Batch' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Http/Client/Batch.php',
-        'Illuminate\\Http\\Client\\BatchInProgressException' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Http/Client/BatchInProgressException.php',
         'Illuminate\\Http\\Client\\Concerns\\DeterminesStatusCode' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Http/Client/Concerns/DeterminesStatusCode.php',
         'Illuminate\\Http\\Client\\ConnectionException' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Http/Client/ConnectionException.php',
         'Illuminate\\Http\\Client\\Events\\ConnectionFailed' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Http/Client/Events/ConnectionFailed.php',

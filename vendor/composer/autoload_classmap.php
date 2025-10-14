@@ -1988,8 +1988,6 @@ return array(
     'Illuminate\\Hashing\\BcryptHasher' => $vendorDir . '/laravel/framework/src/Illuminate/Hashing/BcryptHasher.php',
     'Illuminate\\Hashing\\HashManager' => $vendorDir . '/laravel/framework/src/Illuminate/Hashing/HashManager.php',
     'Illuminate\\Hashing\\HashServiceProvider' => $vendorDir . '/laravel/framework/src/Illuminate/Hashing/HashServiceProvider.php',
-    'Illuminate\\Http\\Client\\Batch' => $vendorDir . '/laravel/framework/src/Illuminate/Http/Client/Batch.php',
-    'Illuminate\\Http\\Client\\BatchInProgressException' => $vendorDir . '/laravel/framework/src/Illuminate/Http/Client/BatchInProgressException.php',
     'Illuminate\\Http\\Client\\Concerns\\DeterminesStatusCode' => $vendorDir . '/laravel/framework/src/Illuminate/Http/Client/Concerns/DeterminesStatusCode.php',
     'Illuminate\\Http\\Client\\ConnectionException' => $vendorDir . '/laravel/framework/src/Illuminate/Http/Client/ConnectionException.php',
     'Illuminate\\Http\\Client\\Events\\ConnectionFailed' => $vendorDir . '/laravel/framework/src/Illuminate/Http/Client/Events/ConnectionFailed.php',
