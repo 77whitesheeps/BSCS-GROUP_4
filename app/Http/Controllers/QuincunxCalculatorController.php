@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PlantCalculation;
 use Illuminate\Support\Facades\Auth; // Import Auth facade
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class QuincunxCalculatorController extends Controller
 {
@@ -62,8 +64,11 @@ class QuincunxCalculatorController extends Controller
             'rowSpacingUnit.required' => 'Row spacing unit is required.',
         ]);
 
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
         try {
-            \Log::info('Quincunx calculation started for user: ' . auth()->id());
+            Log::info('Quincunx calculation started for user: ' . $user->id);
 
             // Convert all to meters for calculation
             $conversionRates = [
@@ -108,54 +113,61 @@ class QuincunxCalculatorController extends Controller
             // Add area information
             $results['effectiveArea'] = round($effectiveLength * $effectiveWidth, 2);
             $results['totalArea'] = round($lengthM * $widthM, 2);
-            $results['plantingDensity'] = $results['totalPlants'] > 0 
+            $results['plantingDensity'] = $results['totalPlants'] > 0 && $results['effectiveArea'] > 0
                 ? round($results['totalPlants'] / $results['effectiveArea'], 2) 
                 : 0;
 
             // Add recommended border to results
             $results['recommendedBorderSpacingM'] = round($recommendedBorderSpacingM, 2);
 
-            // Update user totals after calculation
-            $user = Auth::user();
-            $user->total_calculations += 1;
-            $user->total_plants_calculated += $results['totalPlants'];
-            $user->total_area_planned += $results['totalArea'];
-            $user->save();
+            $calculationData = [
+                'user_id' => $user->id,
+                'calculation_name' => 'Quincunx Pattern - ' . now()->format('M j, Y g:i A'),
+                'calculation_type' => 'quincunx',
+                'plant_type' => $validated['plantType'],
+                'area_length' => $lengthM,
+                'area_width' => $widthM,
+                'plant_spacing' => $plantSpacingM,
+                'row_spacing' => $rowSpacingM,
+                'border_spacing' => $effectiveBorderSpacingM,
+                'total_plants' => $results['totalPlants'],
+                'plants_per_row' => $results['plantsPerRow'] ?? 0,
+                'number_of_rows' => $results['numberOfRows'] ?? 0,
+                'effective_area' => $results['effectiveArea'],
+                'planting_density' => $results['plantingDensity'],
+                'space_utilization' => $results['efficiency'] ?? 0,
+                'input_units' => json_encode([
+                    'length_unit' => $validated['lengthUnit'],
+                    'width_unit' => $validated['widthUnit'],
+                    'spacing_unit' => $validated['spacingUnit'],
+                    'row_spacing_unit' => $validated['rowSpacingUnit'],
+                    'border_unit' => $validated['borderUnit']
+                ]),
+                'total_area' => $results['totalArea'],
+                'is_saved' => false,
+            ];
 
-            // Save calculation to database
-            \Log::info('Attempting to save quincunx calculation for user: ' . auth()->id());
-            try {
-                $calculation = PlantCalculation::create([
-                    'user_id' => auth()->id(),
-                    'calculation_name' => 'Quincunx Pattern - ' . now()->format('M j, Y g:i A'),
-                    'calculation_type' => 'quincunx',
-                    'plant_type' => $validated['plantType'],
-                    'area_length' => $lengthM,
-                    'area_width' => $widthM,
-                    'plant_spacing' => $plantSpacingM,
-                    'row_spacing' => $rowSpacingM,
-                    'border_spacing' => $effectiveBorderSpacingM,
-                    'total_plants' => $results['totalPlants'],
-                    'plants_per_row' => $results['plantsPerRow'] ?? 0,
-                    'number_of_rows' => $results['numberOfRows'] ?? 0,
-                    'effective_area' => $results['effectiveArea'],
-                    'planting_density' => $results['plantingDensity'],
-                    'space_utilization' => $results['efficiency'] ?? 0,
-                    'input_units' => json_encode([
-                        'length_unit' => $validated['lengthUnit'],
-                        'width_unit' => $validated['widthUnit'],
-                        'spacing_unit' => $validated['spacingUnit'],
-                        'row_spacing_unit' => $validated['rowSpacingUnit'],
-                        'border_unit' => $validated['borderUnit']
-                    ]),
-                    'total_area' => $results['totalArea'],
-                    'is_saved' => false,
-                ]);
-                \Log::info('Quincunx calculation saved successfully with ID: ' . $calculation->id);
-            } catch (\Exception $saveError) {
-                // Log the error but don't break the calculation
-                \Log::error('Failed to save quincunx calculation: ' . $saveError->getMessage());
-            }
+            DB::transaction(function () use ($calculationData, $validated, $results, $user) {
+                // Check if this is a new plant type for the user
+                $isNewPlantType = PlantCalculation::where('user_id', $user->id)
+                                                  ->where('plant_type', $validated['plantType'])
+                                                  ->doesntExist();
+
+                // Save calculation
+                $calculation = PlantCalculation::create($calculationData);
+                Log::info('Quincunx calculation saved successfully with ID: ' . $calculation->id);
+
+                // Update user totals
+                $user->total_calculations += 1;
+                $user->total_plants_calculated += $results['totalPlants'];
+                $user->total_area_planned += $results['totalArea'];
+
+                if ($isNewPlantType) {
+                    $user->total_plant_types += 1;
+                }
+                
+                $user->save();
+            });
 
             return view('quincunx-calculator', [
                 'results' => $results,
@@ -163,8 +175,9 @@ class QuincunxCalculatorController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            Log::error('Failed to process Quincunx calculation: ' . $e->getMessage());
             return back()->withErrors([
-                'calculation' => 'An error occurred during calculation. Please check your inputs.'
+                'calculation' => 'An error occurred during calculation and saving. Please try again.'
             ])->withInput();
         }
     }

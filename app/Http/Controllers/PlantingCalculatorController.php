@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PlantCalculation; // Import the PlantCalculation model
 use Illuminate\Support\Facades\Auth; // Import Auth facade
+use Illuminate\Support\Facades\DB;
 
 class PlantingCalculatorController extends Controller
 {
@@ -40,6 +41,9 @@ class PlantingCalculatorController extends Controller
             'autoBorder' => 'nullable|boolean',
         ]);
 
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
         // Extract values
         $areaLength = $validated['areaLength'];
         $areaWidth = $validated['areaWidth'];
@@ -68,13 +72,13 @@ class PlantingCalculatorController extends Controller
 
         // Calculate other metrics
         $effectiveArea = $effectiveLength * $effectiveWidth;
-        $plantingDensity = $totalPlants / $effectiveArea;
-        $spaceUtilization = ($totalPlants * pi() * pow(min($plantSpacing, $rowSpacing)/4, 2)) / $effectiveArea * 100;
+        $plantingDensity = $totalPlants > 0 ? $totalPlants / $effectiveArea : 0;
+        $spaceUtilization = $effectiveArea > 0 ? ($totalPlants * pi() * pow(min($plantSpacing, $rowSpacing)/4, 2)) / $effectiveArea * 100 : 0;
 
         // Save calculation to database
         try {
             $calculationData = [
-                'user_id' => auth()->id(),
+                'user_id' => $user->id,
                 'plant_type' => $validated['plantType'],
                 'calculation_name' => 'Square Pattern - ' . now()->format('M j, Y g:i A'),
                 'calculation_type' => 'square',
@@ -99,19 +103,32 @@ class PlantingCalculatorController extends Controller
                 'is_saved' => false,
             ];
 
-            // Log the data being saved for debugging
-            logger()->info('Saving Square calculation data:', $calculationData);
+            $calculation = DB::transaction(function () use ($calculationData, $validated, $totalPlants, $areaLength, $areaWidth, $user) {
+                // Check if this is a new plant type for the user BEFORE creating the new record
+                $isNewPlantType = PlantCalculation::where('user_id', $user->id)
+                                                  ->where('plant_type', $validated['plantType'])
+                                                  ->doesntExist();
 
-            $calculation = PlantCalculation::create($calculationData);
+                // Log the data being saved for debugging
+                logger()->info('Saving Square calculation data:', $calculationData);
 
-            logger()->info('Square calculation saved successfully with ID: ' . $calculation->id);
+                $calculation = PlantCalculation::create($calculationData);
 
-            // Update user totals
-            $user = Auth::user();
-            $user->total_calculations += 1;
-            $user->total_plants_calculated += $totalPlants;
-            $user->total_area_planned += round($areaLength * $areaWidth, 2);
-            $user->save();
+                logger()->info('Square calculation saved successfully with ID: ' . $calculation->id);
+
+                // Update user totals
+                $user->total_calculations += 1;
+                $user->total_plants_calculated += $totalPlants;
+                $user->total_area_planned += round($areaLength * $areaWidth, 2);
+                
+                if ($isNewPlantType) {
+                    $user->total_plant_types += 1;
+                }
+
+                $user->save();
+
+                return $calculation;
+            });
 
             return response()->json([
                 'success' => true,

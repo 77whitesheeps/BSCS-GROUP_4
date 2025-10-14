@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PlantCalculation;
 use Illuminate\Support\Facades\Auth; // Import Auth facade
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TriangularCalculatorController extends Controller
 {
@@ -49,8 +51,11 @@ class TriangularCalculatorController extends Controller
             'spacingUnit.required' => 'Spacing unit is required.',
         ]);
 
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
         try {
-            \Log::info('Triangular calculation started for user: ' . auth()->id());
+            Log::info('Triangular calculation started for user: ' . $user->id);
 
             // Convert all to meters for calculation
             $conversionRates = [
@@ -88,10 +93,10 @@ class TriangularCalculatorController extends Controller
 
             // Calculate additional metrics
             $effectiveArea = $effectiveLength * $effectiveWidth;
-            $plantingDensity = $totalPlants / $effectiveArea;
+            $plantingDensity = $effectiveArea > 0 ? $totalPlants / $effectiveArea : 0;
             
             // For triangular spacing, each plant occupies 0.866 * spacing^2 area
-            $spaceUtilization = ($totalPlants * 0.866 * pow($plantSpacingM, 2)) / $effectiveArea * 100;
+            $spaceUtilization = $effectiveArea > 0 ? ($totalPlants * 0.866 * pow($plantSpacingM, 2)) / $effectiveArea * 100 : 0;
 
             // Prepare results
             $results = [
@@ -104,46 +109,53 @@ class TriangularCalculatorController extends Controller
                 'recommendedBorderSpacingM' => round($recommendedBorderSpacingM, 2)
             ];
 
-            // Update user totals after calculation
-            $user = Auth::user();
-            $user->total_calculations += 1;
-            $user->total_plants_calculated += $totalPlants;
-            $user->total_area_planned += round($lengthM * $widthM, 2);
-            $user->save();
+            $calculationData = [
+                'user_id' => $user->id,
+                'calculation_name' => 'Triangular Pattern - ' . now()->format('M j, Y g:i A'),
+                'calculation_type' => 'triangular',
+                'plant_type' => $validated['plantType'],
+                'area_length' => $lengthM,
+                'area_width' => $widthM,
+                'plant_spacing' => $plantSpacingM,
+                'row_spacing' => $plantSpacingM * 0.866, // Triangular row spacing
+                'border_spacing' => $effectiveBorderSpacingM,
+                'total_plants' => $totalPlants,
+                'plants_per_row' => $plantsPerRow,
+                'number_of_rows' => $numberOfRows,
+                'effective_area' => $effectiveArea,
+                'planting_density' => $plantingDensity,
+                'space_utilization' => $spaceUtilization,
+                'input_units' => json_encode([
+                    'length_unit' => $validated['lengthUnit'],
+                    'width_unit' => $validated['widthUnit'],
+                    'spacing_unit' => $validated['spacingUnit'],
+                    'border_unit' => $validated['borderUnit']
+                ]),
+                'total_area' => round($lengthM * $widthM, 2),
+                'is_saved' => false,
+            ];
 
-            // Save calculation to database
-            \Log::info('Attempting to save triangular calculation for user: ' . auth()->id());
-            try {
-                $calculation = PlantCalculation::create([
-                    'user_id' => auth()->id(),
-                    'calculation_name' => 'Triangular Pattern - ' . now()->format('M j, Y g:i A'),
-                    'calculation_type' => 'triangular',
-                    'plant_type' => $validated['plantType'],
-                    'area_length' => $lengthM,
-                    'area_width' => $widthM,
-                    'plant_spacing' => $plantSpacingM,
-                    'row_spacing' => $plantSpacingM * 0.866, // Triangular row spacing
-                    'border_spacing' => $effectiveBorderSpacingM,
-                    'total_plants' => $totalPlants,
-                    'plants_per_row' => $plantsPerRow,
-                    'number_of_rows' => $numberOfRows,
-                    'effective_area' => $effectiveArea,
-                    'planting_density' => $plantingDensity,
-                    'space_utilization' => $spaceUtilization,
-                    'input_units' => json_encode([
-                        'length_unit' => $validated['lengthUnit'],
-                        'width_unit' => $validated['widthUnit'],
-                        'spacing_unit' => $validated['spacingUnit'],
-                        'border_unit' => $validated['borderUnit']
-                    ]),
-                    'total_area' => round($lengthM * $widthM, 2),
-                    'is_saved' => false,
-                ]);
-                \Log::info('Triangular calculation saved successfully with ID: ' . $calculation->id);
-            } catch (\Exception $saveError) {
-                // Log the error but don't break the calculation
-                \Log::error('Failed to save triangular calculation: ' . $saveError->getMessage());
-            }
+            DB::transaction(function () use ($calculationData, $validated, $totalPlants, $lengthM, $widthM, $user) {
+                // Check if this is a new plant type for the user
+                $isNewPlantType = PlantCalculation::where('user_id', $user->id)
+                                                  ->where('plant_type', $validated['plantType'])
+                                                  ->doesntExist();
+                
+                // Save calculation
+                $calculation = PlantCalculation::create($calculationData);
+                Log::info('Triangular calculation saved successfully with ID: ' . $calculation->id);
+
+                // Update user totals
+                $user->total_calculations += 1;
+                $user->total_plants_calculated += $totalPlants;
+                $user->total_area_planned += round($lengthM * $widthM, 2);
+
+                if ($isNewPlantType) {
+                    $user->total_plant_types += 1;
+                }
+
+                $user->save();
+            });
 
             return view('triangular-calculator', [
                 'results' => $results,
@@ -151,7 +163,8 @@ class TriangularCalculatorController extends Controller
             ]);
             
         } catch (\Exception $e) {
-            return back()->withErrors('An error occurred during calculation. Please check your inputs.')->withInput();
+            Log::error('Failed to process Triangular calculation: ' . $e->getMessage());
+            return back()->withErrors('An error occurred during calculation and saving. Please try again.')->withInput();
         }
     }
 }
