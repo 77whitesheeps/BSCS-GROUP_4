@@ -217,7 +217,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-.spacing-inputs {
+        .spacing-inputs {
             display: flex;
             gap: 15px;
         }
@@ -248,7 +248,6 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            font-size: 0.8rem;
         }
         
         .legend-color {
@@ -287,7 +286,7 @@
         }
         
         .layout-details {
-background-color: rgba(248, 249, 250, 0.8);
+            background-color: rgba(248, 249, 250, 0.8);
             border-radius: 8px;
             padding: 1rem;
             margin-top: 1rem;
@@ -380,14 +379,186 @@ background-color: rgba(248, 249, 250, 0.8);
                 padding: 8px 15px;
             }
         }
+
+        /* Dark Theme Styles */
+        body.dark-theme {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .calculator-container {
+            background-color: #1e1e1e;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-theme .header {
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+        }
+
+        body.dark-theme .form-label {
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .form-control,
+        body.dark-theme .form-select {
+            background-color: #2c2c2c;
+            color: #e0e0e0;
+            border-color: #444;
+        }
+
+        body.dark-theme .form-control:focus,
+        body.dark-theme .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(139, 195, 74, 0.3);
+            background-color: #333;
+        }
+
+        body.dark-theme .results-container {
+            background-color: #2c2c2c;
+            border-left-color: var(--accent-color);
+        }
+
+        body.dark-theme .results-container h3 {
+            color: #fff;
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-theme .result-value {
+            color: var(--accent-color);
+        }
+
+        body.dark-theme .visualization {
+            background-color: #2c2c2c;
+            border-color: #444;
+        }
+        
+        body.dark-theme .visualization .text-muted {
+             color: #a0a0a0 !important;
+        }
+
+        body.dark-theme .grid-line {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-theme .visualization-info {
+            background: rgba(44, 44, 44, 0.9);
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .btn-outline-light {
+            color: #f8f9fa;
+            border-color: #f8f9fa;
+        }
+
+        body.dark-theme .btn-outline-light:hover {
+            color: #121212;
+            background-color: #f8f9fa;
+            border-color: #f8f9fa;
+        }
+        
+        body.dark-theme .pattern-info {
+            background-color: #2c2c2c;
+            border-left-color: var(--accent-color);
+        }
+        
+        body.dark-theme .pattern-info p, body.dark-theme .pattern-info h5 {
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .form-text {
+            color: #a0a0a0;
+        }
+
+        body.dark-theme .auto-border-info, body.dark-theme .form-check-label {
+            color: #a0a0a0;
+        }
+
+        body.dark-theme .alert-success {
+            background-color: #2e7d32;
+            color: #d4edda;
+        }
+
+        body.dark-theme .alert-danger {
+            background-color: #721c24;
+            color: #f8d7da;
+        }
+
+        body.dark-theme footer {
+            color: #a0a0a0;
+        }
+        
+        body.dark-theme .text-muted {
+            color: #a0a0a0 !important;
+        }
+        
+        body.dark-theme .border-bottom {
+            border-bottom: 1px solid #444 !important;
+        }
+
+        body.dark-theme .plant-dot:hover {
+            background-color: var(--accent-color);
+        }
+        
+        body.dark-theme .plant-grid {
+            background: linear-gradient(135deg, #2a2a2a, #1e1e1e);
+        }
+        
+        body.dark-theme .pattern-title {
+            background: rgba(44, 44, 44, 0.95);
+            color: #e0e0e0;
+        }
+        
+        body.dark-theme .visualization-summary {
+            background: rgba(44, 44, 44, 0.95);
+            color: #e0e0e0;
+        }
+        
+        body.dark-theme .comparison-item {
+            background: #2c2c2c;
+            color: #e0e0e0;
+        }
+        
+        body.dark-theme .alert-success {
+            background-color: #2e7d32;
+            color: #d4edda;
+        }
+        
+        body.dark-theme .alert-danger {
+            background-color: #721c24;
+            color: #f8d7da;
+        }
+        
+        /* Visualization layout fixes */
+        .visualization-content {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .visualization-grid {
+            position: relative;
+            width: 90%;
+            height: 80%;
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        body.dark-theme .visualization-grid {
+            background: #2c2c2c;
+        }
     </style>
 </head>
-<body>
+<body class="@if(Auth::check() && Auth::user()->theme === 'dark') dark-theme @endif">
     <div class="container calculator-container">
         <div class="header">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h1 class="mb-2">🔺 Triangular Planting System Calculator</h1>
+                    <h1 class="mb-2"><i class="fas fa-play me-2"></i>Triangular Planting System Calculator</h1>
                     <p class="mb-0">Maximize planting density with triangular hexagonal pattern</p>
                 </div>
                 <div class="d-flex gap-2">
@@ -450,14 +621,14 @@ background-color: rgba(248, 249, 250, 0.8);
                     <div class="mb-4">
                         <label for="plantType" class="form-label">Plant Type</label>
                         <select class="form-select" id="plantType" name="plantType">
-                            <option value="vegetable">🥬 Vegetables</option>
-                            <option value="fruit">🍓 Fruits</option>
-                            <option value="herb">🌿 Herbs</option>
-                            <option value="flower">🌺 Flowers</option>
-                            <option value="tree">🌳 Trees</option>
-                            <option value="shrub">🌿 Shrubs</option>
-                            <option value="vine">🍇 Vines</option>
-                            <option value="custom">🔧 Custom</option>
+                            <option value="vegetable">Vegetables</option>
+                            <option value="fruit">Fruits</option>
+                            <option value="herb">Herbs</option>
+                            <option value="flower">Flowers</option>
+                            <option value="tree">Trees</option>
+                            <option value="shrub">Shrubs</option>
+                            <option value="vine">Vines</option>
+                            <option value="custom">Custom</option>
                         </select>
                         <div class="form-text">Selecting a plant type may suggest optimal spacing values</div>
                     </div>
@@ -570,10 +741,12 @@ background-color: rgba(248, 249, 250, 0.8);
         <div class="visualization-container mt-4">
             <h4 class="mb-3"><i class="fas fa-project-diagram me-2"></i>Plant Layout Visualization</h4>
             <div class="visualization" id="visualization">
-                <div class="text-center text-muted p-5">
-                    <i class="fas fa-seedling fa-3x mb-3"></i>
-                    <p>Enter your planting parameters and click Calculate</p>
-                    <p class="small">Visualization will show the planting pattern with circle icons</p>
+                <div class="visualization-content">
+                    <div class="text-center text-muted p-5">
+                        <i class="fas fa-seedling fa-3x mb-3"></i>
+                        <p>Enter your planting parameters and click Calculate</p>
+                        <p class="small">Visualization will show the planting pattern with circle icons</p>
+                    </div>
                 </div>
             </div>
             <div class="pattern-comparison">
@@ -669,10 +842,12 @@ background-color: rgba(248, 249, 250, 0.8);
             document.getElementById('errorAlert').classList.add('d-none');
             
             document.getElementById('visualization').innerHTML = `
-                <div class="text-center text-muted p-5">
-                    <i class="fas fa-seedling fa-3x mb-3"></i>
-                    <p>Enter your planting parameters and click Calculate</p>
-                    <p class="small">Visualization will show the planting pattern with circle icons</p>
+                <div class="visualization-content">
+                    <div class="text-center text-muted p-5">
+                        <i class="fas fa-seedling fa-3x mb-3"></i>
+                        <p>Enter your planting parameters and click Calculate</p>
+                        <p class="small">Visualization will show the planting pattern with circle icons</p>
+                    </div>
                 </div>
             `;
             

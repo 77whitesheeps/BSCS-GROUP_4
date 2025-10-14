@@ -50,7 +50,7 @@ font-weight: 700;
         
         .header p {
             opacity: 0.9;
-            margin-bottom: 0;
+margin-bottom: 0;
         }
         
         .form-label {
@@ -343,198 +343,246 @@ font-weight: 700;
             }
         }
     </style>
+
+    <!-- Dark Mode Styles -->
+    <style>
+        .dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .dark-mode .calculator-container {
+            background-color: #1e1e1e;
+        }
+        .dark-mode .form-control, .dark-mode .form-select {
+            background-color: #333;
+            color: #ffffff;
+            border-color: #555;
+        }
+        .dark-mode .form-label {
+            color: #ffffff;
+        }
+        .dark-mode .results-container {
+            background-color: #333;
+            border-left-color: var(--accent-color);
+        }
+        .dark-mode .result-value {
+            color: var(--accent-color);
+        }
+        .dark-mode .results-container h3 {
+            color: #ffffff;
+        }
+        .dark-mode .visualization {
+            background-color: #333;
+            border-color: #555;
+        }
+        .dark-mode .visualization-info {
+            background: rgba(0, 0, 0, 0.7);
+            color: #ffffff;
+        }
+        .dark-mode .header {
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+        }
+        .dark-mode .text-muted {
+            color: #a0a0a0 !important;
+        }
+        .dark-mode .layout-details {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
 <body>
-    <div class="container calculator-container">
-        <div class="header">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div>
-                    <h1 class="mb-2">🌱 Square Planting System Calculator</h1>
-                    <p class="mb-0">Optimize your planting layout with square spacing pattern</p>
-                </div>
-                <div class="d-flex gap-2">
-                    <button type="button" onclick="resetForm()" class="btn btn-outline-light">
-                        <i class="fas fa-redo-alt me-1"></i> Reset
-                    </button>
-                    <a href="{{ route('dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+    <div class="container">
+        <div class="calculator-container">
+            <div class="header">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h1 class="mb-2">🌱 Square Planting System Calculator</h1>
+                        <p class="mb-0">Optimize your planting layout with square spacing pattern</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" onclick="resetForm()" class="btn btn-outline-light">
+                            <i class="fas fa-redo-alt me-1"></i> Reset
+                        </button>
+                        <a href="{{ route('dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Success/Error Messages -->
-        <div class="alert alert-success alert-dismissible fade show d-none" role="alert" id="successAlert">
-            <i class="fas fa-check-circle me-2"></i>Calculation completed successfully!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-
-        <div class="alert alert-danger alert-dismissible fade show d-none" role="alert" id="errorAlert">
-            <i class="fas fa-exclamation-circle me-2"></i>
-            <ul class="mb-0" id="errorList">
-                <!-- Errors will be populated here -->
-            </ul>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        
-        <form id="squareForm">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-4">
-                        <label for="areaLength" class="form-label">Area Length</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" id="areaLength" name="areaLength" step="0.01" min="0.01" required value="10">
-                            <select class="form-select" id="lengthUnit" name="lengthUnit">
-                                <option value="m" selected>Meters (m)</option>
-                                <option value="ft">Feet (ft)</option>
-                                <option value="cm">Centimeters (cm)</option>
-                                <option value="in">Inches (in)</option>
+            
+            <!-- Success/Error Messages -->
+            <div class="alert alert-success alert-dismissible fade show d-none" role="alert" id="successAlert">
+                <i class="fas fa-check-circle me-2"></i>Calculation completed successfully!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+    
+            <div class="alert alert-danger alert-dismissible fade show d-none" role="alert" id="errorAlert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <ul class="mb-0" id="errorList">
+                    <!-- Errors will be populated here -->
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            
+            <form id="squareForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label for="areaLength" class="form-label">Area Length</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="areaLength" name="areaLength" step="0.01" min="0.01" required value="10">
+                                <select class="form-select" id="lengthUnit" name="lengthUnit">
+                                    <option value="m" selected>Meters (m)</option>
+                                    <option value="ft">Feet (ft)</option>
+                                    <option value="cm">Centimeters (cm)</option>
+                                    <option value="in">Inches (in)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="areaWidth" class="form-label">Area Width</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="areaWidth" name="areaWidth" step="0.01" min="0.01" required value="8">
+                                <select class="form-select" id="widthUnit" name="widthUnit">
+                                    <option value="m" selected>Meters (m)</option>
+                                    <option value="ft">Feet (ft)</option>
+                                    <option value="cm">Centimeters (cm)</option>
+                                    <option value="in">Inches (in)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="plantType" class="form-label">Plant Type</label>
+                            <select class="form-select" id="plantType" name="plantType">
+                                <option value="vegetable">🥬 Vegetables</option>
+                                <option value="fruit">🍓 Fruits</option>
+                                <option value="herb">🌿 Herbs</option>
+                                <option value="flower">🌺 Flowers</option>
+                                <option value="tree">🌳 Trees</option>
+                                <option value="shrub">🌿 Shrubs</option>
+                                <option value="vine">🍇 Vines</option>
+                                <option value="custom">🔧 Custom</option>
                             </select>
+                            <div class="form-text">Selecting a plant type may suggest optimal spacing values</div>
                         </div>
                     </div>
                     
-                    <div class="mb-4">
-                        <label for="areaWidth" class="form-label">Area Width</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" id="areaWidth" name="areaWidth" step="0.01" min="0.01" required value="8">
-                            <select class="form-select" id="widthUnit" name="widthUnit">
-                                <option value="m" selected>Meters (m)</option>
-                                <option value="ft">Feet (ft)</option>
-                                <option value="cm">Centimeters (cm)</option>
-                                <option value="in">Inches (in)</option>
-                            </select>
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label for="plantSpacing" class="form-label">Plant Spacing</label>
+                            <div class="spacing-inputs">
+                                <div class="spacing-input">
+                                    <label class="form-label small">Between Plants</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="plantSpacing" name="plantSpacing" step="0.01" min="0.01" required value="0.3">
+                                        <span class="input-group-text">m</span>
+                                    </div>
+                                </div>
+                                <div class="spacing-input">
+                                    <label class="form-label small">Between Rows</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="rowSpacing" name="rowSpacing" step="0.01" min="0.01" required value="0.3">
+                                        <span class="input-group-text">m</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="plantType" class="form-label">Plant Type</label>
-                        <select class="form-select" id="plantType" name="plantType">
-                            <option value="vegetable">🥬 Vegetables</option>
-                            <option value="fruit">🍓 Fruits</option>
-                            <option value="herb">🌿 Herbs</option>
-                            <option value="flower">🌺 Flowers</option>
-                            <option value="tree">🌳 Trees</option>
-                            <option value="shrub">🌿 Shrubs</option>
-                            <option value="vine">🍇 Vines</option>
-                            <option value="custom">🔧 Custom</option>
-                        </select>
-                        <div class="form-text">Selecting a plant type may suggest optimal spacing values</div>
+                        
+                        <div class="mb-4">
+                            <label for="borderSpacing" class="form-label">Border Spacing</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="borderSpacing" name="borderSpacing" step="0.01" min="0" value="0.5" required>
+                                <select class="form-select" id="borderUnit" name="borderUnit">
+                                    <option value="m" selected>Meters (m)</option>
+                                    <option value="ft">Feet (ft)</option>
+                                    <option value="cm">Centimeters (cm)</option>
+                                    <option value="in">Inches (in)</option>
+                                </select>
+                            </div>
+                            <div class="auto-border-info">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="autoBorder" name="autoBorder" value="1" checked>
+                                    <label class="form-check-label" for="autoBorder">
+                                        Auto-calculate border spacing based on plant spacing
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Planting Pattern</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="pattern" id="squarePattern" value="square" checked>
+                                    <label class="form-check-label" for="squarePattern">
+                                        <i class="fas fa-th-large me-1"></i> Square Pattern
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="pattern" id="rectangularPattern" value="rectangular">
+                                    <label class="form-check-label" for="rectangularPattern">
+                                        <i class="fas fa-th me-1"></i> Rectangular Pattern
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="col-md-6">
-                    <div class="mb-4">
-                        <label for="plantSpacing" class="form-label">Plant Spacing</label>
-                        <div class="spacing-inputs">
-                            <div class="spacing-input">
-                                <label class="form-label small">Between Plants</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="plantSpacing" name="plantSpacing" step="0.01" min="0.01" required value="0.3">
-                                    <span class="input-group-text">m</span>
-                                </div>
-                            </div>
-                            <div class="spacing-input">
-                                <label class="form-label small">Between Rows</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="rowSpacing" name="rowSpacing" step="0.01" min="0.01" required value="0.3">
-                                    <span class="input-group-text">m</span>
-                                </div>
-                            </div>
+                <div class="text-center mt-4">
+                    <button type="button" id="calculateBtn" class="btn btn-calculate btn-lg">
+                        <i class="fas fa-calculator me-2"></i> Calculate
+                    </button>
+                </div>
+            </form>
+            
+            <div class="results-container mt-4 d-none" id="resultsContainer">
+                <h3 class="mb-4"><i class="fas fa-chart-bar me-2"></i>Calculation Results</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between border-bottom py-2">
+                            <span><i class="fas fa-seedling me-2 text-success"></i>Number of Plants:</span>
+                            <span class="result-value" id="totalPlants">0</span>
+                        </div>
+                        <div class="d-flex justify-content-between border-bottom py-2">
+                            <span><i class="fas fa-list me-2 text-success"></i>Plants per Row:</span>
+                            <span class="result-value" id="plantsPerRow">0</span>
+                        </div>
+                        <div class="d-flex justify-content-between border-bottom py-2">
+<span><i class="fas fa-bars me-2 text-success"></i>Number of Rows:</span>
+                            <span class="result-value" id="numberOfRows">0</span>
                         </div>
                     </div>
-                    
-                    <div class="mb-4">
-                        <label for="borderSpacing" class="form-label">Border Spacing</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" id="borderSpacing" name="borderSpacing" step="0.01" min="0" value="0.5" required>
-                            <select class="form-select" id="borderUnit" name="borderUnit">
-                                <option value="m" selected>Meters (m)</option>
-                                <option value="ft">Feet (ft)</option>
-                                <option value="cm">Centimeters (cm)</option>
-                                <option value="in">Inches (in)</option>
-                            </select>
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between border-bottom py-2">
+                            <span><i class="fas fa-ruler-combined me-2 text-success"></i>Effective Area:</span>
+                            <span class="result-value" id="effectiveArea">0 m²</span>
                         </div>
-                        <div class="auto-border-info">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="autoBorder" name="autoBorder" value="1" checked>
-                                <label class="form-check-label" for="autoBorder">
-                                    Auto-calculate border spacing based on plant spacing
-                                </label>
-                            </div>
+                        <div class="d-flex justify-content-between border-bottom py-2">
+                            <span><i class="fas fa-chart-pie me-2 text-success"></i>Planting Density:</span>
+                            <span class="result-value" id="plantingDensity">0 plants/m²</span>
+                        </div>
+                        <div class="d-flex justify-content-between border-bottom py-2">
+                            <span><i class="fas fa-percentage me-2 text-success"></i>Space Utilization:</span>
+                            <span class="result-value" id="spaceUtilization">0%</span>
                         </div>
                     </div>
-                    
-                    <div class="mb-4">
-                        <label class="form-label">Planting Pattern</label>
-                        <div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="pattern" id="squarePattern" value="square" checked>
-                                <label class="form-check-label" for="squarePattern">
-                                    <i class="fas fa-th-large me-1"></i> Square Pattern
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="pattern" id="rectangularPattern" value="rectangular">
-                                <label class="form-check-label" for="rectangularPattern">
-                                    <i class="fas fa-th me-1"></i> Rectangular Pattern
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+                
+                <div class="alert alert-success mt-3">
+                    <i class="fas fa-check-circle me-2"></i><strong>Calculation completed successfully!</strong> Results saved to your history.
                 </div>
             </div>
             
-            <div class="text-center mt-4">
-                <button type="button" id="calculateBtn" class="btn btn-calculate btn-lg">
-                    <i class="fas fa-calculator me-2"></i> Calculate
-                </button>
-            </div>
-        </form>
-        
-        <div class="results-container mt-4 d-none" id="resultsContainer">
-            <h3 class="mb-4"><i class="fas fa-chart-bar me-2"></i>Calculation Results</h3>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span><i class="fas fa-seedling me-2 text-success"></i>Number of Plants:</span>
-                        <span class="result-value" id="totalPlants">0</span>
+            <!-- Visualization Area -->
+            <div class="visualization-container mt-4">
+                <h4 class="mb-3"><i class="fas fa-project-diagram me-2"></i>Plant Layout Visualization</h4>
+                <div class="visualization" id="visualization">
+                    <div class="text-center text-muted p-5">
+                        <i class="fas fa-calculator fa-3x mb-3"></i>
+                        <p>Visualization will appear here after calculation</p>
+                        <p class="small">The square pattern arranges plants in straight rows and columns</p>
                     </div>
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span><i class="fas fa-list me-2 text-success"></i>Plants per Row:</span>
-                        <span class="result-value" id="plantsPerRow">0</span>
-                    </div>
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span><i class="fas fa-bars me-2 text-success"></i>Number of Rows:</span>
-                        <span class="result-value" id="numberOfRows">0</span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span><i class="fas fa-ruler-combined me-2 text-success"></i>Effective Area:</span>
-                        <span class="result-value" id="effectiveArea">0 m²</span>
-                    </div>
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span><i class="fas fa-chart-pie me-2 text-success"></i>Planting Density:</span>
-                        <span class="result-value" id="plantingDensity">0 plants/m²</span>
-                    </div>
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span><i class="fas fa-percentage me-2 text-success"></i>Space Utilization:</span>
-                        <span class="result-value" id="spaceUtilization">0%</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="alert alert-success mt-3">
-                <i class="fas fa-check-circle me-2"></i><strong>Calculation completed successfully!</strong> Results saved to your history.
-            </div>
-        </div>
-        
-        <!-- Visualization Area -->
-        <div class="visualization-container mt-4">
-            <h4 class="mb-3"><i class="fas fa-project-diagram me-2"></i>Plant Layout Visualization</h4>
-            <div class="visualization" id="visualization">
-                <div class="text-center text-muted p-5">
-                    <i class="fas fa-calculator fa-3x mb-3"></i>
-                    <p>Visualization will appear here after calculation</p>
-                    <p class="small">The square pattern arranges plants in straight rows and columns</p>
                 </div>
             </div>
         </div>
@@ -547,6 +595,13 @@ font-weight: 700;
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const theme = "{{ auth()->user()->theme ?? 'light' }}";
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+
         // Plant type recommendations
         const plantRecommendations = {
             vegetable: { plantSpacing: 0.3, rowSpacing: 0.4 },

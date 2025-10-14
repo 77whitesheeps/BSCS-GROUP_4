@@ -158,6 +158,57 @@
             padding: 0.5rem 0.5rem;
         }
     </style>
+
+    <!-- Dark Mode Styles -->
+    <style>
+        .dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .dark-mode .card {
+            background-color: #1e1e1e;
+            border-color: #333;
+            color: #ffffff;
+        }
+        .dark-mode .card-header {
+            background-color: #333;
+            border-bottom-color: #444;
+        }
+        .dark-mode .table {
+            color: #ffffff;
+        }
+        .dark-mode .text-muted {
+            color: #f8f9fa !important;
+        }
+        .dark-mode .form-control {
+            background-color: #333;
+            color: #ffffff;
+            border-color: #555;
+        }
+        .dark-mode .form-check-label {
+            color: #ffffff;
+        }
+        .dark-mode .btn-primary {
+            background-color: var(--plant-green);
+            border-color: var(--plant-green);
+        }
+        .dark-mode .btn-secondary {
+            background-color: #ffffff;
+            border-color: #ffffff;
+            color: #121212;
+        }
+        .dark-mode .btn-outline-secondary {
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+        .dark-mode .btn-outline-secondary:hover {
+            background-color: #ffffff;
+            color: #121212;
+        }
+        .dark-mode .badge.bg-success {
+            background-color: var(--plant-green-dark) !important;
+        }
+    </style>
 </head>
 <body>
     <div class="container-fluid">
@@ -377,6 +428,12 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <script>
+        // Apply dark mode if the theme is set to 'dark'
+        const theme = "{{ $theme ?? 'light' }}";
+        if (theme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
         document.getElementById('downloadPdf').addEventListener('click', function() {
             const element = document.querySelector('.main-content');
             const opt = {

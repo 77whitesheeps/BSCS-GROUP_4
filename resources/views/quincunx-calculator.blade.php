@@ -89,7 +89,7 @@
         .btn-calculate:hover {
             background-color: var(--dark-color);
             border-color: var(--dark-color);
-transform: translateY(-2px);
+            transform: translateY(-2px);
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
         }
         
@@ -280,6 +280,7 @@ transform: translateY(-2px);
             width: 100%;
             height: 100%;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
         }
@@ -343,232 +344,347 @@ transform: translateY(-2px);
             font-size: 0.7em;
         }
         
+        .visualization-content {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .visualization-grid {
+            position: relative;
+            width: 90%;
+            height: 80%;
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
         @media (max-width: 768px) {
             .calculator-container {
                 padding: 1.5rem;
                 margin: 1rem;
             }
-            
-            .header {
-                padding: 1.5rem;
-            }
-            
-            .visualization {
-                height: 250px;
-                padding: 1rem;
-            }
-            
-            .plant {
-                width: 18px;
-                height: 18px;
-                font-size: 0.6rem;
-            }
-            
-            .spacing-inputs {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .btn-calculate {
-                width: 100%;
-                margin-bottom: 1rem;
-            }
+        }
+
+        /* Dark Theme Styles */
+        body.dark-theme {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .calculator-container {
+            background-color: #1e1e1e;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-theme .header {
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+        }
+
+        body.dark-theme .form-label {
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .form-control,
+        body.dark-theme .form-select {
+            background-color: #2c2c2c;
+            color: #e0e0e0;
+            border-color: #444;
+        }
+
+        body.dark-theme .form-control:focus,
+        body.dark-theme .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(139, 195, 74, 0.3);
+            background-color: #333;
+        }
+
+        body.dark-theme .results-container {
+            background-color: #2c2c2c;
+            border-left-color: var(--accent-color);
+        }
+
+        body.dark-theme .results-container h3 {
+            color: #fff;
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-theme .result-value {
+            color: var(--accent-color);
+        }
+
+        body.dark-theme .visualization {
+            background-color: #2c2c2c;
+            border-color: #444;
+        }
+        
+        body.dark-theme .visualization .text-muted {
+             color: #a0a0a0 !important;
+        }
+
+        body.dark-theme .grid-line {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-theme .visualization-info {
+            background: rgba(44, 44, 44, 0.9);
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .btn-outline-light {
+            color: #f8f9fa;
+            border-color: #f8f9fa;
+        }
+
+        body.dark-theme .btn-outline-light:hover {
+            color: #121212;
+            background-color: #f8f9fa;
+            border-color: #f8f9fa;
+        }
+        
+        body.dark-theme .pattern-info {
+            background-color: #2c2c2c;
+            border-left-color: var(--accent-color);
+        }
+        
+        body.dark-theme .pattern-info p, body.dark-theme .pattern-info h5 {
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .form-text {
+            color: #a0a0a0;
+        }
+
+        body.dark-theme .auto-border-info, body.dark-theme .form-check-label {
+            color: #a0a0a0;
+        }
+
+        body.dark-theme .alert-success {
+            background-color: #2e7d32;
+            color: #d4edda;
+        }
+
+        body.dark-theme .alert-danger {
+            background-color: #721c24;
+            color: #f8d7da;
+        }
+
+        body.dark-theme footer {
+            color: #a0a0a0;
+        }
+        
+        body.dark-theme .text-muted {
+            color: #a0a0a0 !important;
+        }
+        
+        body.dark-theme .border-bottom {
+            border-bottom: 1px solid #444 !important;
+        }
+
+        body.dark-theme .plant-dot:hover {
+            background-color: var(--accent-color);
         }
     </style>
 </head>
-<body>
-    <div class="container calculator-container">
-        <div class="header">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div>
-                    <h1 class="mb-2"><i class="fas fa-seedling me-2"></i>Quincunx Planting System Calculator</h1>
-                    <p class="mb-0">Optimize your planting layout with staggered quincunx pattern</p>
-                </div>
-                <div class="d-flex gap-2">
-                    <button type="button" onclick="resetForm()" class="btn btn-outline-light">
-                        <i class="fas fa-redo-alt me-1"></i> Reset
-                    </button>
-                    <a href="{{ route('dashboard') }}" class="btn btn-primary">
-                        <i class="fas fa-tachometer-alt me-1"></i> Back to Dashboard
-                    </a>
+<body class="{{ auth()->check() && auth()->user()->theme === 'dark' ? 'dark-theme' : '' }}">
+    <div class="container">
+        <div class="calculator-container">
+            <div class="header">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h1 class="mb-2"><i class="fas fa-seedling me-2"></i>Quincunx Planting System Calculator</h1>
+                        <p class="mb-0">Optimize your planting layout with staggered quincunx pattern</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" onclick="resetForm()" class="btn btn-outline-light">
+                            <i class="fas fa-redo-alt me-1"></i> Reset
+                        </button>
+                        <a href="{{ route('dashboard') }}" class="btn btn-primary">
+                            <i class="fas fa-tachometer-alt me-1"></i> Back to Dashboard
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="pattern-info">
-            <h5><i class="fas fa-info-circle me-2"></i>About Quincunx Planting</h5>
-            <p class="mb-0">The quincunx pattern arranges plants in a staggered formation, with each plant positioned between two plants in the adjacent row. This pattern can increase planting density by up to 15% compared to square planting while maintaining good air circulation.</p>
-        </div>
-        
-        <form id="quincunxForm">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-4">
-                        <label for="areaLength" class="form-label">Area Length</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" id="areaLength" name="areaLength" step="0.01" min="0.01" required value="10">
-                            <select class="form-select" id="lengthUnit" name="lengthUnit">
-                                <option value="m" selected>Meters (m)</option>
-                                <option value="ft">Feet (ft)</option>
-                                <option value="cm">Centimeters (cm)</option>
-                                <option value="in">Inches (in)</option>
+            
+            <div class="pattern-info">
+                <h5><i class="fas fa-info-circle me-2"></i>About Quincunx Planting</h5>
+                <p class="mb-0">The quincunx pattern arranges plants in a staggered formation, with each plant positioned between two plants in the adjacent row. This pattern can increase planting density by up to 15% compared to square planting while maintaining good air circulation.</p>
+            </div>
+            
+            <form id="quincunxForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label for="areaLength" class="form-label">Area Length</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="areaLength" name="areaLength" step="0.01" min="0.01" required value="10">
+                                <select class="form-select" id="lengthUnit" name="lengthUnit">
+                                    <option value="m" selected>Meters (m)</option>
+                                    <option value="ft">Feet (ft)</option>
+                                    <option value="cm">Centimeters (cm)</option>
+                                    <option value="in">Inches (in)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="areaWidth" class="form-label">Area Width</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="areaWidth" name="areaWidth" step="0.01" min="0.01" required value="8">
+                                <select class="form-select" id="widthUnit" name="widthUnit">
+                                    <option value="m" selected>Meters (m)</option>
+                                    <option value="ft">Feet (ft)</option>
+                                    <option value="cm">Centimeters (cm)</option>
+                                    <option value="in">Inches (in)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="plantType" class="form-label">Plant Type</label>
+                            <select class="form-select" id="plantType" name="plantType">
+                                <option value="vegetable">Vegetables</option>
+                                <option value="fruit">Fruits</option>
+                                <option value="herb">Herbs</option>
+                                <option value="flower">Flowers</option>
+                                <option value="tree">Trees</option>
+                                <option value="shrub">Shrubs</option>
+                                <option value="vine">Vines</option>
+                                <option value="custom">Custom</option>
                             </select>
+                            <div class="form-text">Selecting a plant type may suggest optimal spacing values</div>
                         </div>
                     </div>
                     
-                    <div class="mb-4">
-                        <label for="areaWidth" class="form-label">Area Width</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" id="areaWidth" name="areaWidth" step="0.01" min="0.01" required value="8">
-                            <select class="form-select" id="widthUnit" name="widthUnit">
-                                <option value="m" selected>Meters (m)</option>
-                                <option value="ft">Feet (ft)</option>
-                                <option value="cm">Centimeters (cm)</option>
-                                <option value="in">Inches (in)</option>
-                            </select>
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label for="plantSpacing" class="form-label">Plant Spacing</label>
+                            <div class="spacing-inputs">
+                                <div class="spacing-input">
+                                    <label class="form-label small">Between Plants</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="plantSpacing" name="plantSpacing" step="0.01" min="0.01" required value="0.3">
+                                        <select class="form-select" id="spacingUnit" name="spacingUnit">
+                                            <option value="m" selected>Meters (m)</option>
+                                            <option value="ft">Feet (ft)</option>
+                                            <option value="cm">Centimeters (cm)</option>
+                                            <option value="in">Inches (in)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="spacing-input">
+                                    <label class="form-label small">Between Rows</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="rowSpacing" name="rowSpacing" step="0.01" min="0.01" required value="0.3">
+                                        <select class="form-select" id="rowSpacingUnit" name="rowSpacingUnit">
+                                            <option value="m" selected>Meters (m)</option>
+                                            <option value="ft">Feet (ft)</option>
+                                            <option value="cm">Centimeters (cm)</option>
+                                            <option value="in">Inches (in)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="plantType" class="form-label">Plant Type</label>
-                        <select class="form-select" id="plantType" name="plantType">
-                            <option value="vegetable">Vegetables</option>
-                            <option value="fruit">Fruits</option>
-                            <option value="herb">Herbs</option>
-                            <option value="flower">Flowers</option>
-                            <option value="tree">Trees</option>
-                            <option value="shrub">Shrubs</option>
-                            <option value="vine">Vines</option>
-                            <option value="custom">Custom</option>
-                        </select>
-                        <div class="form-text">Selecting a plant type may suggest optimal spacing values</div>
+                        
+                        <div class="mb-4">
+                            <label for="borderSpacing" class="form-label">Border Spacing</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="borderSpacing" name="borderSpacing" step="0.01" min="0" value="0.5" required>
+                                <select class="form-select" id="borderUnit" name="borderUnit">
+                                    <option value="m" selected>Meters (m)</option>
+                                    <option value="ft">Feet (ft)</option>
+                                    <option value="cm">Centimeters (cm)</option>
+                                    <option value="in">Inches (in)</option>
+                                </select>
+                            </div>
+                            <div class="auto-border-info">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="autoBorder" name="autoBorder" value="1" checked>
+                                    <label class="form-check-label" for="autoBorder">
+                                        Auto-calculate border spacing based on plant spacing
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Planting Pattern</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="pattern" id="quincunxPattern" value="quincunx" checked>
+                                    <label class="form-check-label" for="quincunxPattern">
+                                        <i class="fas fa-diamond me-1"></i> Quincunx Pattern
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="pattern" id="squarePattern" value="square">
+                                    <label class="form-check-label" for="squarePattern">
+                                        <i class="fas fa-th-large me-1"></i> Square Pattern
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="col-md-6">
-                    <div class="mb-4">
-                        <label for="plantSpacing" class="form-label">Plant Spacing</label>
-                        <div class="spacing-inputs">
-                            <div class="spacing-input">
-                                <label class="form-label small">Between Plants</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="plantSpacing" name="plantSpacing" step="0.01" min="0.01" required value="0.3">
-                                    <select class="form-select" id="spacingUnit" name="spacingUnit">
-                                        <option value="m" selected>Meters (m)</option>
-                                        <option value="ft">Feet (ft)</option>
-                                        <option value="cm">Centimeters (cm)</option>
-                                        <option value="in">Inches (in)</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="spacing-input">
-                                <label class="form-label small">Between Rows</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="rowSpacing" name="rowSpacing" step="0.01" min="0.01" required value="0.3">
-                                    <select class="form-select" id="rowSpacingUnit" name="rowSpacingUnit">
-                                        <option value="m" selected>Meters (m)</option>
-                                        <option value="ft">Feet (ft)</option>
-                                        <option value="cm">Centimeters (cm)</option>
-                                        <option value="in">Inches (in)</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="borderSpacing" class="form-label">Border Spacing</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" id="borderSpacing" name="borderSpacing" step="0.01" min="0" value="0.5" required>
-                            <select class="form-select" id="borderUnit" name="borderUnit">
-                                <option value="m" selected>Meters (m)</option>
-                                <option value="ft">Feet (ft)</option>
-                                <option value="cm">Centimeters (cm)</option>
-                                <option value="in">Inches (in)</option>
-                            </select>
-                        </div>
-                        <div class="auto-border-info">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="autoBorder" name="autoBorder" value="1" checked>
-                                <label class="form-check-label" for="autoBorder">
-                                    Auto-calculate border spacing based on plant spacing
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label class="form-label">Planting Pattern</label>
-                        <div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="pattern" id="quincunxPattern" value="quincunx" checked>
-                                <label class="form-check-label" for="quincunxPattern">
-                                    <i class="fas fa-diamond me-1"></i> Quincunx Pattern
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="pattern" id="squarePattern" value="square">
-                                <label class="form-check-label" for="squarePattern">
-                                    <i class="fas fa-th-large me-1"></i> Square Pattern
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                <div class="text-center mt-4">
+                    <button type="button" id="calculateBtn" class="btn btn-calculate btn-lg">
+                        <i class="fas fa-calculator me-2"></i> Calculate
+                    </button>
                 </div>
-            </div>
+            </form>
             
-            <div class="text-center mt-4">
-                <button type="button" id="calculateBtn" class="btn btn-calculate btn-lg">
-                    <i class="fas fa-calculator me-2"></i> Calculate
-                </button>
-            </div>
-        </form>
-        
-        <div class="results-container mt-4 d-none" id="resultsContainer">
-            <h3 class="mb-4"><i class="fas fa-chart-bar me-2"></i>Calculation Results</h3>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span><i class="fas fa-seedling me-2 text-success"></i>Number of Plants:</span>
-                        <span class="result-value" id="totalPlants">0</span>
+            <div class="results-container mt-4 d-none" id="resultsContainer">
+                <h3 class="mb-4"><i class="fas fa-chart-bar me-2"></i>Calculation Results</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between border-bottom py-2">
+                            <span><i class="fas fa-seedling me-2 text-success"></i>Number of Plants:</span>
+                            <span class="result-value" id="totalPlants">0</span>
+                        </div>
+                        <div class="d-flex justify-content-between border-bottom py-2">
+                            <span><i class="fas fa-list me-2 text-success"></i>Plants per Row:</span>
+                            <span class="result-value" id="plantsPerRow">0</span>
+                        </div>
+                        <div class="d-flex justify-content-between border-bottom py-2">
+                            <span><i class="fas fa-bars me-2 text-success"></i>Number of Rows:</span>
+                            <span class="result-value" id="numberOfRows">0</span>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span><i class="fas fa-list me-2 text-success"></i>Plants per Row:</span>
-                        <span class="result-value" id="plantsPerRow">0</span>
-                    </div>
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span><i class="fas fa-bars me-2 text-success"></i>Number of Rows:</span>
-                        <span class="result-value" id="numberOfRows">0</span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span><i class="fas fa-ruler-combined me-2 text-success"></i>Effective Area:</span>
-                        <span class="result-value" id="effectiveArea">0 m²</span>
-                    </div>
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span><i class="fas fa-chart-pie me-2 text-success"></i>Planting Density:</span>
-                        <span class="result-value" id="plantingDensity">0 plants/m²</span>
-                    </div>
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span><i class="fas fa-percentage me-2 text-success"></i>Space Utilization:</span>
-                        <span class="result-value" id="spaceUtilization">0%</span>
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between border-bottom py-2">
+                            <span><i class="fas fa-ruler-combined me-2 text-success"></i>Effective Area:</span>
+                            <span class="result-value" id="effectiveArea">0 m²</span>
+                        </div>
+                        <div class="d-flex justify-content-between border-bottom py-2">
+                            <span><i class="fas fa-chart-pie me-2 text-success"></i>Planting Density:</span>
+                            <span class="result-value" id="plantingDensity">0 plants/m²</span>
+                        </div>
+                        <div class="d-flex justify-content-between border-bottom py-2">
+                            <span><i class="fas fa-percentage me-2 text-success"></i>Space Utilization:</span>
+                            <span class="result-value" id="spaceUtilization">0%</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row mt-3">
-                <div class="col-12">
-                    <div class="d-flex justify-content-between border-bottom py-2">
-                        <span><i class="fas fa-leaf me-2 text-success"></i>Pattern Efficiency:</span>
-                        <span class="result-value" id="patternEfficiency">0%</span>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between border-bottom py-2">
+                            <span><i class="fas fa-leaf me-2 text-success"></i>Pattern Efficiency:</span>
+                            <span class="result-value" id="patternEfficiency">0%</span>
+                        </div>
+                        <small class="text-muted">Compared to square planting pattern</small>
                     </div>
-                    <small class="text-muted">Compared to square planting pattern</small>
                 </div>
-            </div>
             
-            <div class="alert alert-success mt-3">
-                <i class="fas fa-check-circle me-2"></i><strong>Calculation completed successfully!</strong> The quincunx pattern can accommodate more plants in the same area.
+                <div class="alert alert-success mt-3">
+                    <i class="fas fa-check-circle me-2"></i><strong>Calculation completed successfully!</strong> The quincunx pattern can accommodate more plants in the same area.
+                </div>
             </div>
         </div>
         
@@ -576,10 +692,12 @@ transform: translateY(-2px);
         <div class="visualization-container mt-4">
             <h4 class="mb-3"><i class="fas fa-project-diagram me-2"></i>Plant Layout Visualization</h4>
             <div class="visualization" id="visualization">
-                <div class="text-center text-muted p-5">
-                    <i class="fas fa-calculator fa-3x mb-3"></i>
-                    <p>Visualization will appear here after calculation</p>
-                    <p class="small">The quincunx pattern arranges plants in a staggered formation</p>
+                <div class="visualization-content">
+                    <div class="text-center text-muted p-5">
+                        <i class="fas fa-calculator fa-3x mb-3"></i>
+                        <p>Visualization will appear here after calculation</p>
+                        <p class="small">The quincunx pattern arranges plants in a staggered formation</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -670,10 +788,12 @@ transform: translateY(-2px);
             
             // Reset visualization
             document.getElementById('visualization').innerHTML = `
-                <div class="text-center text-muted p-5">
-                    <i class="fas fa-calculator fa-3x mb-3"></i>
-                    <p>Visualization will appear here after calculation</p>
-                    <p class="small">The quincunx pattern arranges plants in a staggered formation</p>
+                <div class="visualization-content">
+                    <div class="text-center text-muted p-5">
+                        <i class="fas fa-calculator fa-3x mb-3"></i>
+                        <p>Visualization will appear here after calculation</p>
+                        <p class="small">The quincunx pattern arranges plants in a staggered formation</p>
+                    </div>
                 </div>
             `;
             
@@ -790,12 +910,12 @@ transform: translateY(-2px);
             const plantSize = Math.min(cellWidth, cellHeight) * 0.7;
             
             let visualizationHTML = `
-                <div class="plant-grid">
+                <div class="visualization-content">
                     <div class="text-center mb-2">
                         <h5 class="text-success">${plantsPerRow * numberOfRows} Plants</h5>
                         <p class="small text-muted">${pattern === 'quincunx' ? 'Quincunx' : 'Square'} Pattern</p>
                     </div>
-                    <div style="position: relative; width: ${containerWidth}px; height: ${containerHeight}px; background: #f8f9fa; border-radius: 8px; padding: 10px;">
+                    <div class="visualization-grid">
             `;
             
             // Add plants based on pattern
@@ -813,12 +933,16 @@ transform: translateY(-2px);
                         top = row * cellHeight + (cellHeight / 2);
                     }
                     
+                    // Convert to percentage for responsive positioning
+                    const leftPercent = (left / containerWidth) * 100;
+                    const topPercent = (top / containerHeight) * 100;
+                    
                     visualizationHTML += `
                         <div class="plant-dot" style="
                             width: ${plantSize}px; 
                             height: ${plantSize}px; 
-                            left: ${left}px; 
-                            top: ${top}px;
+                            left: ${leftPercent}%; 
+                            top: ${topPercent}%;
                         " title="Plant ${row * maxCols + col + 1}">
                             <i class="fas fa-circle plant-icon"></i>
                         </div>

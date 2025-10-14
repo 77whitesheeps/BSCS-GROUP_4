@@ -16,8 +16,9 @@ class MonthlyReportController extends Controller
         $currentMonth = Carbon::now();
 
         $reportData = $this->getReportData($user, $currentMonth);
+        $theme = $user->theme ?? 'light';
 
-        return view('monthly-report.index', compact('reportData'));
+        return view('monthly-report.index', compact('reportData', 'theme'));
     }
 
     public function generate(Request $request)
@@ -33,12 +34,13 @@ class MonthlyReportController extends Controller
 
         $reportData = $this->getReportData($user, $selectedMonth);
         $reportData['include_charts'] = $request->boolean('include_charts');
+        $theme = $user->theme ?? 'light';
 
         if ($request->has('download')) {
             return $this->downloadPdf($reportData);
         }
 
-        return view('monthly-report.index', compact('reportData'));
+        return view('monthly-report.index', compact('reportData', 'theme'));
     }
 
     public function downloadPdf($reportData)
