@@ -12,6 +12,9 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
+    <!-- html2pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <!-- Custom CSS from Dashboard -->
     <style>
         :root {
@@ -375,8 +378,15 @@
     
     <script>
         document.getElementById('downloadPdf').addEventListener('click', function() {
-            // Implement PDF download functionality
-            alert('PDF download functionality would be implemented here with a library like jsPDF or by calling a backend endpoint.');
+            const element = document.querySelector('.main-content');
+            const opt = {
+                margin:       0.5,
+                filename:     'monthly-report.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
         });
 
         // Auto-refresh report data

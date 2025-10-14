@@ -84,7 +84,8 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-.btn-calculate:hover {
+        
+        .btn-calculate:hover {
             background-color: var(--dark-color);
             border-color: var(--dark-color);
             transform: translateY(-2px);
@@ -129,7 +130,7 @@
             border-radius: 12px;
             padding: 1.8rem;
             margin-top: 2rem;
-            height: 350px;
+            height: 400px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -139,60 +140,83 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
         
-        .triangular-pattern {
+        .plant-grid {
             position: relative;
             width: 100%;
             height: 100%;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+            overflow: hidden;
         }
         
-        .plant {
+        .plant-circle {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: absolute;
-            width: 22px;
-            height: 22px;
-            background-color: var(--secondary-color);
-            border-radius: 50%;
+            transform: translate(-50%, -50%);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: bold;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.16);
-            transform: translate(-50%, -50%);
+            cursor: pointer;
             z-index: 2;
-            font-size: 0.7rem;
-            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
         }
         
-        .plant:hover {
-            transform: translate(-50%, -50%) scale(1.2);
+        .plant-circle:hover {
+            transform: translate(-50%, -50%) scale(1.4);
             z-index: 3;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
         }
         
-        .grid-lines {
+        .plant-circle:hover::after {
+            content: attr(title);
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            z-index: 4;
         }
         
-        .grid-line {
+        .pattern-title {
             position: absolute;
-            background-color: rgba(0, 0, 0, 0.1);
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.95);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            color: #2e7d32;
+            text-align: center;
         }
         
-        .grid-line.vertical {
-            width: 1px;
-            height: 100%;
+        .visualization-info {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            text-align: center;
         }
         
-        .grid-line.horizontal {
-            height: 1px;
-            width: 100%;
+        .visualization-summary {
+            background: rgba(255,255,255,0.95);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #555;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        .spacing-inputs {
+.spacing-inputs {
             display: flex;
             gap: 15px;
         }
@@ -210,18 +234,6 @@
         .form-check-input:checked {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
-        }
-        
-        .visualization-info {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 8px 15px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            z-index: 10;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         .pattern-legend {
@@ -273,32 +285,8 @@
             margin-bottom: 0;
         }
         
-        .plant-grid {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .plant-dot {
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            position: absolute;
-            transform: translate(-50%, -50%);
-        }
-        
-        .plant-dot:hover {
-            transform: translate(-50%, -50%) scale(1.2);
-            z-index: 2;
-        }
-        
         .layout-details {
-            background-color: rgba(248, 249, 250, 0.8);
+background-color: rgba(248, 249, 250, 0.8);
             border-radius: 8px;
             padding: 1rem;
             margin-top: 1rem;
@@ -350,6 +338,17 @@
             border-radius: 4px;
         }
         
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.1;
+            z-index: 1;
+        }
+        
         @media (max-width: 768px) {
             .calculator-container {
                 padding: 1.5rem;
@@ -361,14 +360,8 @@
             }
             
             .visualization {
-                height: 250px;
+                height: 300px;
                 padding: 1rem;
-            }
-            
-            .plant {
-                width: 18px;
-                height: 18px;
-                font-size: 0.6rem;
             }
             
             .spacing-inputs {
@@ -379,6 +372,11 @@
             .btn-calculate {
                 width: 100%;
                 margin-bottom: 1rem;
+            }
+            
+            .pattern-title {
+                font-size: 0.8rem;
+                padding: 8px 15px;
             }
         }
     </style>
@@ -395,7 +393,9 @@
                     <button type="button" onclick="resetForm()" class="btn btn-outline-light">
                         <i class="fas fa-redo-alt me-1"></i> Reset
                     </button>
-                    <a href="{{ route('dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+                    <a href="{{ route('dashboard') }}" class="btn btn-primary">
+                        <i class="fas fa-tachometer-alt me-1"></i> Back to Dashboard
+                    </a>
                 </div>
             </div>
         </div>
@@ -406,27 +406,18 @@
         </div>
         
         <!-- Success/Error Messages -->
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
+        <div class="alert alert-success alert-dismissible fade show d-none" id="successAlert" role="alert">
+            <i class="fas fa-check-circle me-2"></i><span id="successMessage">Calculation completed successfully!</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
-        @if($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                <ul class="mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
+        <div class="alert alert-danger alert-dismissible fade show d-none" id="errorAlert" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <ul class="mb-0" id="errorList"></ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         
-        <form id="triangularForm" action="{{ route('triangle.calculate') }}" method="POST">
-            @csrf
+        <form id="triangularForm">
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-4">
@@ -524,41 +515,41 @@
             </div>
             
             <div class="text-center mt-4">
-                <button type="submit" id="calculateBtn" class="btn btn-calculate btn-lg">
+                <button type="button" id="calculateBtn" class="btn btn-calculate btn-lg">
                     <i class="fas fa-calculator me-2"></i> Calculate
                 </button>
             </div>
         </form>
         
-        <div class="results-container mt-4 @if(!$results) d-none @endif" id="resultsContainer">
+        <div class="results-container mt-4 d-none" id="resultsContainer">
             <h3 class="mb-4"><i class="fas fa-chart-bar me-2"></i>Calculation Results</h3>
             <div class="row">
                 <div class="col-md-6">
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-seedling me-2 text-success"></i>Number of Plants:</span>
-                        <span class="result-value" id="totalPlants">{{ $results['totalPlants'] ?? 0 }}</span>
+                        <span class="result-value" id="totalPlants">0</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-list me-2 text-success"></i>Plants per Row:</span>
-                        <span class="result-value" id="plantsPerRow">{{ $results['plantsPerRow'] ?? 0 }}</span>
+                        <span class="result-value" id="plantsPerRow">0</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-bars me-2 text-success"></i>Number of Rows:</span>
-                        <span class="result-value" id="numberOfRows">{{ $results['numberOfRows'] ?? 0 }}</span>
+                        <span class="result-value" id="numberOfRows">0</span>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-ruler-combined me-2 text-success"></i>Effective Area:</span>
-                        <span class="result-value" id="effectiveArea">{{ number_format($results['effectiveArea'] ?? 0, 2) }} m²</span>
+                        <span class="result-value" id="effectiveArea">0 m²</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-chart-pie me-2 text-success"></i>Planting Density:</span>
-                        <span class="result-value" id="plantingDensity">{{ number_format($results['plantingDensity'] ?? 0, 2) }} plants/m²</span>
+                        <span class="result-value" id="plantingDensity">0 plants/m²</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-percentage me-2 text-success"></i>Space Utilization:</span>
-                        <span class="result-value" id="spaceUtilization">{{ number_format($results['spaceUtilization'] ?? 0, 1) }}%</span>
+                        <span class="result-value" id="spaceUtilization">0%</span>
                     </div>
                 </div>
             </div>
@@ -567,14 +558,10 @@
                 <div class="col-12">
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-leaf me-2 text-success"></i>Pattern Efficiency:</span>
-                        <span class="result-value" id="patternEfficiency">{{ $results['efficiency'] ?? 0 }}%</span>
+                        <span class="result-value" id="patternEfficiency">0%</span>
                     </div>
                     <small class="text-muted">Compared to square planting pattern</small>
                 </div>
-            </div>
-            
-            <div class="alert alert-success mt-3">
-                <i class="fas fa-check-circle me-2"></i><strong>Calculation completed successfully!</strong> The triangular pattern maximizes planting density.
             </div>
         </div>
         
@@ -582,28 +569,24 @@
         <div class="visualization-container mt-4">
             <h4 class="mb-3"><i class="fas fa-project-diagram me-2"></i>Plant Layout Visualization</h4>
             <div class="visualization" id="visualization">
-                @if($results)
-                    <div class="text-center text-muted p-5">
-                        <i class="fas fa-calculator fa-3x mb-3"></i>
-                        <p>Visualization would show {{ $results['totalPlants'] }} plants in triangular pattern</p>
-                        <p class="small">The triangular pattern arranges plants in equilateral triangles</p>
-                    </div>
-                @else
-                    <div class="text-center text-muted p-5">
-                        <i class="fas fa-calculator fa-3x mb-3"></i>
-                        <p>Visualization will appear here after calculation</p>
-                        <p class="small">The triangular pattern arranges plants in equilateral triangles</p>
-                    </div>
-                @endif
+                <div class="text-center text-muted p-5">
+                    <i class="fas fa-seedling fa-3x mb-3"></i>
+                    <p>Enter your planting parameters and click Calculate</p>
+                    <p class="small">Visualization will show the planting pattern with circle icons</p>
+                </div>
             </div>
             <div class="pattern-comparison">
                 <div class="comparison-item">
                     <div style="width: 12px; height: 12px; background: #28a745; border-radius: 50%;"></div>
-                    <span>Plant</span>
+                    <span>Plant Position</span>
                 </div>
                 <div class="comparison-item">
-                    <div style="width: 12px; height: 12px; background: transparent; border: 1px dashed #6c757d; border-radius: 50%;"></div>
-                    <span>Optimal spacing</span>
+                    <i class="fas fa-play text-primary"></i>
+                    <span>Triangular Pattern</span>
+                </div>
+                <div class="comparison-item">
+                    <i class="fas fa-th-large text-secondary"></i>
+                    <span>Square Pattern</span>
                 </div>
             </div>
         </div>
@@ -630,29 +613,13 @@
         // Auto-border functionality
         document.getElementById('autoBorder').addEventListener('change', function() {
             const borderInput = document.getElementById('borderSpacing');
-            const form = document.getElementById('triangularForm');
-
-            // Remove existing hidden border input if any
-            const existingHidden = form.querySelector('input[name="borderSpacing"][type="hidden"]');
-            if (existingHidden) {
-                existingHidden.remove();
-            }
-
             if (this.checked) {
                 borderInput.disabled = true;
                 const plantSpacing = parseFloat(document.getElementById('plantSpacing').value) || 0.3;
                 const borderSpacingValue = plantSpacing / 2;
                 borderInput.value = borderSpacingValue.toFixed(2);
-
-                // Create hidden input to ensure value is sent
-                const hiddenInput = document.createElement('input');
-                hiddenInput.type = 'hidden';
-                hiddenInput.name = 'borderSpacing';
-                hiddenInput.value = borderSpacingValue.toFixed(2);
-                form.appendChild(hiddenInput);
             } else {
                 borderInput.disabled = false;
-                borderInput.value = '0.5'; // Default value when unchecked
             }
         });
         
@@ -663,8 +630,6 @@
             
             if (recommendation && plantType !== 'custom') {
                 document.getElementById('plantSpacing').value = recommendation.plantSpacing;
-                
-                // Trigger auto-border update
                 document.getElementById('autoBorder').dispatchEvent(new Event('change'));
             }
         });
@@ -698,22 +663,18 @@
         // Function to reset the form
         function resetForm() {
             document.getElementById('triangularForm').reset();
-            
-            // Hide results
             document.getElementById('resultsContainer').classList.add('d-none');
             document.getElementById('successAlert').classList.add('d-none');
             document.getElementById('errorAlert').classList.add('d-none');
             
-            // Reset visualization
             document.getElementById('visualization').innerHTML = `
                 <div class="text-center text-muted p-5">
-                    <i class="fas fa-calculator fa-3x mb-3"></i>
-                    <p>Visualization will appear here after calculation</p>
-                    <p class="small">The triangular pattern arranges plants in equilateral triangles</p>
+                    <i class="fas fa-seedling fa-3x mb-3"></i>
+                    <p>Enter your planting parameters and click Calculate</p>
+                    <p class="small">Visualization will show the planting pattern with circle icons</p>
                 </div>
             `;
             
-            // Re-trigger auto-border functionality
             document.getElementById('autoBorder').dispatchEvent(new Event('change'));
         }
         
@@ -735,7 +696,6 @@
             if (!borderSpacing || borderSpacing < 0) errors.push("Border spacing must be a non-negative number");
             
             if (errors.length > 0) {
-                // Show errors
                 document.getElementById('errorList').innerHTML = errors.map(error => `<li>${error}</li>`).join('');
                 document.getElementById('errorAlert').classList.remove('d-none');
                 document.getElementById('successAlert').classList.add('d-none');
@@ -761,20 +721,16 @@
             
             if (pattern === 'triangular') {
                 // Triangular pattern calculation
-                // In triangular pattern, vertical distance between rows is plantSpacing * √3/2
                 const verticalSpacing = plantSpacing * Math.sqrt(3) / 2;
                 
                 plantsPerRow = Math.floor(effectiveLength / plantSpacing);
                 numberOfRows = Math.floor(effectiveWidth / verticalSpacing);
                 
-                // For triangular pattern, we have alternating rows with full and offset plants
                 totalPlants = 0;
                 for (let row = 0; row < numberOfRows; row++) {
                     if (row % 2 === 0) {
-                        // Even rows have full number of plants
                         totalPlants += plantsPerRow;
                     } else {
-                        // Odd rows have plantsPerRow - 1 plants (offset)
                         totalPlants += Math.max(plantsPerRow - 1, 0);
                     }
                 }
@@ -788,18 +744,16 @@
             const effectiveArea = effectiveLength * effectiveWidth;
             const plantingDensity = totalPlants / effectiveArea;
             
-            // Calculate space utilization based on pattern
+            // Calculate space utilization
             let spaceUtilization;
             if (pattern === 'triangular') {
-                // Area per plant in triangular pattern is (√3/2) * plantSpacing²
                 const areaPerPlant = (Math.sqrt(3) / 2) * plantSpacing * plantSpacing;
                 spaceUtilization = (totalPlants * areaPerPlant) / (areaLength * areaWidth) * 100;
             } else {
-                // Area per plant in square pattern is plantSpacing²
                 spaceUtilization = (totalPlants * plantSpacing * plantSpacing) / (areaLength * areaWidth) * 100;
             }
             
-            // Calculate pattern efficiency (triangular vs square)
+            // Calculate pattern efficiency
             const squarePlants = Math.floor(effectiveLength / plantSpacing) * Math.floor(effectiveWidth / plantSpacing);
             const patternEfficiency = pattern === 'triangular' ? 
                 ((totalPlants - squarePlants) / squarePlants * 100).toFixed(1) : 0;
@@ -823,130 +777,113 @@
             updateVisualization(plantsPerRow, numberOfRows, plantType, pattern, plantSpacing);
         });
         
-        // Function to update visualization
+        // Function to update visualization with circle icons
         function updateVisualization(plantsPerRow, numberOfRows, plantType, pattern, plantSpacing) {
             const visualization = document.getElementById('visualization');
             
-            // Determine plant icon based on type
-            let plantIcon = '🌱'; // default
-            switch(plantType) {
-                case 'vegetable': plantIcon = '🥬'; break;
-                case 'fruit': plantIcon = '🍓'; break;
-                case 'herb': plantIcon = '🌿'; break;
-                case 'flower': plantIcon = '🌺'; break;
-                case 'tree': plantIcon = '🌳'; break;
-                case 'shrub': plantIcon = '🌿'; break;
-                case 'vine': plantIcon = '🍇'; break;
-                default: plantIcon = '🌱';
-            }
+            // Clear previous visualization
+            visualization.innerHTML = '';
+            
+            // Create the plant grid container
+            const plantGrid = document.createElement('div');
+            plantGrid.className = 'plant-grid';
+            
+            // Add pattern title
+            const patternTitle = document.createElement('div');
+            patternTitle.className = 'pattern-title';
+            patternTitle.innerHTML = `
+                <i class="fas fa-${pattern === 'triangular' ? 'play' : 'th-large'} me-2"></i>
+                <strong>${pattern === 'triangular' ? 'Triangular' : 'Square'} Pattern</strong>
+                <div class="small mt-1">${plantsPerRow} × ${numberOfRows} = ${plantsPerRow * numberOfRows} plants</div>
+            `;
+            plantGrid.appendChild(patternTitle);
             
             // Limit visualization to reasonable dimensions
-            const maxRows = Math.min(numberOfRows, 8);
-            const maxCols = Math.min(plantsPerRow, 12);
+            const maxRows = Math.min(numberOfRows, 12);
+            const maxCols = Math.min(plantsPerRow, 16);
             
-            // Calculate appropriate sizing
-            const containerWidth = visualization.clientWidth - 40;
-            const containerHeight = visualization.clientHeight - 40;
+            // Get container dimensions
+            const containerWidth = visualization.clientWidth - 60;
+            const containerHeight = visualization.clientHeight - 80;
             
-            // Calculate cell size based on pattern
+            // Calculate spacing for visualization
             let cellWidth, cellHeight;
+            
             if (pattern === 'triangular') {
+                // Triangular pattern: hexagonal packing
                 cellWidth = containerWidth / (maxCols + 0.5);
-                cellHeight = containerHeight / maxRows;
+                cellHeight = containerHeight / (maxRows * 0.866); // √3/2 ≈ 0.866
             } else {
+                // Square pattern
                 cellWidth = containerWidth / maxCols;
                 cellHeight = containerHeight / maxRows;
             }
-            const plantSize = Math.min(cellWidth, cellHeight) * 0.6;
             
-            let visualizationHTML = `
-                <div class="plant-grid">
-                    <div class="text-center mb-2">
-                        <h5 class="text-success">${plantsPerRow * numberOfRows} Plants</h5>
-                        <p class="small text-muted">${pattern === 'triangular' ? 'Triangular' : 'Square'} Pattern</p>
-                    </div>
-                    <div style="position: relative; width: ${containerWidth}px; height: ${containerHeight}px; background: #f8f9fa; border-radius: 8px; padding: 10px;">
-            `;
+            // Plant size - make it responsive
+            const plantSize = Math.min(cellWidth, cellHeight) * 0.5;
+            
+            let totalPlants = 0;
             
             // Add plants based on pattern
             for(let row = 0; row < maxRows; row++) {
-                let colsInThisRow = maxCols;
-                
+                let plantsInThisRow = maxCols;
                 if (pattern === 'triangular' && row % 2 === 1) {
-                    // For triangular pattern, odd rows have one less plant
-                    colsInThisRow = Math.max(maxCols - 1, 1);
+                    plantsInThisRow = Math.max(maxCols - 1, 1);
                 }
                 
-                for(let col = 0; col < colsInThisRow; col++) {
-                    let left, top;
+                for(let col = 0; col < plantsInThisRow; col++) {
+                    totalPlants++;
+                    
+                    // Calculate position
+                    let x, y;
                     
                     if (pattern === 'triangular') {
                         // Triangular pattern positioning
                         if (row % 2 === 0) {
-                            // Even rows: regular positioning
-                            left = col * cellWidth + (cellWidth / 2);
+                            x = col * cellWidth + (cellWidth / 2) + 30;
                         } else {
-                            // Odd rows: offset by half cell width
-                            left = col * cellWidth + cellWidth;
+                            x = col * cellWidth + cellWidth + 30;
                         }
-                        top = row * cellHeight + (cellHeight / 2);
+                        y = row * cellHeight * 0.866 + (cellHeight / 2) + 40;
                     } else {
                         // Square pattern positioning
-                        left = col * cellWidth + (cellWidth / 2);
-                        top = row * cellHeight + (cellHeight / 2);
+                        x = col * cellWidth + (cellWidth / 2) + 30;
+                        y = row * cellHeight + (cellHeight / 2) + 40;
                     }
                     
-                    visualizationHTML += `
-                        <div class="plant-dot" style="
-                            width: ${plantSize}px; 
-                            height: ${plantSize}px; 
-                            background: #28a745; 
-                            left: ${left}px; 
-                            top: ${top}px;
-                            font-size: ${plantSize * 0.5}px;
-                            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                        ">
-                            ${plantIcon}
-                        </div>
+                    // Create plant element with Font Awesome circle
+                    const plant = document.createElement('div');
+                    plant.className = 'plant-circle';
+                    plant.innerHTML = '<i class="fas fa-circle"></i>';
+                    plant.title = `Row ${row + 1}, Position ${col + 1}`;
+                    
+                    // Style the plant
+                    plant.style.cssText = `
+                        left: ${x}px;
+                        top: ${y}px;
+                        width: ${plantSize}px;
+                        height: ${plantSize}px;
+                        color: #28a745;
+                        font-size: ${plantSize}px;
                     `;
                     
-                    // Add spacing indicator for triangular pattern
-                    if (pattern === 'triangular' && row < maxRows - 1 && col < colsInThisRow - 1) {
-                        const nextLeft = pattern === 'triangular' && (row % 2 === 0) ? 
-                            (col + 1) * cellWidth + (cellWidth / 2) : 
-                            (col + 1) * cellWidth + cellWidth;
-                        const nextTop = (row + 1) * cellHeight + (cellHeight / 2);
-                        
-                        // Draw a faint line to show optimal spacing
-                        visualizationHTML += `
-                            <div style="
-                                position: absolute;
-                                left: ${left}px;
-                                top: ${top}px;
-                                width: ${Math.sqrt(Math.pow(nextLeft - left, 2) + Math.pow(nextTop - top, 2))}px;
-                                height: 1px;
-                                background: rgba(0,0,0,0.1);
-                                transform: rotate(${Math.atan2(nextTop - top, nextLeft - left)}rad);
-                                transform-origin: 0 0;
-                            "></div>
-                        `;
-                    }
+                    plantGrid.appendChild(plant);
                 }
             }
             
-            visualizationHTML += `</div>`;
+            visualization.appendChild(plantGrid);
             
-            if (numberOfRows > maxRows || plantsPerRow > maxCols) {
-                visualizationHTML += `
-                    <p class="text-center text-muted small mt-2">
-                        Showing ${maxCols} × ${maxRows} of ${plantsPerRow} × ${numberOfRows} total plants
-                    </p>
-                `;
-            }
-            
-            visualizationHTML += `</div>`;
-            
-            visualization.innerHTML = visualizationHTML;
+            // Add summary information
+            const summary = document.createElement('div');
+            summary.className = 'visualization-info';
+            summary.innerHTML = `
+                <div class="visualization-summary">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Showing ${maxCols} × ${maxRows} of ${plantsPerRow} × ${numberOfRows} total plants
+                    ${pattern === 'triangular' ? '• Hexagonal packing' : '• Grid pattern'}
+                </div>
+            `;
+            plantGrid.appendChild(summary);
         }
         
         // Add subtle animations to form elements

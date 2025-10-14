@@ -88,7 +88,7 @@
         .btn-calculate:hover {
             background-color: var(--dark-color);
             border-color: var(--dark-color);
-            transform: translateY(-2px);
+transform: translateY(-2px);
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
         }
         
@@ -252,7 +252,7 @@
             padding: 1.5rem;
             color: #6c757d;
             font-size: 0.9rem;
-}
+        }
         
         .alert {
             border-radius: 10px;
@@ -291,11 +291,14 @@
             border-radius: 50%;
             position: absolute;
             transform: translate(-50%, -50%);
+            background-color: var(--secondary-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
         .plant-dot:hover {
             transform: translate(-50%, -50%) scale(1.2);
             z-index: 2;
+            background-color: var(--dark-color);
         }
         
         .layout-details {
@@ -332,6 +335,11 @@
         
         .visualization-container {
             position: relative;
+        }
+        
+        .plant-icon {
+            color: white;
+            font-size: 0.7em;
         }
         
         @media (max-width: 768px) {
@@ -372,14 +380,16 @@
         <div class="header">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h1 class="mb-2">🔷 Quincunx Planting System Calculator</h1>
+                    <h1 class="mb-2"><i class="fas fa-seedling me-2"></i>Quincunx Planting System Calculator</h1>
                     <p class="mb-0">Optimize your planting layout with staggered quincunx pattern</p>
                 </div>
                 <div class="d-flex gap-2">
                     <button type="button" onclick="resetForm()" class="btn btn-outline-light">
                         <i class="fas fa-redo-alt me-1"></i> Reset
                     </button>
-                    <a href="{{ route('dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+                    <a href="{{ route('dashboard') }}" class="btn btn-primary">
+                        <i class="fas fa-tachometer-alt me-1"></i> Back to Dashboard
+                    </a>
                 </div>
             </div>
         </div>
@@ -389,28 +399,7 @@
             <p class="mb-0">The quincunx pattern arranges plants in a staggered formation, with each plant positioned between two plants in the adjacent row. This pattern can increase planting density by up to 15% compared to square planting while maintaining good air circulation.</p>
         </div>
         
-        <!-- Success/Error Messages -->
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        @if($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                <ul class="mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-        
-        <form id="quincunxForm" action="{{ route('calculate.quincunx') }}" method="POST">
-            @csrf
+        <form id="quincunxForm">
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-4">
@@ -442,14 +431,14 @@
                     <div class="mb-4">
                         <label for="plantType" class="form-label">Plant Type</label>
                         <select class="form-select" id="plantType" name="plantType">
-                            <option value="vegetable">🥬 Vegetables</option>
-                            <option value="fruit">🍓 Fruits</option>
-                            <option value="herb">🌿 Herbs</option>
-                            <option value="flower">🌺 Flowers</option>
-                            <option value="tree">🌳 Trees</option>
-                            <option value="shrub">🌿 Shrubs</option>
-                            <option value="vine">🍇 Vines</option>
-                            <option value="custom">🔧 Custom</option>
+                            <option value="vegetable">Vegetables</option>
+                            <option value="fruit">Fruits</option>
+                            <option value="herb">Herbs</option>
+                            <option value="flower">Flowers</option>
+                            <option value="tree">Trees</option>
+                            <option value="shrub">Shrubs</option>
+                            <option value="vine">Vines</option>
+                            <option value="custom">Custom</option>
                         </select>
                         <div class="form-text">Selecting a plant type may suggest optimal spacing values</div>
                     </div>
@@ -528,41 +517,41 @@
             </div>
             
             <div class="text-center mt-4">
-                <button type="submit" id="calculateBtn" class="btn btn-calculate btn-lg">
+                <button type="button" id="calculateBtn" class="btn btn-calculate btn-lg">
                     <i class="fas fa-calculator me-2"></i> Calculate
                 </button>
             </div>
         </form>
         
-        <div class="results-container mt-4 @if(!$results) d-none @endif" id="resultsContainer">
+        <div class="results-container mt-4 d-none" id="resultsContainer">
             <h3 class="mb-4"><i class="fas fa-chart-bar me-2"></i>Calculation Results</h3>
             <div class="row">
                 <div class="col-md-6">
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-seedling me-2 text-success"></i>Number of Plants:</span>
-                        <span class="result-value" id="totalPlants">{{ $results['totalPlants'] ?? 0 }}</span>
+                        <span class="result-value" id="totalPlants">0</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-list me-2 text-success"></i>Plants per Row:</span>
-                        <span class="result-value" id="plantsPerRow">{{ $results['plantsPerRow'] ?? 0 }}</span>
+                        <span class="result-value" id="plantsPerRow">0</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-bars me-2 text-success"></i>Number of Rows:</span>
-                        <span class="result-value" id="numberOfRows">{{ $results['numberOfRows'] ?? 0 }}</span>
+                        <span class="result-value" id="numberOfRows">0</span>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-ruler-combined me-2 text-success"></i>Effective Area:</span>
-                        <span class="result-value" id="effectiveArea">{{ number_format($results['effectiveArea'] ?? 0, 2) }} m²</span>
+                        <span class="result-value" id="effectiveArea">0 m²</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-chart-pie me-2 text-success"></i>Planting Density:</span>
-                        <span class="result-value" id="plantingDensity">{{ number_format($results['plantingDensity'] ?? 0, 2) }} plants/m²</span>
+                        <span class="result-value" id="plantingDensity">0 plants/m²</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-percentage me-2 text-success"></i>Space Utilization:</span>
-                        <span class="result-value" id="spaceUtilization">{{ number_format($results['spaceUtilization'] ?? 0, 1) }}%</span>
+                        <span class="result-value" id="spaceUtilization">0%</span>
                     </div>
                 </div>
             </div>
@@ -571,7 +560,7 @@
                 <div class="col-12">
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span><i class="fas fa-leaf me-2 text-success"></i>Pattern Efficiency:</span>
-                        <span class="result-value" id="patternEfficiency">{{ $results['efficiency'] ?? 0 }}%</span>
+                        <span class="result-value" id="patternEfficiency">0%</span>
                     </div>
                     <small class="text-muted">Compared to square planting pattern</small>
                 </div>
@@ -586,19 +575,11 @@
         <div class="visualization-container mt-4">
             <h4 class="mb-3"><i class="fas fa-project-diagram me-2"></i>Plant Layout Visualization</h4>
             <div class="visualization" id="visualization">
-                @if($results)
-                    <div class="text-center text-muted p-5">
-                        <i class="fas fa-calculator fa-3x mb-3"></i>
-                        <p>Visualization would show {{ $results['totalPlants'] }} plants in quincunx pattern</p>
-                        <p class="small">The quincunx pattern arranges plants in a staggered formation</p>
-                    </div>
-                @else
-                    <div class="text-center text-muted p-5">
-                        <i class="fas fa-calculator fa-3x mb-3"></i>
-                        <p>Visualization will appear here after calculation</p>
-                        <p class="small">The quincunx pattern arranges plants in a staggered formation</p>
-                    </div>
-                @endif
+                <div class="text-center text-muted p-5">
+                    <i class="fas fa-calculator fa-3x mb-3"></i>
+                    <p>Visualization will appear here after calculation</p>
+                    <p class="small">The quincunx pattern arranges plants in a staggered formation</p>
+                </div>
             </div>
         </div>
     </div>
@@ -685,8 +666,6 @@
             
             // Hide results
             document.getElementById('resultsContainer').classList.add('d-none');
-            document.getElementById('successAlert').classList.add('d-none');
-            document.getElementById('errorAlert').classList.add('d-none');
             
             // Reset visualization
             document.getElementById('visualization').innerHTML = `
@@ -721,11 +700,7 @@
             if (!borderSpacing || borderSpacing < 0) errors.push("Border spacing must be a non-negative number");
             
             if (errors.length > 0) {
-                // Show errors
-                document.getElementById('errorList').innerHTML = errors.map(error => `<li>${error}</li>`).join('');
-                document.getElementById('errorAlert').classList.remove('d-none');
-                document.getElementById('successAlert').classList.add('d-none');
-                document.getElementById('resultsContainer').classList.add('d-none');
+                alert("Please fix the following errors:\n" + errors.join("\n"));
                 return;
             }
             
@@ -735,11 +710,7 @@
             
             // Ensure effective dimensions are positive
             if (effectiveLength <= 0 || effectiveWidth <= 0) {
-                errors.push("Border spacing is too large for the given area dimensions");
-                document.getElementById('errorList').innerHTML = errors.map(error => `<li>${error}</li>`).join('');
-                document.getElementById('errorAlert').classList.remove('d-none');
-                document.getElementById('successAlert').classList.add('d-none');
-                document.getElementById('resultsContainer').classList.add('d-none');
+                alert("Border spacing is too large for the given area dimensions");
                 return;
             }
             
@@ -780,8 +751,6 @@
             
             // Show results
             document.getElementById('resultsContainer').classList.remove('d-none');
-            document.getElementById('successAlert').classList.remove('d-none');
-            document.getElementById('errorAlert').classList.add('d-none');
             
             // Update visualization
             updateVisualization(plantsPerRow, numberOfRows, plantType, pattern);
@@ -790,19 +759,6 @@
         // Function to update visualization
         function updateVisualization(plantsPerRow, numberOfRows, plantType, pattern) {
             const visualization = document.getElementById('visualization');
-            
-            // Determine plant icon based on type
-            let plantIcon = '🌱'; // default
-            switch(plantType) {
-                case 'vegetable': plantIcon = '🥬'; break;
-                case 'fruit': plantIcon = '🍓'; break;
-                case 'herb': plantIcon = '🌿'; break;
-                case 'flower': plantIcon = '🌺'; break;
-                case 'tree': plantIcon = '🌳'; break;
-                case 'shrub': plantIcon = '🌿'; break;
-                case 'vine': plantIcon = '🍇'; break;
-                default: plantIcon = '🌱';
-            }
             
             // Limit visualization to reasonable dimensions
             const maxRows = Math.min(numberOfRows, 8);
@@ -832,8 +788,8 @@
                     let left, top;
                     
                     if (pattern === 'quincunx') {
-                        // Staggered positioning for quincunx pattern
-                        left = (col * cellWidth) + (row % 2 === 1 ? cellWidth / 2 : 0);
+                        // Fixed quincunx positioning - plants in even rows are offset
+                        left = (col * cellWidth) + (row % 2 === 0 ? 0 : cellWidth / 2);
                         top = row * cellHeight + (cellHeight / 2);
                     } else {
                         // Square pattern positioning
@@ -845,13 +801,10 @@
                         <div class="plant-dot" style="
                             width: ${plantSize}px; 
                             height: ${plantSize}px; 
-                            background: #28a745; 
                             left: ${left}px; 
                             top: ${top}px;
-                            font-size: ${plantSize * 0.5}px;
-                            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                        ">
-                            ${plantIcon}
+                        " title="Plant ${row * maxCols + col + 1}">
+                            <i class="fas fa-circle plant-icon"></i>
                         </div>
                     `;
                 }
