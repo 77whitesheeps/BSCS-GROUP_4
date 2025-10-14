@@ -8,7 +8,9 @@
                     <i class="fas fa-user-circle fa-2x text-muted"></i>
                 </div>
                 <div class="user-info">
-                    <h6 class="mb-0">{{ auth()->user()->name }}</h6>
+                    <a href="{{ route('profile.edit') }}" class="text-decoration-none" style="color: inherit;">
+                        <h6 class="mb-0">{{ auth()->user()->name }}</h6>
+                    </a>
                     <small class="text-muted">Online</small>
                 </div>
             </div>
