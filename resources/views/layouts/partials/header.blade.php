@@ -1,7 +1,12 @@
 <nav class="navbar navbar-expand-lg main-header">
     <div class="container-fluid">
-        <!-- Sidebar Toggle Button -->
-        <button class="sidebar-toggle me-3">
+        <!-- Desktop Sidebar Collapse Toggle -->
+        <button class="sidebar-toggle sidebar-toggle-desktop me-2 d-none d-lg-inline btn btn-sm btn-outline-light px-2" type="button" title="Toggle sidebar (collapse)">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Mobile Sidebar Open Toggle -->
+        <button class="sidebar-toggle-mobile d-inline d-lg-none btn btn-sm btn-outline-light px-2 me-2" type="button" title="Open menu">
             <i class="fas fa-bars"></i>
         </button>
 
@@ -11,11 +16,10 @@
             Plant-O-Matic
         </a>
 
-        <!-- Mobile Sidebar Toggle -->
-        </button>
+    <!-- Spacer for alignment -->
 
         <!-- Right Side Navbar -->
-        <div class="navbar-nav ms-auto d-flex align-items-center">
+    <div class="navbar-nav ms-auto d-flex align-items-center gap-2">
             @auth
                 <!-- Notifications Dropdown -->
                 <div class="nav-item dropdown me-3">

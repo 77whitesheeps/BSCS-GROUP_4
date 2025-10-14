@@ -144,4 +144,8 @@
 .user-panel {
     background: linear-gradient(135deg, var(--plant-green-light), #f8f9fa);
 }
+@media (max-width: 991.98px) {
+    .main-sidebar { width: var(--sidebar-width); max-width: 85%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .sidebar-menu li a { padding: 12px 16px; }
+}
 </style>
