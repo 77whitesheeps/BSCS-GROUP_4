@@ -160,14 +160,6 @@ class GardenPlan extends Model
 
     private function updateUserTotals()
     {
-        $user = $this->user;
-
-        // Get fresh data from database to avoid stale model relationships
-        $plans = GardenPlan::where('user_id', $user->id)->get();
-
-        $user->total_plans = $plans->count();
-        $user->total_garden_area_planned = $plans->sum('total_area') ?? 0;
-
-        $user->save();
+        $this->user->updateUserTotals();
     }
 }

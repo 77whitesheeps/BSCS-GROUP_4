@@ -95,7 +95,7 @@ class User extends Authenticatable
                                                ->unique()
                                                ->count();
         $this->total_plants_calculated = $calculations->sum('total_plants') ?? 0;
-        $this->total_area_planned = $calculations->sum('total_area') ?? 0;
+        $this->total_area_planned = ($calculations->sum('total_area') ?? 0) + ($plans->sum('total_area') ?? 0);
         $this->total_plans = $plans->count();
         $this->total_garden_area_planned = $plans->sum('total_area') ?? 0;
 

@@ -22,8 +22,8 @@ class DashboardController extends Controller
         $plantTypes = $userCalculations->whereNotNull('plant_type')
                                       ->distinct('plant_type')
                                       ->count('plant_type');
-        $plantsCalculated = $userCalculations->sum('total_plants') ?? 0;
-        $totalAreaPlanned = $userCalculations->sum('total_area') ?? 0;
+        $plantsCalculated = $user->total_plants_calculated;
+        $totalAreaPlanned = $user->total_area_planned;
         $totalPlans = $userGardenPlans->count();
         $totalGardenAreaPlanned = $userGardenPlans->sum('total_area') ?? 0;
 
@@ -31,8 +31,6 @@ class DashboardController extends Controller
         $user->update([
             'total_calculations' => $totalCalculations,
             'total_plant_types' => $plantTypes,
-            'total_plants_calculated' => $plantsCalculated,
-            'total_area_planned' => $totalAreaPlanned,
             'total_plans' => $totalPlans,
             'total_garden_area_planned' => $totalGardenAreaPlanned,
         ]);
