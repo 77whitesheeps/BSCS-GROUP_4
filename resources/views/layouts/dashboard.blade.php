@@ -50,7 +50,8 @@
 
         /* Header Styles */
         .main-header {
-            height: var(--header-height);
+            /* Use min-height so the green background always covers contents if they grow */
+            min-height: var(--header-height);
             display: flex;
             align-items: center; /* vertically center icons/text */
             padding-top: 4px; /* small breathing space so icons fully sit inside */
@@ -64,14 +65,30 @@
             z-index: 1030;
         }
 
+        /* Keep header content on one straight line and allow safe shrinking */
+        .main-header .container-fluid {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            flex-wrap: nowrap; /* prevent wrapping under the header */
+            min-width: 0; /* allow flex items to shrink */
+        }
+
         .main-header .navbar-brand {
             color: white !important;
             font-weight: bold;
             font-size: 1.5rem;
+            white-space: nowrap; /* keep title in one line */
+            margin-right: .25rem;
+            min-width: 0; /* so it can shrink with ellipsis */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1 1 auto; /* brand can shrink first */
         }
 
         .main-header .navbar-nav .nav-link {
             color: white !important;
+            padding: .25rem .5rem; /* slightly tighter to save space */
         }
 
         .main-header .navbar-nav .dropdown-menu {
@@ -79,6 +96,7 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             background: var(--card-bg);
             color: var(--text-color);
+            z-index: 2000; /* ensure it appears above sidebar */
         }
 
         .main-header .navbar-nav .dropdown-menu .dropdown-item {
@@ -176,6 +194,7 @@
             color: white;
             font-size: 1.2rem;
             cursor: pointer;
+            padding: .25rem .5rem;
         }
 
         /* Sidebar overlay (mobile) */
@@ -212,6 +231,33 @@
         @media (min-width: 576px) { .responsive-grid.cols-sm-2 { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 768px) { .responsive-grid.cols-md-3 { grid-template-columns: repeat(3, 1fr); } }
         @media (min-width: 992px) { .responsive-grid.cols-lg-4 { grid-template-columns: repeat(4, 1fr); } }
+
+        /* Right-side nav should stay horizontal */
+    .main-header .navbar-nav { flex-direction: row; align-items: center; flex: 0 0 auto; }
+        .main-header .navbar-nav .nav-item { position: relative; }
+        .main-header .navbar-nav .badge {
+            position: absolute;
+            top: 2px;
+            right: 0;
+            transform: translate(60%, -60%);
+            font-size: .7rem;
+        }
+
+        /* Make dropdowns fully visible on very small screens */
+        @media (max-width: 575.98px) {
+            .main-header .navbar-brand { font-size: 1.05rem; }
+            /* Use fixed positioning so the menu doesn't get clipped and fits the viewport */
+            .main-header .dropdown-menu {
+                position: fixed;
+                top: calc(var(--header-height) - 2px);
+                right: .5rem;
+                left: .5rem;
+                width: auto;
+                max-width: calc(100vw - 1rem);
+                max-height: calc(100vh - var(--header-height) - 1rem);
+                overflow-y: auto;
+            }
+        }
 
         /* Custom Components */
         .card-dashboard {
