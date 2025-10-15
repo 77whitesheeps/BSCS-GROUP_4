@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Monthly Report - Plant-O-Matic</title>
-    
+    <!-- html2pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
-    <!-- html2pdf.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
 
     <!-- Custom CSS from Dashboard -->
     <style>
@@ -252,9 +252,7 @@
                             </div>
                             <div class="col-md-4 d-flex align-items-end">
                                 <button type="submit" class="btn btn-primary me-2">Generate Report</button>
-                                <button type="submit" name="download" value="1" class="btn btn-success">
-                                    Download PDF
-                                </button>
+                                
                             </div>
                         </form>
                     </div>
@@ -434,17 +432,21 @@
             document.body.classList.add('dark-mode');
         }
 
-        document.getElementById('downloadPdf').addEventListener('click', function() {
-            const element = document.querySelector('.main-content');
-            const opt = {
-                margin:       0.5,
-                filename:     'monthly-report.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
-        });
+        // Toolbar PDF download functionality
+        const downloadBtn = document.getElementById('downloadPdf');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', function() {
+                const element = document.querySelector('.main-content');
+                const opt = {
+                    margin:       0.5,
+                    filename:     'monthly-report.pdf',
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2 },
+                    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                };
+                html2pdf().set(opt).from(element).save();
+            });
+        }
 
         // Auto-refresh report data
         setInterval(function() {
