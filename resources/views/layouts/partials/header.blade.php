@@ -22,18 +22,21 @@
     <div class="navbar-nav ms-auto d-flex align-items-center gap-2">
             @auth
                 <!-- Notifications Dropdown -->
-                <div class="nav-item dropdown me-3">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                <div class="nav-item dropdown me-3" id="notifDropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-bell"></i>
-                        <span class="badge bg-danger badge-sm">3</span>
+                        <span class="badge bg-danger badge-sm d-none" id="notifBadge">0</span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
+                    <ul class="dropdown-menu dropdown-menu-end" style="min-width: 280px;">
                         <li><h6 class="dropdown-header">Notifications</h6></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-info-circle me-2"></i>New calculation saved</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-leaf me-2"></i>Plant spacing updated</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-chart-line me-2"></i>Weekly report ready</a></li>
+                        <div id="notifItems">
+                            <li class="px-3 py-2 text-muted small">No notifications</li>
+                        </div>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-center" href="#">View all notifications</a></li>
+                        <li class="d-flex">
+                            <a class="dropdown-item text-center flex-fill" href="{{ route('notifications.index') }}">View all</a>
+                            <a class="dropdown-item text-center flex-fill" href="#" id="markAllLink">Mark all read</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -81,3 +84,57 @@
         </div>
     </div>
 </nav>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const badge = document.getElementById('notifBadge');
+    const itemsContainer = document.getElementById('notifItems');
+    const markAll = document.getElementById('markAllLink');
+
+    function render(items){
+        itemsContainer.innerHTML = '';
+        if(!items || items.length === 0){
+            itemsContainer.innerHTML = '<li class="px-3 py-2 text-muted small">No notifications</li>';
+            return;
+        }
+        items.forEach(n => {
+            const icon = n.icon || 'info-circle';
+            const url = n.url || '#';
+            const li = document.createElement('li');
+            li.innerHTML = `<a class="dropdown-item d-flex align-items-center" href="${url}" data-id="${n.id}">
+                    <i class="fas fa-${icon} me-2"></i>
+                    <span>${n.title}</span>
+                </a>`;
+            itemsContainer.appendChild(li);
+            li.querySelector('a').addEventListener('click', function(e){
+                // mark as read then follow link
+                fetch(`{{ url('/notifications') }}/${n.id}/read`, {method:'POST', headers:{'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content}})
+                    .then(()=>{ if(url && url !== '#'){ window.location.href = url; } });
+            });
+        });
+    }
+
+    function load(){
+        fetch('{{ route('notifications.fetch') }}')
+            .then(r=>r.json())
+            .then(data => {
+                const unread = data.unread || 0;
+                if(unread > 0){ badge.classList.remove('d-none'); badge.textContent = unread; } else { badge.classList.add('d-none'); }
+                render(data.items || []);
+            })
+            .catch(()=>{});
+    }
+
+    load();
+    // Refresh occasionally
+    setInterval(load, 60000);
+
+    markAll?.addEventListener('click', function(e){
+        e.preventDefault();
+        fetch('{{ route('notifications.readAll') }}', {method:'POST', headers:{'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content}})
+            .then(()=>load());
+    });
+});
+</script>
+@endpush

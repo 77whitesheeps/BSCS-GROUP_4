@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\GardenPlan;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\GenericNotification;
 
 class GardenPlannerController extends Controller
 {
@@ -74,6 +75,18 @@ class GardenPlannerController extends Controller
 
         $plan = GardenPlan::create($planData);
 
+        // Notify user of new plan
+        try {
+            $request->user()?->notify(new GenericNotification(
+                title: 'Garden plan created',
+                message: '"' . $plan->name . '" has been created successfully.',
+                icon: 'leaf',
+                url: route('garden.planner')
+            ));
+        } catch (\Throwable $e) {
+            logger()->warning('Failed to send plan created notification: ' . $e->getMessage());
+        }
+
         return response()->json(['success' => true, 'plan' => $plan]);
     }
 
@@ -129,13 +142,38 @@ class GardenPlannerController extends Controller
 
         $plan->update($updateData);
 
+        // Notify user of plan update
+        try {
+            $request->user()?->notify(new GenericNotification(
+                title: 'Garden plan updated',
+                message: 'Your plan "' . $plan->name . '" was updated.',
+                icon: 'edit',
+                url: route('garden.planner')
+            ));
+        } catch (\Throwable $e) {
+            logger()->warning('Failed to send plan updated notification: ' . $e->getMessage());
+        }
+
         return response()->json(['success' => true, 'plan' => $plan]);
     }
 
     public function delete($id)
     {
         $plan = GardenPlan::where('user_id', auth()->id())->findOrFail($id);
+        $planName = $plan->name;
         $plan->delete();
+
+        // Notify user of deletion
+        try {
+            auth()->user()?->notify(new GenericNotification(
+                title: 'Garden plan deleted',
+                message: 'Your plan "' . $planName . '" was deleted.',
+                icon: 'trash',
+                url: route('garden.planner')
+            ));
+        } catch (\Throwable $e) {
+            logger()->warning('Failed to send plan deleted notification: ' . $e->getMessage());
+        }
 
         return response()->json(['success' => true]);
     }
@@ -166,6 +204,18 @@ class GardenPlannerController extends Controller
         
         $plan->update(['plant_calculations' => $calculations]);
 
+        // Notify user of calculation import
+        try {
+            $request->user()?->notify(new GenericNotification(
+                title: 'Calculation imported to plan',
+                message: 'A ' . ($request->calculation_data['method'] ?? 'plant') . ' calculation was added to "' . $plan->name . '".',
+                icon: 'file-import',
+                url: route('garden.planner')
+            ));
+        } catch (\Throwable $e) {
+            logger()->warning('Failed to send calculation import notification: ' . $e->getMessage());
+        }
+
         return response()->json(['success' => true, 'plan' => $plan]);
     }
 
@@ -189,6 +239,19 @@ class GardenPlannerController extends Controller
         if (isset($tasks[$request->task_index])) {
             $tasks[$request->task_index]['completed'] = $request->completed;
             $plan->update(['task_checklist' => $tasks]);
+
+            // Notify user of task status change
+            try {
+                $title = $request->completed ? 'Task completed' : 'Task re-opened';
+                $request->user()?->notify(new GenericNotification(
+                    title: $title,
+                    message: 'A task in "' . $plan->name . '" was ' . ($request->completed ? 'completed' : 're-opened') . '.',
+                    icon: $request->completed ? 'check-circle' : 'undo',
+                    url: route('garden.planner')
+                ));
+            } catch (\Throwable $e) {
+                logger()->warning('Failed to send task status notification: ' . $e->getMessage());
+            }
         }
 
         return response()->json(['success' => true, 'plan' => $plan->fresh()]);

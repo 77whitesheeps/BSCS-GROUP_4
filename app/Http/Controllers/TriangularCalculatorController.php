@@ -7,6 +7,7 @@ use App\Models\PlantCalculation;
 use Illuminate\Support\Facades\Auth; // Import Auth facade
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Notifications\GenericNotification;
 
 class TriangularCalculatorController extends Controller
 {
@@ -150,6 +151,18 @@ class TriangularCalculatorController extends Controller
                 // User totals will be updated automatically via model events
                 return $calculation;
             });
+
+            // Notify user that calculation was saved
+            try {
+                $request->user()?->notify(new GenericNotification(
+                    title: 'Calculation saved',
+                    message: 'Your Triangular calculation "' . ($calculation->calculation_name ?? 'Unnamed') . '" was saved to your history.',
+                    icon: 'calculator',
+                    url: route('calculations.history')
+                ));
+            } catch (\Throwable $e) {
+                Log::warning('Failed to send Triangular calc notification: ' . $e->getMessage());
+            }
 
             // Return JSON response for AJAX requests
             if ($request->wantsJson()) {

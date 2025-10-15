@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\PlantCalculation;
 use App\Models\GardenPlan;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\GenericNotification;
 
 class MonthlyReportController extends Controller
 {
@@ -35,6 +36,18 @@ class MonthlyReportController extends Controller
         $reportData = $this->getReportData($user, $selectedMonth);
         $reportData['include_charts'] = $request->boolean('include_charts');
         $theme = $user->theme ?? 'light';
+
+        // Notify user that monthly report is ready
+        try {
+            $user?->notify(new GenericNotification(
+                title: 'Monthly report generated',
+                message: 'Your ' . $selectedMonth->format('F Y') . ' report is ready to view.',
+                icon: 'calendar',
+                url: route('monthly-reports.index')
+            ));
+        } catch (\Throwable $e) {
+            // Avoid breaking flow if notifications fail
+        }
 
         if ($request->has('download')) {
             return $this->downloadPdf($reportData);

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\PlantCalculation; // Import the PlantCalculation model
 use Illuminate\Support\Facades\Auth; // Import Auth facade
 use Illuminate\Support\Facades\DB;
+use App\Notifications\GenericNotification;
 
 class PlantingCalculatorController extends Controller
 {
@@ -114,6 +115,19 @@ class PlantingCalculatorController extends Controller
                 // User totals will be updated automatically via model events
                 return $calculation;
             });
+
+            // Notify user that calculation was saved
+            try {
+                $request->user()?->notify(new GenericNotification(
+                    title: 'Calculation saved',
+                    message: 'Your Square calculation "' . ($calculation->calculation_name ?? 'Unnamed') . '" was saved to your history.',
+                    icon: 'calculator',
+                    url: route('calculations.history')
+                ));
+            } catch (\Throwable $e) {
+                // Do not interrupt the normal flow if notifications fail
+                logger()->warning('Failed to send calculation saved notification: ' . $e->getMessage());
+            }
 
             return response()->json([
                 'success' => true,

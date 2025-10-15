@@ -8,6 +8,7 @@ use App\Models\ExportLog;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Response;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Notifications\GenericNotification;
 
 class CalculationHistoryController extends Controller
 {
@@ -110,6 +111,18 @@ class CalculationHistoryController extends Controller
             'notes' => $request->notes,
             'is_saved' => true
         ]);
+
+        // Notify user of saved calculation
+        try {
+            $request->user()?->notify(new GenericNotification(
+                title: 'Calculation saved',
+                message: '"' . $calculation->calculation_name . '" has been saved successfully.',
+                icon: 'save',
+                url: route('calculations.saved')
+            ));
+        } catch (\Throwable $e) {
+            logger()->warning('Failed to send saved calculation notification: ' . $e->getMessage());
+        }
         
         return redirect()->back()->with('success', 'Calculation saved successfully!');
     }
@@ -127,7 +140,19 @@ class CalculationHistoryController extends Controller
         }
         
         $calculation->delete();
-        
+
+        // Notify user of deletion
+        try {
+            auth()->user()?->notify(new GenericNotification(
+                title: 'Calculation deleted',
+                message: 'A calculation was deleted from your history.',
+                icon: 'trash',
+                url: route('calculations.history')
+            ));
+        } catch (\Throwable $e) {
+            logger()->warning('Failed to send calc deleted notification: ' . $e->getMessage());
+        }
+
         return redirect()->back()->with('success', 'Calculation deleted successfully!');
     }
     
@@ -249,6 +274,18 @@ class CalculationHistoryController extends Controller
             // Update export log with file size if possible
             $this->updateExportLogFileSize($exportLog, $response);
             
+            // Notify on export completed
+            try {
+                $request->user()?->notify(new GenericNotification(
+                    title: 'Export completed',
+                    message: 'Your calculations were exported as CSV (' . $calculations->count() . ' records).',
+                    icon: 'file-csv',
+                    url: route('calculations.export')
+                ));
+            } catch (\Throwable $e) {
+                logger()->warning('Failed to send export notification: ' . $e->getMessage());
+            }
+
             return $response;
         } elseif ($format === 'pdf') {
             $response = $this->exportPdf($calculations);
@@ -256,6 +293,18 @@ class CalculationHistoryController extends Controller
             // Update export log with file size if possible
             $this->updateExportLogFileSize($exportLog, $response);
             
+            // Notify on export completed
+            try {
+                $request->user()?->notify(new GenericNotification(
+                    title: 'Export completed',
+                    message: 'Your calculations were exported as PDF (' . $calculations->count() . ' records).',
+                    icon: 'file-pdf',
+                    url: route('calculations.export')
+                ));
+            } catch (\Throwable $e) {
+                logger()->warning('Failed to send export notification: ' . $e->getMessage());
+            }
+
             return $response;
         }
         

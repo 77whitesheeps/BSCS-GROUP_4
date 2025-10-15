@@ -16,6 +16,7 @@ use App\Http\Controllers\GardenPlannerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalculationHistoryController;
 use App\Http\Controllers\HelpController;
+use App\Http\Controllers\NotificationsController;
 
 // Public routes
 Route::get('/', function () {
@@ -103,4 +104,12 @@ Route::get('/print-report', [PlantReportController::class, 'printReport'])->name
 
     // Help routes
     Route::get('/help', [HelpController::class, 'index'])->name('help.support');
+
+    // Notifications
+    Route::middleware('auth')->group(function() {
+        Route::get('/notifications', [NotificationsController::class, 'index'])->name('notifications.index');
+        Route::get('/notifications/fetch', [NotificationsController::class, 'fetch'])->name('notifications.fetch');
+        Route::post('/notifications/{id}/read', [NotificationsController::class, 'markAsRead'])->name('notifications.read');
+        Route::post('/notifications/read-all', [NotificationsController::class, 'markAllAsRead'])->name('notifications.readAll');
+    });
 });
