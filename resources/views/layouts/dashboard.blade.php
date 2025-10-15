@@ -80,10 +80,8 @@
             font-size: 1.5rem;
             white-space: nowrap; /* keep title in one line */
             margin-right: .25rem;
-            min-width: 0; /* so it can shrink with ellipsis */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            flex: 1 1 auto; /* brand can shrink first */
+            /* Keep the brand visible and avoid being pushed out */
+            flex: 0 0 auto;
         }
 
         .main-header .navbar-nav .nav-link {
@@ -233,7 +231,7 @@
         @media (min-width: 992px) { .responsive-grid.cols-lg-4 { grid-template-columns: repeat(4, 1fr); } }
 
         /* Right-side nav should stay horizontal */
-    .main-header .navbar-nav { flex-direction: row; align-items: center; flex: 0 0 auto; }
+    .main-header .navbar-nav { flex-direction: row; align-items: center; justify-content: flex-end; flex: 1 1 auto; gap: .25rem; }
         .main-header .navbar-nav .nav-item { position: relative; }
         .main-header .navbar-nav .badge {
             position: absolute;
@@ -257,6 +255,17 @@
                 max-height: calc(100vh - var(--header-height) - 1rem);
                 overflow-y: auto;
             }
+            /* Tighten spacing and scale icons so brand never disappears */
+            .main-header .container-fluid { gap: .25rem; }
+            .main-header .navbar-nav { gap: .15rem; }
+            .main-header .navbar-nav .nav-link { padding: .15rem .35rem; }
+            .main-header .navbar-nav .fa-bell,
+            .main-header .navbar-nav .fa-user-circle { font-size: 1rem; }
+            .main-header .navbar-nav .badge { transform: translate(40%, -60%); font-size: .6rem; }
+            /* Hide the dropdown caret to save width */
+            .main-header .nav-link.dropdown-toggle::after { display: none; }
+            /* Reduce extra margin on notifications item */
+            .main-header .navbar-nav .nav-item.me-3 { margin-right: .25rem !important; }
         }
 
         /* Custom Components */
