@@ -368,6 +368,48 @@
                 padding: 1.5rem;
                 margin: 1rem;
             }
+            .header {
+                padding: 1.5rem;
+            }
+            .visualization {
+                height: 250px;
+                padding: 1rem;
+            }
+            .plant {
+                width: 18px;
+                height: 18px;
+                font-size: 0.6rem;
+            }
+            .spacing-inputs {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .btn-calculate {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            /* Header action buttons wrap under title on small screens */
+            .header .d-flex.justify-content-between {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: .75rem;
+            }
+            .header .d-flex.gap-2 {
+                width: 100%;
+                justify-content: stretch;
+            }
+            .header .d-flex.gap-2 > * { flex: 1 1 auto; }
+            /* Make input groups wrap better on small screens */
+            .input-group { flex-wrap: wrap; }
+            .input-group .form-control { flex: 1 1 100%; }
+            .input-group .form-select, .input-group .input-group-text { flex: 0 0 auto; margin-top: .5rem; }
+            /* Tighter footer spacing */
+            footer { padding: 1rem; }
+        }
+        @media (max-width: 420px) {
+            .visualization { height: 220px; }
+            .header h1 { font-size: 1.25rem; }
+            .header p { font-size: .9rem; }
         }
 
         /* Dark Theme Styles */
