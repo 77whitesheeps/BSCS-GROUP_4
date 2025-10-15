@@ -23,7 +23,7 @@
             --plant-green-dark: #5a9625;
             --plant-green-light: #eaf5e1;
             --sidebar-width: 250px;
-            --header-height: 60px;
+            --header-height: 85px; /* Increased to ensure header background covers profile icon */
             --footer-height: 50px;
             /* Light theme colors */
             --bg-color: #f8f9fa;
@@ -50,7 +50,12 @@
 
         /* Header Styles */
         .main-header {
-            height: var(--header-height);
+            /* Use min-height so the green background always covers contents if they grow */
+            min-height: var(--header-height);
+            display: flex;
+            align-items: center; /* vertically center icons/text */
+            padding-top: 4px; /* small breathing space so icons fully sit inside */
+            padding-bottom: 4px;
             background: linear-gradient(135deg, var(--plant-green), var(--plant-green-dark));
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             position: fixed;
@@ -60,14 +65,28 @@
             z-index: 1030;
         }
 
+        /* Keep header content on one straight line and allow safe shrinking */
+        .main-header .container-fluid {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            flex-wrap: nowrap; /* prevent wrapping under the header */
+            min-width: 0; /* allow flex items to shrink */
+        }
+
         .main-header .navbar-brand {
             color: white !important;
             font-weight: bold;
             font-size: 1.5rem;
+            white-space: nowrap; /* keep title in one line */
+            margin-right: .25rem;
+            /* Keep the brand visible and avoid being pushed out */
+            flex: 0 0 auto;
         }
 
         .main-header .navbar-nav .nav-link {
             color: white !important;
+            padding: .25rem .5rem; /* slightly tighter to save space */
         }
 
         .main-header .navbar-nav .dropdown-menu {
@@ -75,6 +94,7 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             background: var(--card-bg);
             color: var(--text-color);
+            z-index: 2000; /* ensure it appears above sidebar */
         }
 
         .main-header .navbar-nav .dropdown-menu .dropdown-item {
@@ -172,22 +192,80 @@
             color: white;
             font-size: 1.2rem;
             cursor: pointer;
+            padding: .25rem .5rem;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .main-sidebar {
-                margin-left: calc(-1 * var(--sidebar-width));
+        /* Sidebar overlay (mobile) */
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 1015;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .3s ease;
+        }
+        .sidebar-mobile-open .sidebar-overlay { opacity: 1; pointer-events: auto; }
+
+        /* Responsive refinements */
+        @media (max-width: 991.98px) { /* Bootstrap lg breakpoint */
+            body { font-size: 15px; }
+            .main-sidebar { margin-left: calc(-1 * var(--sidebar-width)); box-shadow: 4px 0 12px rgba(0,0,0,0.15); }
+            .main-content, .main-footer { margin-left: 0; padding: 15px; }
+            .sidebar-mobile-open .main-sidebar { margin-left: 0; }
+            .main-header .navbar-brand { font-size: 1.25rem; }
+            .breadcrumb { display: none; }
+        }
+
+        @media (max-width: 575.98px) { /* xs */
+            h1, .h1 { font-size: 1.35rem; }
+            h2, .h2 { font-size: 1.2rem; }
+            .card-dashboard { margin-bottom: 1rem; }
+        }
+
+        /* Utility */
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .responsive-grid { display: grid; gap: 1rem; }
+        @media (min-width: 576px) { .responsive-grid.cols-sm-2 { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 768px) { .responsive-grid.cols-md-3 { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 992px) { .responsive-grid.cols-lg-4 { grid-template-columns: repeat(4, 1fr); } }
+
+        /* Right-side nav should stay horizontal */
+    .main-header .navbar-nav { flex-direction: row; align-items: center; justify-content: flex-end; flex: 1 1 auto; gap: .25rem; }
+        .main-header .navbar-nav .nav-item { position: relative; }
+        .main-header .navbar-nav .badge {
+            position: absolute;
+            top: 2px;
+            right: 0;
+            transform: translate(60%, -60%);
+            font-size: .7rem;
+        }
+
+        /* Make dropdowns fully visible on very small screens */
+        @media (max-width: 575.98px) {
+            .main-header .navbar-brand { font-size: 1.05rem; }
+            /* Use fixed positioning so the menu doesn't get clipped and fits the viewport */
+            .main-header .dropdown-menu {
+                position: fixed;
+                top: calc(var(--header-height) - 2px);
+                right: .5rem;
+                left: .5rem;
+                width: auto;
+                max-width: calc(100vw - 1rem);
+                max-height: calc(100vh - var(--header-height) - 1rem);
+                overflow-y: auto;
             }
-            
-            .main-content,
-            .main-footer {
-                margin-left: 0;
-            }
-            
-            .sidebar-mobile-open .main-sidebar {
-                margin-left: 0;
-            }
+            /* Tighten spacing and scale icons so brand never disappears */
+            .main-header .container-fluid { gap: .25rem; }
+            .main-header .navbar-nav { gap: .15rem; }
+            .main-header .navbar-nav .nav-link { padding: .15rem .35rem; }
+            .main-header .navbar-nav .fa-bell,
+            .main-header .navbar-nav .fa-user-circle { font-size: 1rem; }
+            .main-header .navbar-nav .badge { transform: translate(40%, -60%); font-size: .6rem; }
+            /* Hide the dropdown caret to save width */
+            .main-header .nav-link.dropdown-toggle::after { display: none; }
+            /* Reduce extra margin on notifications item */
+            .main-header .navbar-nav .nav-item.me-3 { margin-right: .25rem !important; }
         }
 
         /* Custom Components */
@@ -199,43 +277,22 @@
             color: var(--text-color);
             transition: transform 0.2s ease;
         }
-
-        .card-dashboard:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn-plant {
-            background-color: var(--plant-green);
-            border-color: var(--plant-green);
-            color: white;
-        }
-
-        .btn-plant:hover {
-            background-color: var(--plant-green-dark);
-            border-color: var(--plant-green-dark);
-            color: white;
-        }
-
-        .alert-dismissible .btn-close {
-            padding: 0.5rem 0.5rem;
-        }
-
+        .card-dashboard:hover { transform: translateY(-2px); }
+        .btn-plant { background-color: var(--plant-green); border-color: var(--plant-green); color: #fff; }
+        .btn-plant:hover { background-color: var(--plant-green-dark); border-color: var(--plant-green-dark); color: #fff; }
+        .alert-dismissible .btn-close { padding: 0.5rem 0.5rem; }
         /* Breadcrumb Styles */
-        .breadcrumb {
-            background: transparent;
-            margin-bottom: 1.5rem;
-            padding: 0;
-        }
-
-        .breadcrumb-item a {
-            color: var(--text-color);
-            text-decoration: none;
-        }
-
-        .breadcrumb-item.active {
-            color: var(--text-color);
-        }
+        .breadcrumb { background: transparent; margin-bottom: 1.5rem; padding: 0; }
+        .breadcrumb-item a { color: var(--text-color); text-decoration: none; }
+        .breadcrumb-item.active { color: var(--text-color); }
     </style>
+    @php($viteManifest = public_path('build/manifest.json'))
+    @if (file_exists($viteManifest))
+        {{-- Vite (Tailwind & App Assets) --}}
+        @vite(['resources/css/app.css','resources/js/app.js'])
+    @else
+        <!-- Vite manifest not found. Run: npm install && npm run build (or npm run dev) to generate assets. -->
+    @endif
     
     @stack('styles')
 </head>
@@ -245,6 +302,9 @@
 
     <!-- Sidebar -->
     @include('layouts.partials.sidebar')
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay d-lg-none"></div>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -301,38 +361,30 @@
     @include('layouts.partials.footer')
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Sidebar Toggle Functionality
-        $(document).ready(function() {
-            $('.sidebar-toggle').on('click', function() {
-                $('body').toggleClass('sidebar-collapsed');
-                
-                // Store sidebar state in localStorage
-                if ($('body').hasClass('sidebar-collapsed')) {
-                    localStorage.setItem('sidebarCollapsed', 'true');
-                } else {
-                    localStorage.setItem('sidebarCollapsed', 'false');
+        // Progressive enhancement if Vite JS not yet loaded
+        (function(){
+            function ready(fn){ if(document.readyState!=='loading'){ fn(); } else { document.addEventListener('DOMContentLoaded', fn); } }
+            ready(function(){
+                var body = document.body;
+                var collapseBtn = document.querySelector('.sidebar-toggle-desktop');
+                var mobileBtn = document.querySelector('.sidebar-toggle-mobile');
+                var overlay = document.querySelector('.sidebar-overlay');
+                if(collapseBtn){
+                    collapseBtn.addEventListener('click', function(){
+                        body.classList.toggle('sidebar-collapsed');
+                        localStorage.setItem('sidebarCollapsed', body.classList.contains('sidebar-collapsed'));
+                    });
+                    if(localStorage.getItem('sidebarCollapsed') === 'true') { body.classList.add('sidebar-collapsed'); }
                 }
+                if(mobileBtn){
+                    mobileBtn.addEventListener('click', function(){ body.classList.toggle('sidebar-mobile-open'); });
+                }
+                if(overlay){ overlay.addEventListener('click', function(){ body.classList.remove('sidebar-mobile-open'); }); }
             });
-
-            // Restore sidebar state from localStorage
-            if (localStorage.getItem('sidebarCollapsed') === 'true') {
-                $('body').addClass('sidebar-collapsed');
-            }
-
-            // Mobile sidebar toggle
-            $('.mobile-sidebar-toggle').on('click', function() {
-                $('body').toggleClass('sidebar-mobile-open');
-            });
-
-            // Auto-hide alerts after 5 seconds
-            setTimeout(function() {
-                $('.alert').alert('close');
-            }, 5000);
-        });
+        })();
     </script>
     
     @stack('scripts')
