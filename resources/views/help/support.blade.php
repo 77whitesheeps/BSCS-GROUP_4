@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid" id="help-top">
     <div class="row">
         <div class="col-lg-12">
             <div class="card card-dashboard mb-4">
@@ -71,7 +71,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item">
+                                                <div class="accordion-item" id="contact">
                             <h2 class="accordion-header" id="headingFive">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
                                     Need more help?
@@ -88,4 +88,26 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // If the URL has a hash for deep-linking, handle it
+    const hash = window.location.hash;
+    if (hash === '#contact') {
+        // Expand the "Need more help?" accordion
+        const btn = document.querySelector('[data-bs-target="#collapseFive"]');
+        const collapseEl = document.getElementById('collapseFive');
+        if (btn && collapseEl) {
+            // Bootstrap's Collapse API
+            const collapse = new bootstrap.Collapse(collapseEl, {toggle: false});
+            collapse.show();
+            // Scroll into view after opening
+            setTimeout(() => document.getElementById('contact')?.scrollIntoView({behavior: 'smooth', block: 'start'}), 100);
+        }
+    } else if (hash === '#help-top') {
+        document.getElementById('help-top')?.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+});
+</script>
+@endpush
 @endsection

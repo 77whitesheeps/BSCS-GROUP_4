@@ -7,11 +7,11 @@
             <div class="col-md-6 text-end">
                 <span>Version 1.0.0</span>
                 <span class="mx-2">|</span>
-                <a href="#" class="text-muted text-decoration-none">
+                <a href="{{ route('help.support') }}#help-top" class="text-muted text-decoration-none" title="Help & Support">
                     <i class="fas fa-question-circle me-1"></i>Help
                 </a>
                 <span class="mx-2">|</span>
-                <a href="#" class="text-muted text-decoration-none">
+                <a href="{{ route('help.support') }}#contact" class="text-muted text-decoration-none" title="Contact Support">
                     <i class="fas fa-envelope me-1"></i>Support
                 </a>
             </div>
