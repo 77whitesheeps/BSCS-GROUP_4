@@ -198,7 +198,18 @@
                         
                         <!-- Pagination -->
                         <div class="card-footer">
-                            {{ $calculations->links() }}
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+                                <div class="text-muted small order-2 order-md-1">
+                                    @php
+                                        $from = ($calculations->currentPage() - 1) * $calculations->perPage() + 1;
+                                        $to = min($calculations->currentPage() * $calculations->perPage(), $calculations->total());
+                                    @endphp
+                                    Showing {{ $calculations->total() ? $from : 0 }} to {{ $calculations->total() ? $to : 0 }} of {{ $calculations->total() }} results
+                                </div>
+                                <div class="order-1 order-md-2">
+                                    {{ $calculations->onEachSide(1)->links() }}
+                                </div>
+                            </div>
                         </div>
                     @else
                         <div class="text-center py-5">
@@ -247,6 +258,11 @@
 @endsection
 
 @push('scripts')
+<style>
+/* Ensure pagination icons have sensible size and avoid huge SVGs */
+.pagination .page-link { font-size: 0.95rem; line-height: 1.25; }
+.pagination .page-item.disabled .page-link { color: #6c757d; }
+</style>
 <script>
 function saveCalculation(id) {
     document.getElementById('saveCalculationForm').action = `/calculations/${id}/save`;

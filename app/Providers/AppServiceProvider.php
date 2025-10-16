@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator;
 use Carbon\Carbon;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,5 +28,8 @@ class AppServiceProvider extends ServiceProvider
         
         // Ensure Carbon uses the correct timezone
         Carbon::setTestNow(null);
+
+        // Use Bootstrap 5 pagination views across the app
+        Paginator::useBootstrapFive();
     }
 }
