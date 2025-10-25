@@ -19,7 +19,7 @@ class MonthlyReportController extends Controller
         $reportData = $this->getReportData($user, $currentMonth);
         $theme = $user->theme ?? 'light';
 
-        return view('monthly-report.index', compact('reportData', 'theme'));
+        return view('monthly-report.reports', compact('reportData', 'theme'));
     }
 
     public function generate(Request $request)
@@ -53,7 +53,7 @@ class MonthlyReportController extends Controller
             return $this->downloadPdf($reportData);
         }
 
-        return view('monthly-report.index', compact('reportData', 'theme'));
+        return view('monthly-report.reports', compact('reportData', 'theme'));
     }
 
     public function downloadPdf($reportData)
