@@ -77,13 +77,6 @@
                                 style="background-color:#68af2C; border-color:#68af2C; color:white;">
                             Register Account
                         </button>
-
-                        <hr>
-
-                        <!-- Social Logins -->
-                        <a href="{{ url('auth/google') }}" class="btn btn-google btn-user btn-block">
-                            <i class="fab fa-google fa-fw"></i> Register with Google
-                        </a>
                     </form>
 
                     <hr>

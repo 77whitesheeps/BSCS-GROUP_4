@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit086877c3db2343c56833f7fd7e9d8030
+class ComposerStaticInit64b37ed7bbaff05edae3f2047c6e8a23
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
@@ -601,6 +601,7 @@ class ComposerStaticInit086877c3db2343c56833f7fd7e9d8030
         'App\\Http\\Controllers\\HelpController' => __DIR__ . '/../..' . '/app/Http/Controllers/HelpController.php',
         'App\\Http\\Controllers\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/LoginController.php',
         'App\\Http\\Controllers\\MonthlyReportController' => __DIR__ . '/../..' . '/app/Http/Controllers/MonthlyReportController.php',
+        'App\\Http\\Controllers\\NotificationsController' => __DIR__ . '/../..' . '/app/Http/Controllers/NotificationsController.php',
         'App\\Http\\Controllers\\PlantReportController' => __DIR__ . '/../..' . '/app/Http/Controllers/PlantReportController.php',
         'App\\Http\\Controllers\\PlantingCalculatorController' => __DIR__ . '/../..' . '/app/Http/Controllers/PlantingCalculatorController.php',
         'App\\Http\\Controllers\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProfileController.php',
@@ -613,6 +614,7 @@ class ComposerStaticInit086877c3db2343c56833f7fd7e9d8030
         'App\\Models\\GardenPlan' => __DIR__ . '/../..' . '/app/Models/GardenPlan.php',
         'App\\Models\\PlantCalculation' => __DIR__ . '/../..' . '/app/Models/PlantCalculation.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
+        'App\\Notifications\\GenericNotification' => __DIR__ . '/../..' . '/app/Notifications/GenericNotification.php',
         'App\\Notifications\\ResetPasswordNotification' => __DIR__ . '/../..' . '/app/Notifications/ResetPasswordNotification.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
@@ -2583,6 +2585,8 @@ class ComposerStaticInit086877c3db2343c56833f7fd7e9d8030
         'Illuminate\\Hashing\\BcryptHasher' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Hashing/BcryptHasher.php',
         'Illuminate\\Hashing\\HashManager' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Hashing/HashManager.php',
         'Illuminate\\Hashing\\HashServiceProvider' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Hashing/HashServiceProvider.php',
+        'Illuminate\\Http\\Client\\Batch' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Http/Client/Batch.php',
+        'Illuminate\\Http\\Client\\BatchInProgressException' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Http/Client/BatchInProgressException.php',
         'Illuminate\\Http\\Client\\Concerns\\DeterminesStatusCode' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Http/Client/Concerns/DeterminesStatusCode.php',
         'Illuminate\\Http\\Client\\ConnectionException' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Http/Client/ConnectionException.php',
         'Illuminate\\Http\\Client\\Events\\ConnectionFailed' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Http/Client/Events/ConnectionFailed.php',
@@ -7428,9 +7432,9 @@ class ComposerStaticInit086877c3db2343c56833f7fd7e9d8030
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit086877c3db2343c56833f7fd7e9d8030::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit086877c3db2343c56833f7fd7e9d8030::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit086877c3db2343c56833f7fd7e9d8030::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit64b37ed7bbaff05edae3f2047c6e8a23::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit64b37ed7bbaff05edae3f2047c6e8a23::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit64b37ed7bbaff05edae3f2047c6e8a23::$classMap;
 
         }, null, ClassLoader::class);
     }
