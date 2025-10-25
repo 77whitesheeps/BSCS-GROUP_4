@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('layouts.app')
 
 @section('title', 'Garden Planner')
 @section('page-title', 'Garden Planner')

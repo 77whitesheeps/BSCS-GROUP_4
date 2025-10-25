@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('layouts.app')
 
 @section('title', 'Profile Settings')
 @section('page-title', 'Profile Settings')

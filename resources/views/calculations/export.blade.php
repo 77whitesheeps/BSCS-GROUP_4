@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('layouts.app')
 
 @section('title', 'Export Calculations')
 @section('page-title', 'Export Calculations')

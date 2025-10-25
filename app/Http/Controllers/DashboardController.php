@@ -55,7 +55,7 @@ class DashboardController extends Controller
                                               ->get(),
         ];
 
-        return view('dashboard', compact('data'));
+        return view('layouts.pages.dashboard', compact('data'));
     }
 
     private function formatArea($totalAreaSqMeters)
