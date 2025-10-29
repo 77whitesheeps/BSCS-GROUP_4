@@ -13,27 +13,37 @@
     <div class="card card-dashboard">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h6 class="mb-0"><i class="fas fa-bell me-2"></i>Notifications</h6>
-            <button id="markAllBtn" class="btn btn-sm btn-outline-primary">Mark all as read</button>
+            <div>
+                <button id="markAllBtn" class="btn btn-sm btn-outline-primary me-2">Mark all as read</button>
+                <button id="deleteAllBtn" class="btn btn-sm btn-outline-danger">Delete all</button>
+            </div>
         </div>
         <div class="card-body">
             @if($notifications && $notifications->count())
                 <div class="list-group">
                     @foreach($notifications as $n)
-                        <a href="{{ $n->data['url'] ?? '#' }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-start {{ $n->read_at ? '' : 'list-group-item-warning' }}" data-id="{{ $n->id }}">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold">
-                                    <i class="fas fa-{{ $n->data['icon'] ?? 'info-circle' }} me-2"></i>{{ $n->data['title'] ?? 'Notification' }}
-                                    @if(!$n->read_at)
-                                        <span class="badge bg-primary ms-2">New</span>
-                                    @endif
+                        <div class="list-group-item d-flex justify-content-between align-items-start {{ $n->read_at ? '' : 'list-group-item-warning' }}" data-id="{{ $n->id }}">
+                            <a href="{{ $n->data['url'] ?? '#' }}" class="flex-grow-1 text-decoration-none text-dark">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">
+                                        <i class="fas fa-{{ $n->data['icon'] ?? 'info-circle' }} me-2"></i>{{ $n->data['title'] ?? 'Notification' }}
+                                        @if(!$n->read_at)
+                                            <span class="badge bg-primary ms-2">New</span>
+                                        @endif
+                                    </div>
+                                    <div class="small text-muted">{{ $n->created_at->diffForHumans() }}</div>
+                                    <div>{{ $n->data['message'] ?? '' }}</div>
                                 </div>
-                                <div class="small text-muted">{{ $n->created_at->diffForHumans() }}</div>
-                                <div>{{ $n->data['message'] ?? '' }}</div>
+                            </a>
+                            <div class="d-flex gap-2">
+                                @if(!$n->read_at)
+                                    <button class="btn btn-sm btn-outline-secondary mark-read">Mark as read</button>
+                                @endif
+                                <button class="btn btn-sm btn-outline-danger delete-notification" title="Delete notification">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </div>
-                            @if(!$n->read_at)
-                                <button class="btn btn-sm btn-outline-secondary mark-read">Mark as read</button>
-                            @endif
-                        </a>
+                        </div>
                     @endforeach
                 </div>
                 <div class="mt-3">
@@ -52,11 +62,29 @@
 
 @push('scripts')
 <script>
+    // Mark all as read
     document.getElementById('markAllBtn')?.addEventListener('click', function(){
         fetch('{{ route('notifications.readAll') }}', {method: 'POST', headers: {'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content}})
             .then(r=>r.json()).then(()=>location.reload());
     });
 
+    // Delete all notifications
+    document.getElementById('deleteAllBtn')?.addEventListener('click', function(){
+        if(confirm('Are you sure you want to delete all notifications? This action cannot be undone.')) {
+            fetch('{{ route('notifications.destroyAll') }}', {
+                method: 'DELETE', 
+                headers: {'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content}
+            })
+            .then(r=>r.json())
+            .then(data => {
+                alert(data.message || 'All notifications deleted successfully');
+                location.reload();
+            })
+            .catch(err => alert('Failed to delete notifications'));
+        }
+    });
+
+    // Mark individual notification as read
     document.querySelectorAll('.mark-read').forEach(btn=>{
         btn.addEventListener('click', function(e){
             e.preventDefault();
@@ -64,6 +92,31 @@
             const id = item.getAttribute('data-id');
             fetch(`/notifications/${id}/read`, {method: 'POST', headers: {'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content}})
                 .then(r=>r.json()).then(()=>location.reload());
+        });
+    });
+
+    // Delete individual notification
+    document.querySelectorAll('.delete-notification').forEach(btn=>{
+        btn.addEventListener('click', function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            if(confirm('Are you sure you want to delete this notification?')) {
+                const item = this.closest('[data-id]');
+                const id = item.getAttribute('data-id');
+                fetch(`/notifications/${id}`, {
+                    method: 'DELETE', 
+                    headers: {'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content}
+                })
+                .then(r=>r.json())
+                .then(data => {
+                    item.remove();
+                    // Check if there are no more notifications
+                    if(document.querySelectorAll('[data-id]').length === 0) {
+                        location.reload();
+                    }
+                })
+                .catch(err => alert('Failed to delete notification'));
+            }
         });
     });
 </script>

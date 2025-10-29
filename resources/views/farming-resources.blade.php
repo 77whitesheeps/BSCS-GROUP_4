@@ -253,31 +253,10 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-3 mb-2">
+                                        <div class="col-12 mb-2">
                                             <div class="d-grid">
                                                 <button class="btn btn-outline-success btn-sm" onclick="showPlantingCalendar()">
                                                     <i class="fas fa-calendar-alt me-2"></i>Planting Calendar
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 mb-2">
-                                            <div class="d-grid">
-                                                <button class="btn btn-outline-info btn-sm" onclick="showWateringCalculator()">
-                                                    <i class="fas fa-calculator me-2"></i>Watering Calculator
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 mb-2">
-                                            <div class="d-grid">
-                                                <button class="btn btn-outline-warning btn-sm" onclick="showHarvestTracker()">
-                                                    <i class="fas fa-apple-alt me-2"></i>Harvest Tracker
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 mb-2">
-                                            <div class="d-grid">
-                                                <button class="btn btn-outline-danger btn-sm" onclick="showWeatherIntegration()">
-                                                    <i class="fas fa-cloud-sun me-2"></i>Weather Integration
                                                 </button>
                                             </div>
                                         </div>
@@ -292,20 +271,269 @@
     </div>
 </div>
 
+<!-- Planting Calendar Modal -->
+<div class="modal fade" id="plantingCalendarModal" tabindex="-1" aria-labelledby="plantingCalendarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="plantingCalendarModalLabel">
+                    <i class="fas fa-calendar-alt me-2"></i>Planting Calendar
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Location Detection -->
+                <div class="card border-primary mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6 class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>Your Location</h6>
+                                <p class="mb-2 text-muted" id="detectedLocation">Detecting location...</p>
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    We'll use your location to provide personalized planting dates
+                                </small>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center">
+                                <button class="btn btn-primary w-100" onclick="detectLocation()">
+                                    <i class="fas fa-crosshairs me-2"></i>Detect Location
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="calendarLoading" class="text-center py-5" style="display: none;">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Fetching personalized planting calendar...</p>
+                </div>
+
+                <!-- Calendar Information -->
+                <div id="calendarInfo" style="display: none;">
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="card text-center border-success">
+                                <div class="card-body">
+                                    <i class="fas fa-globe fa-2x text-success mb-2"></i>
+                                    <h6 class="small mb-1">Climate Zone</h6>
+                                    <strong id="climateZoneDisplay">-</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center border-info">
+                                <div class="card-body">
+                                    <i class="fas fa-thermometer-half fa-2x text-info mb-2"></i>
+                                    <h6 class="small mb-1">Hardiness Zone</h6>
+                                    <strong id="hardinessZoneDisplay">-</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center border-warning">
+                                <div class="card-body">
+                                    <i class="fas fa-snowflake fa-2x text-warning mb-2"></i>
+                                    <h6 class="small mb-1">Last Frost</h6>
+                                    <strong id="lastFrostDisplay">-</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center border-primary">
+                                <div class="card-body">
+                                    <i class="fas fa-calendar fa-2x text-primary mb-2"></i>
+                                    <h6 class="small mb-1">Growing Days</h6>
+                                    <strong id="growingDaysDisplay">-</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Planting Calendar Table -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-sm">
+                            <thead class="table-success">
+                                <tr>
+                                    <th>Plant</th>
+                                    <th>Start Seeds Indoors</th>
+                                    <th>Direct Sow/Transplant</th>
+                                    <th>Harvest Time</th>
+                                    <th>Difficulty</th>
+                                </tr>
+                            </thead>
+                            <tbody id="plantingCalendarBody">
+                                <!-- Will be populated dynamically from API -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="alert alert-success mt-3">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <strong>Personalized for Your Location!</strong> These planting dates are calculated based on your exact location and climate zone.
+                    </div>
+                </div>
+
+                <!-- Error State -->
+                <div id="calendarError" class="alert alert-warning" style="display: none;">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <span id="errorMessage">Unable to detect location. Please enable location services or try again.</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+let userCoordinates = null;
+
 function showPlantingCalendar() {
-    alert('Planting Calendar Tool\n\nThis feature will show optimal planting times based on your location and last frost dates. Coming soon!');
+    const modal = new bootstrap.Modal(document.getElementById('plantingCalendarModal'));
+    modal.show();
+    
+    // Auto-detect location when modal opens
+    detectLocation();
 }
 
-function showWateringCalculator() {
-    alert('Watering Calculator\n\nCalculate water requirements based on:\n- Plant types\n- Garden size\n- Climate conditions\n- Soil type\n\nComing soon!');
+function detectLocation() {
+    document.getElementById('calendarLoading').style.display = 'block';
+    document.getElementById('calendarInfo').style.display = 'none';
+    document.getElementById('calendarError').style.display = 'none';
+    document.getElementById('detectedLocation').textContent = 'Detecting location...';
+    
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                userCoordinates = {
+                    lat: position.coords.latitude,
+                    lon: position.coords.longitude
+                };
+                fetchPlantingCalendar(userCoordinates.lat, userCoordinates.lon);
+            },
+            function(error) {
+                console.error('Geolocation error:', error);
+                document.getElementById('calendarLoading').style.display = 'none';
+                document.getElementById('calendarError').style.display = 'block';
+                document.getElementById('detectedLocation').textContent = 'Location detection failed';
+                
+                // Fallback to demo data or ask for manual location
+                if (error.code === error.PERMISSION_DENIED) {
+                    document.getElementById('errorMessage').textContent = 
+                        'Location access denied. Please enable location services or enter your location manually.';
+                }
+            }
+        );
+    } else {
+        document.getElementById('calendarLoading').style.display = 'none';
+        document.getElementById('calendarError').style.display = 'block';
+        document.getElementById('errorMessage').textContent = 
+            'Geolocation is not supported by your browser. Please enter your location manually.';
+    }
 }
 
-function showHarvestTracker() {
-    alert('Harvest Tracker\n\nTrack your harvest yields:\n- Record actual vs expected yields\n- Compare year-over-year performance\n- Identify most productive varieties\n\nComing soon!');
+async function fetchPlantingCalendar(lat, lon) {
+    try {
+        const response = await fetch(`/planting-calendar/location?lat=${lat}&lon=${lon}`, {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+                'Accept': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch planting calendar');
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            displayPlantingCalendar(data);
+        } else {
+            throw new Error(data.message || 'Failed to load calendar');
+        }
+        
+    } catch (error) {
+        console.error('Fetch error:', error);
+        document.getElementById('calendarLoading').style.display = 'none';
+        document.getElementById('calendarError').style.display = 'block';
+        document.getElementById('errorMessage').textContent = 
+            'Error loading planting calendar. Please try again.';
+    }
 }
 
-function showWeatherIntegration() {
-    alert('Weather Integration\n\nGet weather-based recommendations:\n- Watering adjustments\n- Frost warnings\n- Planting timing\n- Harvest reminders\n\nComing soon!');
+function displayPlantingCalendar(data) {
+    // Hide loading, show content
+    document.getElementById('calendarLoading').style.display = 'none';
+    document.getElementById('calendarInfo').style.display = 'block';
+    document.getElementById('calendarError').style.display = 'none';
+    
+    // Update location display
+    document.getElementById('detectedLocation').innerHTML = `
+        <i class="fas fa-check-circle text-success me-1"></i>
+        <strong>${data.location}</strong>
+    `;
+    
+    // Update zone information
+    document.getElementById('climateZoneDisplay').textContent = 
+        data.climate_zone.charAt(0).toUpperCase() + data.climate_zone.slice(1);
+    document.getElementById('hardinessZoneDisplay').textContent = 
+        data.hardiness_zone || 'N/A';
+    
+    // Update frost date
+    if (data.frost_dates && data.frost_dates.has_frost) {
+        const frostDate = new Date(data.frost_dates.last_frost_spring);
+        document.getElementById('lastFrostDisplay').textContent = 
+            frostDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    } else {
+        document.getElementById('lastFrostDisplay').textContent = 'No Frost';
+    }
+    
+    // Update growing season length
+    document.getElementById('growingDaysDisplay').textContent = 
+        data.growing_season_length + ' days';
+    
+    // Populate planting schedule table
+    const tbody = document.getElementById('plantingCalendarBody');
+    tbody.innerHTML = '';
+    
+    data.planting_schedule.forEach(crop => {
+        const difficultyColor = {
+            'Easy': 'success',
+            'Medium': 'warning',
+            'Hard': 'danger'
+        }[crop.difficulty] || 'secondary';
+        
+        // Format dates if available
+        let indoorText = crop.indoor;
+        if (crop.exact_indoor_date) {
+            const date = new Date(crop.exact_indoor_date);
+            indoorText += ` <br><small class="text-primary">(${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })})</small>`;
+        }
+        
+        let outdoorText = crop.outdoor;
+        if (crop.exact_outdoor_date) {
+            const date = new Date(crop.exact_outdoor_date);
+            outdoorText += ` <br><small class="text-primary">(${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })})</small>`;
+        }
+        
+        const row = `
+            <tr>
+                <td><strong>${crop.plant}</strong></td>
+                <td>${indoorText}</td>
+                <td>${outdoorText}</td>
+                <td>${crop.harvest}</td>
+                <td><span class="badge bg-${difficultyColor}">${crop.difficulty}</span></td>
+            </tr>
+        `;
+        tbody.innerHTML += row;
+    });
 }
 </script>

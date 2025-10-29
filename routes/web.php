@@ -29,21 +29,21 @@ Route::get('/welcome', function () {
     return view('welcome');
 });
 
-// Authentication routes
-Route::get('/register', [RegistrationController::class, 'showForm'])->name('register');
-Route::post('/register', [RegistrationController::class, 'register']);
-Route::get('/login', [LoginController::class, 'showForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    // Authentication routes
+    Route::get('/register', [RegistrationController::class, 'showForm'])->name('register');
+    Route::post('/register', [RegistrationController::class, 'register']);
+    Route::get('/login', [LoginController::class, 'showForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Password reset routes
-Route::get('/forgot-password', [ForgotPasswordController::class, 'showForm'])->name('password.request');
-Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink']);
-Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
-Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+    // Password reset routes
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showForm'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink']);
+    Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 
-// Protected routes (require authentication)
-Route::middleware('auth')->group(function () {
+    // Protected routes (require authentication)
+    Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     
@@ -60,12 +60,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/triangular-calculator/calculate', [TriangularCalculatorController::class, 'calculate'])->name('triangle.calculate');
     
     // (Removed: Usage Statistics routes)
-Route::get('/monthly-reports', [MonthlyReportController::class, 'index'])->name('monthly-reports.index');
-Route::post('/monthly-report/generate', [MonthlyReportController::class, 'generate'])->name('monthly-report.generate');
-Route::get('/monthly-report/api/{month?}', [MonthlyReportController::class, 'apiData'])->name('monthly-report.api');
+    Route::get('/monthly-reports', [MonthlyReportController::class, 'index'])->name('monthly-reports.index');
+    Route::post('/monthly-report/generate', [MonthlyReportController::class, 'generate'])->name('monthly-report.generate');
+    Route::get('/monthly-report/api/{month?}', [MonthlyReportController::class, 'apiData'])->name('monthly-report.api');
 
-// Print report route  
-Route::get('/print-report', [PlantReportController::class, 'printReport'])->name('print.report');
+    // Print report route  
+    Route::get('/print-report', [PlantReportController::class, 'printReport'])->name('print.report');
 
     // Calculation History routes
     Route::get('/calculations/history', [CalculationHistoryController::class, 'index'])->name('calculations.history');
@@ -90,6 +90,16 @@ Route::get('/print-report', [PlantReportController::class, 'printReport'])->name
     Route::post('/garden-planner/{id}/import-calculation', [GardenPlannerController::class, 'importCalculation'])->name('garden.planner.import-calculation');
     Route::patch('/garden-planner/{id}/task-status', [GardenPlannerController::class, 'updateTaskStatus'])->name('garden.planner.task-status');
     Route::get('/garden-planner/statistics', [GardenPlannerController::class, 'getStatistics'])->name('garden.planner.statistics');
+    // Planting calendar and weather integration
+    Route::get('/planting-calendar', [GardenPlannerController::class, 'plantingCalendar'])->name('garden.planner.calendar');
+    Route::get('/weather-recommendations', [GardenPlannerController::class, 'weatherRecommendations'])->name('garden.planner.weather');
+    // API-powered planting calendar
+    Route::get('/planting-calendar/location', [GardenPlannerController::class, 'getPlantingCalendarByLocation'])->name('garden.planner.calendar.location');
+    Route::get('/planting-recommendations/current', [GardenPlannerController::class, 'getCurrentPlantingRecommendations'])->name('garden.planner.recommendations.current');
+    
+    // NEW: Garden Plan + Planting Calendar Integration
+    Route::get('/garden-planner/{id}/with-recommendations', [GardenPlannerController::class, 'getPlanWithRecommendations'])->name('garden.planner.with-recommendations');
+    Route::post('/garden-planner/{id}/refresh-calendar', [GardenPlannerController::class, 'refreshPlantingCalendar'])->name('garden.planner.refresh-calendar');
 
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -106,5 +116,7 @@ Route::get('/print-report', [PlantReportController::class, 'printReport'])->name
         Route::get('/notifications/fetch', [NotificationsController::class, 'fetch'])->name('notifications.fetch');
         Route::post('/notifications/{id}/read', [NotificationsController::class, 'markAsRead'])->name('notifications.read');
         Route::post('/notifications/read-all', [NotificationsController::class, 'markAllAsRead'])->name('notifications.readAll');
+        Route::delete('/notifications/{id}', [NotificationsController::class, 'destroy'])->name('notifications.destroy');
+        Route::delete('/notifications', [NotificationsController::class, 'destroyAll'])->name('notifications.destroyAll');
     });
 });

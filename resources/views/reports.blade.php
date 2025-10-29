@@ -1,3 +1,0 @@
-<div class="report-container">
-    // ... report content ...
-</div>
