@@ -208,6 +208,65 @@
         .dark-mode .badge.bg-success {
             background-color: var(--plant-green-dark) !important;
         }
+
+        .dark-mode .btn-secondary {
+            background-color: #3d3d3d !important;
+            border-color: #555555 !important;
+            color: #ffffff !important;
+        }
+
+        .dark-mode .btn-secondary:hover {
+            background-color: #555555 !important;
+            border-color: #777777 !important;
+            color: #ffffff !important;
+        }
+
+        .dark-mode .card-header.bg-primary {
+            background-color: var(--plant-green) !important;
+            color: #ffffff !important;
+        }
+
+        .dark-mode .list-group-item {
+            background-color: #2c2c2c !important;
+            border-color: #444444 !important;
+            color: #ffffff !important;
+        }
+
+        .dark-mode .list-group-item .fw-bold {
+            color: #ffffff !important;
+        }
+
+        .dark-mode .badge.bg-primary {
+            background-color: var(--plant-green) !important;
+            color: #ffffff !important;
+        }
+
+        .dark-mode .card-header {
+            background-color: #333333 !important;
+            border-bottom-color: #444444 !important;
+            color: #ffffff !important;
+        }
+
+        .dark-mode .card-body {
+            background-color: #1e1e1e !important;
+            color: #ffffff !important;
+        }
+
+        .dark-mode .table {
+            background-color: #1e1e1e !important;
+            color: #ffffff !important;
+        }
+
+        .dark-mode .table td,
+        .dark-mode .table th {
+            background-color: #1e1e1e !important;
+            border-color: #444444 !important;
+            color: #ffffff !important;
+        }
+
+        .dark-mode small {
+            color: #f8f9fa !important;
+        }
     </style>
 </head>
 <body>

@@ -410,6 +410,12 @@ margin-bottom: 0;
         .dark-mode .layout-details {
             background-color: rgba(0, 0, 0, 0.2);
         }
+
+        .dark-mode .input-group-text {
+            background-color: #3d3d3d !important;
+            color: #ffffff !important;
+            border-color: #555555 !important;
+        }
     </style>
 </head>
 <body>

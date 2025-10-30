@@ -64,10 +64,11 @@ class CalculationHistoryController extends Controller
                              ->appends($request->query());
         
         // Get statistics for the filtered period
+        $user = auth()->user();
         $stats = [
             'total' => $query->count(),
             'total_plants' => $query->sum('total_plants'),
-            'total_area' => $query->sum('total_area'),
+            'total_area' => $user->total_area_planned, // Use the same calculation as dashboard
             'avg_plants' => $query->avg('total_plants'),
         ];
         

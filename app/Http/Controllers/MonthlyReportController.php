@@ -60,7 +60,7 @@ class MonthlyReportController extends Controller
     {
         // Implement PDF download functionality
         // You can use packages like barryvdh/laravel-dompdf
-        
+
         return response()->json([
             'message' => 'PDF download functionality would be implemented here',
             'data' => $reportData
@@ -103,7 +103,7 @@ class MonthlyReportController extends Controller
             ->get();
 
         // Calculate metrics
-        $totalAreaPlanned = $calculations->sum('total_area');
+        $totalAreaPlanned = $calculations->sum('total_area') + $gardenPlans->sum('total_area');
         $plantsCalculated = $calculations->sum('total_plants');
         $plantTypesUsed = $calculations->whereNotNull('plant_type')->unique('plant_type')->count();
         $totalCalculations = $calculations->count();

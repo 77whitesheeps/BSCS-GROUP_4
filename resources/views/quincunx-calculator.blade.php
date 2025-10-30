@@ -530,6 +530,12 @@
         body.dark-theme .plant-dot:hover {
             background-color: var(--accent-color);
         }
+
+        body.dark-theme .input-group-text {
+            background-color: #3d3d3d !important;
+            color: #ffffff !important;
+            border-color: #555555 !important;
+        }
     </style>
 </head>
 <body class="{{ auth()->check() && auth()->user()->theme === 'dark' ? 'dark-theme' : '' }}">

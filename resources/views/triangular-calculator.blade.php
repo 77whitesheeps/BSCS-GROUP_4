@@ -516,9 +516,15 @@
         body.dark-theme .text-muted {
             color: #a0a0a0 !important;
         }
-        
+
         body.dark-theme .border-bottom {
             border-bottom: 1px solid #444 !important;
+        }
+
+        body.dark-theme .input-group-text {
+            background-color: #3d3d3d !important;
+            color: #ffffff !important;
+            border-color: #555555 !important;
         }
 
         body.dark-theme .plant-dot:hover {
