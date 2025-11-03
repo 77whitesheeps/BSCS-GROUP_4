@@ -38,17 +38,17 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4 mb-2">
-                            <a href="{{ route('planting.calculator') }}" class="btn btn-outline-success btn-sm w-100" target="_blank">
+                            <a href="{{ route('planting.calculator') }}" class="btn btn-outline-success btn-sm w-100">
                                 <i class="fas fa-calculator me-2"></i>Square Planting Calculator
                             </a>
                         </div>
                         <div class="col-md-4 mb-2">
-                            <a href="{{ route('quincunx.calculator') }}" class="btn btn-outline-info btn-sm w-100" target="_blank">
+                           <a href="{{ route('quincunx.calculator') }}" class="btn btn-outline-info btn-sm w-100">
                                 <i class="fas fa-th me-2"></i>Quincunx Calculator
                             </a>
                         </div>
                         <div class="col-md-4 mb-2">
-                            <a href="{{ route('triangular.calculator') }}" class="btn btn-outline-warning btn-sm w-100" target="_blank">
+                            <a href="{{ route('triangular.calculator') }}" class="btn btn-outline-warning btn-sm w-100">
                                 <i class="fas fa-play me-2"></i>Triangular Calculator
                             </a>
                         </div>

@@ -551,9 +551,7 @@
                         <button type="button" onclick="resetForm()" class="btn btn-outline-light">
                             <i class="fas fa-redo-alt me-1"></i> Reset
                         </button>
-                        <a href="{{ route('dashboard') }}" class="btn btn-primary">
-                            <i class="fas fa-tachometer-alt me-1"></i> Back to Dashboard
-                        </a>
+                        <a href="{{ url()->previous() }}" class="btn btn-primary">Back</a>
                     </div>
                 </div>
             </div>
@@ -681,7 +679,7 @@
                 </div>
                 
                 <div class="text-center mt-4">
-                    <button type="button" id="calculateBtn" class="btn btn-calculate btn-lg">
+                    <button type="button" id="calculateBtn" class="btn btn-calculate btn-lg text-white">
                         <i class="fas fa-calculator me-2"></i> Calculate
                     </button>
                 </div>
