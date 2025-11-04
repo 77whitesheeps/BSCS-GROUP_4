@@ -79,257 +79,541 @@
                         <input type="hidden" id="editMode" name="edit_mode" value="false">
                         <input type="hidden" id="planId" name="plan_id" value="">
 
-                        <!-- Navigation Tabs -->
-                        <ul class="nav nav-tabs mb-4" id="planTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="basic-tab" data-bs-toggle="tab" data-bs-target="#basic" type="button" role="tab">
-                                    <i class="fas fa-info-circle me-1"></i>Basic Info
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="calculations-tab" data-bs-toggle="tab" data-bs-target="#calculations" type="button" role="tab">
-                                    <i class="fas fa-calculator me-1"></i>Plant Calculations
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="seasonal-tab" data-bs-toggle="tab" data-bs-target="#seasonal" type="button" role="tab">
-                                    <i class="fas fa-calendar me-1"></i>Seasonal Planning
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="resources-tab" data-bs-toggle="tab" data-bs-target="#resources" type="button" role="tab">
-                                    <i class="fas fa-tools me-1"></i>Resources & Care
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tracking-tab" data-bs-toggle="tab" data-bs-target="#tracking" type="button" role="tab">
-                                    <i class="fas fa-tasks me-1"></i>Progress Tracking
-                                </button>
-                            </li>
-                        </ul>
-
-                        <!-- Tab Content -->
-                        <div class="tab-content" id="planTabContent">
-                            <!-- Basic Information Tab -->
-                            <div class="tab-pane fade show active" id="basic" role="tabpanel">
+                        <!-- Streamlined Single Form Following Best Practices -->
+                        
+                        <!-- Section 1: Garden Identity & Location -->
+                        <div class="mb-4">
+                            <h6 class="text-success border-bottom pb-2 mb-3">
+                                <i class="fas fa-map-marker-alt me-2"></i>1. Garden Identity & Location
+                            </h6>
+                            <div class="ps-3">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label for="planName" class="form-label">Plan Name *</label>
-                                        <input type="text" class="form-control" id="planName" name="name" required placeholder="e.g., Summer Vegetable Garden 2024">
+                                        <label for="planName" class="form-label">Garden Plan Name *</label>
+                                        <input type="text" class="form-control" id="planName" name="name" required placeholder="e.g., Backyard Vegetable Garden 2025">
+                                        <small class="text-muted">Give your garden a descriptive name</small>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="totalArea" class="form-label">Total Area (m²)</label>
-                                        <input type="number" class="form-control" id="totalArea" name="total_area" step="0.01" min="0" placeholder="e.g., 50.00">
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="growingSeason" class="form-label">Growing Season</label>
-                                        <select class="form-control" id="growingSeason" name="growing_season">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="growingSeason" class="form-label">Primary Season *</label>
+                                        <select class="form-control" id="growingSeason" name="growing_season" required>
                                             <option value="">Select Season</option>
-                                            <option value="spring">Spring</option>
-                                            <option value="summer">Summer</option>
-                                            <option value="fall">Fall/Autumn</option>
-                                            <option value="winter">Winter</option>
-                                            <option value="year-round">Year-round</option>
+                                            <option value="spring">🌸 Spring</option>
+                                            <option value="summer">☀️ Summer</option>
+                                            <option value="fall">🍂 Fall</option>
+                                            <option value="winter">❄️ Winter</option>
+                                            <option value="year-round">🌍 Year-round</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="climateZone" class="form-label">Climate Zone</label>
-                                        <input type="text" class="form-control" id="climateZone" name="climate_zone" placeholder="e.g., 9a, Tropical, Mediterranean">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="gardenType" class="form-label">Garden Type *</label>
+                                        <select class="form-control" id="gardenType" name="garden_type" required>
+                                            <option value="">Select Type</option>
+                                            <option value="vegetable">Vegetable</option>
+                                            <option value="fruit">Fruit</option>
+                                            <option value="herb">Herb</option>
+                                            <option value="flower">Flower</option>
+                                            <option value="mixed">Mixed</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-8 mb-3">
+                                        <label for="gardenLocation" class="form-label">Location/Plot Name</label>
+                                        <input type="text" class="form-control" id="gardenLocation" name="location" placeholder="e.g., Backyard Plot A, North Garden Bed">
+                                        <small class="text-muted">Where is this garden physically located?</small>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="sunExposure" class="form-label">Sun Exposure *</label>
+                                        <select class="form-control" id="sunExposure" name="sun_exposure" required>
+                                            <option value="">Select</option>
+                                            <option value="full-sun">☀️ Full Sun (6+ hrs)</option>
+                                            <option value="partial-sun">⛅ Partial Sun (4-6 hrs)</option>
+                                            <option value="partial-shade">🌤️ Partial Shade (2-4 hrs)</option>
+                                            <option value="full-shade">🌑 Full Shade (<2 hrs)</option>
+                                        </select>
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="planDescription" class="form-label">Description</label>
-                                    <textarea class="form-control" id="planDescription" name="description" rows="3" placeholder="Describe your garden plan, goals, and objectives..."></textarea>
-                                </div>
-
-                                <!-- Basic Layout Configuration -->
-                                <div class="card border-light">
-                                    <div class="card-header bg-light">
-                                        <h6 class="mb-0"><i class="fas fa-th me-2"></i>Basic Layout Configuration</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-4 mb-2">
-                                                <label for="rows" class="form-label small">Number of Rows</label>
-                                                <input type="number" class="form-control" id="rows" name="rows" min="1" max="20" value="1">
-                                            </div>
-                                            <div class="col-md-4 mb-2">
-                                                <label for="cols" class="form-label small">Number of Columns</label>
-                                                <input type="number" class="form-control" id="cols" name="cols" min="1" max="20" value="1">
-                                            </div>
-                                            <div class="col-md-4 mb-2">
-                                                <label for="plantType" class="form-label small">Default Plant Type</label>
-                                                <input type="text" class="form-control" id="plantType" name="plant_type" placeholder="e.g., Tomato">
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <label for="planDescription" class="form-label">Garden Goals & Description</label>
+                                    <textarea class="form-control" id="planDescription" name="description" rows="2" placeholder="What do you want to achieve? (e.g., Fresh vegetables for family, Cut flowers, Maximize yield)"></textarea>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Plant Calculations Tab -->
-                            <div class="tab-pane fade" id="calculations" role="tabpanel">
-                                <div class="card border-light mb-3">
-                                    <div class="card-header bg-light">
-                                        <h6 class="mb-0"><i class="fas fa-calculator me-2"></i>Import Calculator Results</h6>
+                        <!-- Section 2: Garden Dimensions & Bed Layout -->
+                        <div class="mb-4">
+                            <h6 class="text-success border-bottom pb-2 mb-3">
+                                <i class="fas fa-ruler-combined me-2"></i>2. Garden Dimensions & Bed Layout
+                            </h6>
+                            <div class="ps-3">
+                                <div class="alert alert-info mb-3">
+                                    <i class="fas fa-lightbulb me-2"></i>
+                                    <strong>Best Practice:</strong> Measure your garden space accurately. Standard bed width is 1-1.2m for easy reach from both sides, or 0.6m for single-sided access.
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="totalAreaLength" class="form-label">Total Garden Length (m) *</label>
+                                        <input type="number" class="form-control" id="totalAreaLength" name="total_area_length" step="0.1" min="0.1" placeholder="10.0" required>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="alert alert-info">
-                                            <i class="fas fa-info-circle me-2"></i>
-                                            Use the calculator links above to calculate planting densities, then paste the results here or manually enter calculation data.
-                                        </div>
-                                        
-                                        <button type="button" class="btn btn-success btn-sm mb-3" id="addCalculationBtn">
-                                            <i class="fas fa-plus me-2"></i>Add Plant Calculation
-                                        </button>
-                                        
-                                        <div id="calculationsContainer">
-                                            <!-- Dynamic calculation entries will be added here -->
-                                        </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="totalAreaWidth" class="form-label">Total Garden Width (m) *</label>
+                                        <input type="number" class="form-control" id="totalAreaWidth" name="total_area_width" step="0.1" min="0.1" placeholder="5.0" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Total Area</label>
+                                        <input type="text" class="form-control bg-light" id="totalGardenArea" readonly placeholder="0 m²">
+                                        <input type="hidden" id="totalArea" name="total_area">
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Seasonal Planning Tab -->
-                            <div class="tab-pane fade" id="seasonal" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <div class="card border-light">
-                                            <div class="card-header bg-light">
-                                                <h6 class="mb-0"><i class="fas fa-seedling me-2"></i>Planting Schedule</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <textarea class="form-control" id="plantingSchedule" rows="6" placeholder="January: Start seeds indoors&#10;March: Transplant seedlings&#10;April: Direct sow cool-season crops&#10;May: Plant warm-season crops&#10;..."></textarea>
-                                            </div>
-                                        </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="bedLayout" class="form-label">Bed Layout *</label>
+                                        <select class="form-control" id="bedLayout" name="bed_layout" required>
+                                            <option value="">Select Layout</option>
+                                            <option value="single-bed">Single Bed</option>
+                                            <option value="raised-beds">Multiple Raised Beds</option>
+                                            <option value="row-garden">Traditional Rows</option>
+                                            <option value="square-foot">Square Foot Garden</option>
+                                            <option value="container">Container Garden</option>
+                                        </select>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="card border-light">
-                                            <div class="card-header bg-light">
-                                                <h6 class="mb-0"><i class="fas fa-apple-alt me-2"></i>Harvest Schedule</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <textarea class="form-control" id="harvestSchedule" rows="6" placeholder="June: Early lettuce, radishes&#10;July: Summer squash, herbs&#10;August: Tomatoes, peppers&#10;September: Fall crops&#10;..."></textarea>
-                                                <div class="mt-2">
-                                                    <label for="expectedYield" class="form-label small">Expected Total Yield (kg)</label>
-                                                    <input type="number" class="form-control" id="expectedYield" name="expected_yield" step="0.1" min="0" placeholder="e.g., 25.5">
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="numberOfBeds" class="form-label">Number of Beds/Rows</label>
+                                        <input type="number" class="form-control" id="numberOfBeds" name="number_of_beds" min="1" value="1" placeholder="1">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="pathWidth" class="form-label">Path Width (m)</label>
+                                        <input type="number" class="form-control" id="pathWidth" name="path_width" step="0.1" min="0" value="0.4" placeholder="0.4">
+                                        <small class="text-muted">Min 0.4m recommended</small>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Resources & Care Tab -->
-                            <div class="tab-pane fade" id="resources" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <div class="card border-light mb-3">
-                                            <div class="card-header bg-light">
-                                                <h6 class="mb-0"><i class="fas fa-tint me-2"></i>Irrigation Plan</h6>
-                                            </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Planting Area Calculator</label>
+                                        <div class="card bg-light">
                                             <div class="card-body">
-                                                <div class="mb-2">
-                                                    <label for="estimatedWaterUsage" class="form-label small">Estimated Water Usage (L/week)</label>
-                                                    <input type="number" class="form-control" id="estimatedWaterUsage" name="estimated_water_usage" step="0.1" min="0" placeholder="e.g., 150.0">
-                                                </div>
-                                                <textarea class="form-control" id="irrigationPlan" rows="4" placeholder="Daily: Check soil moisture&#10;Twice weekly: Deep watering of vegetables&#10;Weekly: Water fruit trees&#10;As needed: Supplement during dry spells"></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div class="card border-light">
-                                            <div class="card-header bg-light">
-                                                <h6 class="mb-0"><i class="fas fa-mountain me-2"></i>Soil Management</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <textarea class="form-control" id="soilRequirements" rows="4" placeholder="pH: 6.0-7.0&#10;Well-draining loamy soil&#10;Rich in organic matter&#10;Regular compost additions"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <div class="card border-light mb-3">
-                                            <div class="card-header bg-light">
-                                                <h6 class="mb-0"><i class="fas fa-leaf me-2"></i>Fertilizer Schedule</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <textarea class="form-control" id="fertilizerSchedule" rows="4" placeholder="Spring: Apply compost and balanced fertilizer&#10;Mid-season: Side-dress heavy feeders&#10;Fall: Bone meal for perennials&#10;Winter: Mulch for soil protection"></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div class="card border-light">
-                                            <div class="card-header bg-light">
-                                                <h6 class="mb-0"><i class="fas fa-tools me-2"></i>Required Tools & Supplies</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <textarea class="form-control" id="toolRequirements" rows="4" placeholder="Tools: Spade, hoe, rake, pruning shears&#10;Supplies: Seeds, seedlings, mulch, fertilizer&#10;Infrastructure: Trellises, stakes, irrigation system&#10;Estimated Cost: $XXX"></textarea>
-                                                <div class="mt-2">
-                                                    <label for="estimatedCost" class="form-label small">Estimated Total Cost ($)</label>
-                                                    <input type="number" class="form-control" id="estimatedCost" name="estimated_cost" step="0.01" min="0" placeholder="e.g., 250.00">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Progress Tracking Tab -->
-                            <div class="tab-pane fade" id="tracking" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <div class="card border-light">
-                                            <div class="card-header bg-light">
-                                                <h6 class="mb-0"><i class="fas fa-tasks me-2"></i>Task Checklist</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <button type="button" class="btn btn-success btn-sm mb-3" id="addTaskBtn">
-                                                    <i class="fas fa-plus me-2"></i>Add Task
-                                                </button>
-                                                <div id="taskContainer">
-                                                    <!-- Dynamic tasks will be added here -->
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-md-6 mb-3">
-                                        <div class="card border-light mb-3">
-                                            <div class="card-header bg-light">
-                                                <h6 class="mb-0"><i class="fas fa-chart-line me-2"></i>Status & Progress</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="mb-3">
-                                                    <label for="planStatus" class="form-label">Current Status</label>
-                                                    <select class="form-control" id="planStatus" name="status">
-                                                        <option value="planning">Planning</option>
-                                                        <option value="planted">Planted</option>
-                                                        <option value="growing">Growing</option>
-                                                        <option value="harvesting">Harvesting</option>
-                                                        <option value="completed">Completed</option>
-                                                    </select>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Progress Indicator</label>
-                                                    <div class="progress mb-2">
-                                                        <div class="progress-bar" role="progressbar" id="progressBar" style="width: 0%">0%</div>
+                                                <div class="row text-center">
+                                                    <div class="col-md-4">
+                                                        <strong class="text-success" id="usablePlantingArea">0 m²</strong>
+                                                        <div><small class="text-muted">Usable Planting Area</small></div>
                                                     </div>
-                                                    <small class="text-muted">Based on completed tasks</small>
+                                                    <div class="col-md-4">
+                                                        <strong class="text-warning" id="pathArea">0 m²</strong>
+                                                        <div><small class="text-muted">Path Area</small></div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <strong class="text-info" id="spaceEfficiency">0%</strong>
+                                                        <div><small class="text-muted">Space Efficiency</small></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                                        <div class="card border-light">
-                                            <div class="card-header bg-light">
-                                                <h6 class="mb-0"><i class="fas fa-sticky-note me-2"></i>Additional Notes</h6>
+                        <!-- Section 3: Choose Calculator & Add Plants -->
+                        <div class="mb-4">
+                            <h6 class="text-success border-bottom pb-2 mb-3">
+                                <i class="fas fa-calculator me-2"></i>3. Choose Calculator & Add Plants
+                            </h6>
+                            <div class="ps-3">
+                                <div class="alert alert-info mb-3">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>How it works:</strong> Choose a calculator below based on your planting pattern, calculate your plants, then add them to your garden plan.
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="calcPlantType" class="form-label">Plant/Crop Name *</label>
+                                        <select class="form-control" id="calcPlantType">
+                                            <option value="">Select or type plant name</option>
+                                            <optgroup label="Vegetables">
+                                                <option value="Tomato" data-spacing="0.5" data-row="0.6">🍅 Tomato (50-60cm spacing)</option>
+                                                <option value="Lettuce" data-spacing="0.2" data-row="0.3">🥬 Lettuce (20-30cm spacing)</option>
+                                                <option value="Cabbage" data-spacing="0.4" data-row="0.5">🥬 Cabbage (40-50cm spacing)</option>
+                                                <option value="Carrot" data-spacing="0.05" data-row="0.3">🥕 Carrot (5-30cm rows)</option>
+                                                <option value="Pepper" data-spacing="0.4" data-row="0.5">�️ Pepper (40-50cm spacing)</option>
+                                                <option value="Cucumber" data-spacing="0.4" data-row="1.0">🥒 Cucumber (40cm-1m spacing)</option>
+                                            </optgroup>
+                                            <optgroup label="Fruits">
+                                                <option value="Strawberry" data-spacing="0.3" data-row="0.4">� Strawberry (30-40cm spacing)</option>
+                                                <option value="Melon" data-spacing="1.0" data-row="1.5">🍈 Melon (1-1.5m spacing)</option>
+                                            </optgroup>
+                                            <optgroup label="Herbs">
+                                                <option value="Basil" data-spacing="0.25" data-row="0.3">� Basil (25-30cm spacing)</option>
+                                                <option value="Parsley" data-spacing="0.15" data-row="0.25">� Parsley (15-25cm spacing)</option>
+                                                <option value="Mint" data-spacing="0.3" data-row="0.4">🌿 Mint (30-40cm spacing)</option>
+                                            </optgroup>
+                                            <option value="custom" data-spacing="0.3" data-row="0.3">🔧 Custom Plant</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="calcPattern" class="form-label">Planting Pattern</label>
+                                        <select class="form-control" id="calcPattern">
+                                            <option value="square">Grid (Square)</option>
+                                            <option value="quincunx">Offset (Quincunx)</option>
+                                            <option value="triangular">Hex (Triangular)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="plantVariety" class="form-label">Variety (Optional)</label>
+                                        <input type="text" class="form-control" id="plantVariety" placeholder="e.g., Cherry, Beefsteak">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-3 mb-2">
+                                        <label for="calcAreaLength" class="form-label">Bed Length (m) *</label>
+                                        <input type="number" class="form-control" id="calcAreaLength" step="0.1" min="0.1" placeholder="3.0">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label for="calcAreaWidth" class="form-label">Bed Width (m) *</label>
+                                        <input type="number" class="form-control" id="calcAreaWidth" step="0.1" min="0.1" placeholder="1.2">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label for="calcPlantSpacing" class="form-label">Plant Spacing (m) *</label>
+                                        <input type="number" class="form-control" id="calcPlantSpacing" step="0.01" min="0.01" value="0.3">
+                                        <small class="text-muted">Within row</small>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label for="calcRowSpacing" class="form-label">Row Spacing (m) *</label>
+                                        <input type="number" class="form-control" id="calcRowSpacing" step="0.01" min="0.01" value="0.4">
+                                        <small class="text-muted">Between rows</small>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-12 text-center">
+                                        <button type="button" class="btn btn-success" id="calculateBtn">
+                                            <i class="fas fa-calculator me-2"></i>Calculate Plant Count
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary ms-2" id="useAdvancedCalc">
+                                            <i class="fas fa-external-link-alt me-2"></i>Use Advanced Calculator
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Calculation Results -->
+                                <div id="calcResults" class="card border-success d-none mb-3">
+                                    <div class="card-header bg-success text-white">
+                                        <h6 class="mb-0"><i class="fas fa-check-circle me-2"></i>Planting Calculation Results</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row text-center">
+                                            <div class="col-3">
+                                                <div class="border rounded p-2 bg-light">
+                                                    <h4 class="mb-0 text-success" id="resultTotalPlants">0</h4>
+                                                    <small class="text-muted">Total Plants</small>
+                                                </div>
                                             </div>
-                                            <div class="card-body">
-                                                <textarea class="form-control" id="additionalNotes" name="notes" rows="6" placeholder="Record observations, challenges, successes, and lessons learned..."></textarea>
+                                            <div class="col-3">
+                                                <div class="border rounded p-2 bg-light">
+                                                    <h5 class="mb-0 text-success" id="resultPlantsPerRow">0</h5>
+                                                    <small class="text-muted">Per Row</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="border rounded p-2 bg-light">
+                                                    <h5 class="mb-0 text-success" id="resultRows">0</h5>
+                                                    <small class="text-muted">Rows</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="border rounded p-2 bg-light">
+                                                    <h5 class="mb-0 text-success" id="resultDensity">0</h5>
+                                                    <small class="text-muted">plants/m²</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 text-center">
+                                            <button type="button" class="btn btn-primary" id="addToList">
+                                                <i class="fas fa-plus-circle me-2"></i>Add to Garden Plan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Saved Plant List -->
+                                <div id="savedCalculations" class="mt-3">
+                                    <h6 class="text-muted mb-2">
+                                        <i class="fas fa-list me-2"></i>Plants in This Garden (<span id="plantCount">0</span> types)
+                                    </h6>
+                                    <!-- Saved calculations will appear here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 4: Planting Timeline & Schedule -->
+                        <div class="mb-4">
+                            <h6 class="text-success border-bottom pb-2 mb-3">
+                                <i class="fas fa-calendar-alt me-2"></i>4. Planting Timeline & Schedule
+                            </h6>
+                            <div class="ps-3">
+                                <div class="alert alert-info mb-3">
+                                    <i class="fas fa-calendar-check me-2"></i>
+                                    <strong>Pro Tip:</strong> Plan by working backwards from your desired harvest date. Consider your climate zone's first/last frost dates for optimal timing.
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="startDate" class="form-label">Start Date *</label>
+                                        <input type="date" class="form-control" id="startDate" name="start_date" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="firstPlantingDate" class="form-label">First Planting Date</label>
+                                        <input type="date" class="form-control" id="firstPlantingDate" name="first_planting_date">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="expectedHarvestDate" class="form-label">Expected First Harvest</label>
+                                        <input type="date" class="form-control" id="expectedHarvestDate" name="expected_harvest_date">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="plantingSchedule" class="form-label">Planting Schedule</label>
+                                        <textarea class="form-control" id="plantingSchedule" rows="4" placeholder="Week 1: Prepare beds, add compost&#10;Week 2: Direct sow lettuce, radish&#10;Week 4: Transplant tomato seedlings&#10;Week 6: Plant beans, cucumbers"></textarea>
+                                        <small class="text-muted">List key planting activities by week/month</small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="harvestSchedule" class="form-label">Expected Harvest Schedule</label>
+                                        <textarea class="form-control" id="harvestSchedule" rows="4" placeholder="Week 6: Lettuce, radishes&#10;Week 10: Peas, spinach&#10;Week 14: Tomatoes begin&#10;Week 16: Peak harvest season"></textarea>
+                                        <small class="text-muted">When do you expect to harvest each crop?</small>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="expectedYield" class="form-label">Expected Total Yield (kg)</label>
+                                        <input type="number" class="form-control" id="expectedYield" name="expected_yield" step="0.1" min="0" placeholder="50.0">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="harvestDuration" class="form-label">Harvest Duration (weeks)</label>
+                                        <input type="number" class="form-control" id="harvestDuration" name="harvest_duration" min="1" placeholder="8">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="successionPlanting" class="form-label">Succession Planting</label>
+                                        <select class="form-control" id="successionPlanting" name="succession_planting">
+                                            <option value="none">No succession</option>
+                                            <option value="weekly">Weekly</option>
+                                            <option value="biweekly">Every 2 weeks</option>
+                                            <option value="monthly">Monthly</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 5: Soil & Growing Conditions -->
+                        <div class="mb-4">
+                            <h6 class="text-success border-bottom pb-2 mb-3">
+                                <i class="fas fa-mountain me-2"></i>5. Soil & Growing Conditions
+                            </h6>
+                            <div class="ps-3">
+                                <div class="row mb-3">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="soilType" class="form-label">Soil Type *</label>
+                                        <select class="form-control" id="soilType" name="soil_type" required>
+                                            <option value="">Select Type</option>
+                                            <option value="clay">Clay</option>
+                                            <option value="sandy">Sandy</option>
+                                            <option value="loam">Loam (Ideal)</option>
+                                            <option value="silt">Silt</option>
+                                            <option value="mixed">Mixed</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="soilPH" class="form-label">Soil pH Level</label>
+                                        <input type="number" class="form-control" id="soilPH" name="soil_ph" step="0.1" min="0" max="14" placeholder="6.5">
+                                        <small class="text-muted">6.0-7.0 ideal for most crops</small>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="soilQuality" class="form-label">Soil Quality</label>
+                                        <select class="form-control" id="soilQuality" name="soil_quality">
+                                            <option value="excellent">Excellent</option>
+                                            <option value="good">Good</option>
+                                            <option value="fair">Fair</option>
+                                            <option value="poor">Poor</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="drainageQuality" class="form-label">Drainage</label>
+                                        <select class="form-control" id="drainageQuality" name="drainage">
+                                            <option value="excellent">Excellent</option>
+                                            <option value="good">Good</option>
+                                            <option value="poor">Poor/Waterlogged</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="soilAmendments" class="form-label">Soil Amendments & Preparation</label>
+                                        <textarea class="form-control" id="soilAmendments" name="soil_amendments" rows="3" placeholder="Compost: 5 bags (50L each)&#10;Aged manure: 2 bags&#10;Perlite for drainage: 1 bag&#10;Blood meal for nitrogen"></textarea>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="soilRequirements" class="form-label">Special Soil Requirements</label>
+                                        <textarea class="form-control" id="soilRequirements" rows="3" placeholder="Tomatoes need calcium (add bone meal)&#10;Blueberries need acidic soil (pH 4.5-5.5)&#10;Root crops need deep, loose soil"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 6: Watering & Irrigation Plan -->
+                        <div class="mb-4">
+                            <h6 class="text-success border-bottom pb-2 mb-3">
+                                <i class="fas fa-tint me-2"></i>6. Watering & Irrigation Plan
+                            </h6>
+                            <div class="ps-3">
+                                <div class="row mb-3">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="irrigationMethod" class="form-label">Irrigation Method *</label>
+                                        <select class="form-control" id="irrigationMethod" name="irrigation_method" required>
+                                            <option value="">Select Method</option>
+                                            <option value="hand-water">Hand Watering</option>
+                                            <option value="drip">Drip Irrigation</option>
+                                            <option value="soaker-hose">Soaker Hose</option>
+                                            <option value="sprinkler">Sprinkler System</option>
+                                            <option value="mixed">Mixed Methods</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="wateringFrequency" class="form-label">Watering Frequency</label>
+                                        <select class="form-control" id="wateringFrequency" name="watering_frequency">
+                                            <option value="daily">Daily</option>
+                                            <option value="every-other-day">Every other day</option>
+                                            <option value="twice-weekly">2x per week</option>
+                                            <option value="weekly">Weekly</option>
+                                            <option value="as-needed">As needed</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="estimatedWaterUsage" class="form-label">Water Usage (L/week)</label>
+                                        <input type="number" class="form-control" id="estimatedWaterUsage" name="estimated_water_usage" step="1" min="0" placeholder="150">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="irrigationPlan" class="form-label">Detailed Watering Schedule</label>
+                                    <textarea class="form-control" id="irrigationPlan" rows="3" placeholder="Morning: Water 30 min (6-8 AM)&#10;Check soil moisture daily&#10;Deep water 2x/week in hot weather&#10;Reduce watering 2 weeks before harvest"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 7: Fertilizer & Nutrient Management -->
+                        <div class="mb-4">
+                            <h6 class="text-success border-bottom pb-2 mb-3">
+                                <i class="fas fa-leaf me-2"></i>7. Fertilizer & Nutrient Management
+                            </h6>
+                            <div class="ps-3">
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="fertilizerType" class="form-label">Primary Fertilizer Type</label>
+                                        <select class="form-control" id="fertilizerType" name="fertilizer_type">
+                                            <option value="organic">Organic (Compost, Manure)</option>
+                                            <option value="synthetic">Synthetic (NPK)</option>
+                                            <option value="mixed">Mixed Approach</option>
+                                            <option value="none">No fertilizer</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="npkRatio" class="form-label">NPK Ratio</label>
+                                        <input type="text" class="form-control" id="npkRatio" name="npk_ratio" placeholder="e.g., 10-10-10, 5-10-5">
+                                        <small class="text-muted">Nitrogen-Phosphorus-Potassium</small>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="fertilizerSchedule" class="form-label">Fertilizer Application Schedule</label>
+                                    <textarea class="form-control" id="fertilizerSchedule" rows="3" placeholder="Week 0: Pre-plant compost (5kg/m²)&#10;Week 2: Side-dress nitrogen&#10;Week 6: Balanced fertilizer&#10;Week 10: High phosphorus for fruiting"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 8: Resources & Budget -->
+                        <div class="mb-4">
+                            <h6 class="text-success border-bottom pb-2 mb-3">
+                                <i class="fas fa-dollar-sign me-2"></i>8. Resources & Budget
+                            </h6>
+                            <div class="ps-3">
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="estimatedCost" class="form-label">Total Estimated Cost ($)</label>
+                                        <input type="number" class="form-control" id="estimatedCost" name="estimated_cost" step="0.01" min="0" placeholder="250.00">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="laborHours" class="form-label">Estimated Labor (hours/week)</label>
+                                        <input type="number" class="form-control" id="laborHours" name="labor_hours" step="0.5" min="0" placeholder="5.0">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="toolRequirements" class="form-label">Required Tools & Materials</label>
+                                    <textarea class="form-control" id="toolRequirements" rows="3" placeholder="Seeds: Tomato (3 pkts), Lettuce (2 pkts) - $25&#10;Compost: 10 bags @ $5 each - $50&#10;Drip irrigation kit - $75&#10;Garden stakes, twine - $20&#10;Mulch: 5 bags - $30"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 9: Tasks & Progress Tracking -->
+                        <div class="mb-4">
+                            <h6 class="text-success border-bottom pb-2 mb-3">
+                                <i class="fas fa-tasks me-2"></i>9. Tasks & Progress Tracking
+                            </h6>
+                            <div class="ps-3">
+                                <div class="row mb-3">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="planStatus" class="form-label">Current Status *</label>
+                                        <select class="form-control" id="planStatus" name="status" required>
+                                            <option value="planning">📝 Planning Phase</option>
+                                            <option value="preparing">🔨 Preparing Beds</option>
+                                            <option value="planting">🌱 Planting</option>
+                                            <option value="growing">🌿 Growing</option>
+                                            <option value="maintaining">🚿 Maintaining</option>
+                                            <option value="harvesting">🌾 Harvesting</option>
+                                            <option value="completed">✅ Completed</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Overall Progress</label>
+                                        <div class="progress" style="height: 38px;">
+                                            <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" id="progressBar" style="width: 0%">
+                                                <span class="fw-bold">0%</span>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Tasks Completed</label>
+                                        <div class="text-center border rounded p-2 bg-light">
+                                            <h4 class="mb-0" id="taskProgress">0 / 0</h4>
+                                            <small class="text-muted">tasks done</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Garden Task Checklist</label>
+                                    <button type="button" class="btn btn-success btn-sm mb-2" id="addTaskBtn">
+                                        <i class="fas fa-plus me-2"></i>Add Custom Task
+                                    </button>
+                                    <div class="alert alert-light">
+                                        <small><i class="fas fa-info-circle me-1"></i> Add tasks like: "Prepare soil", "Plant tomatoes", "Install irrigation", "First harvest"</small>
+                                    </div>
+                                    <div id="taskContainer" class="border rounded p-3 bg-white">
+                                        <!-- Dynamic tasks will be added here -->
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="additionalNotes" class="form-label">Garden Journal & Observations</label>
+                                    <textarea class="form-control" id="additionalNotes" name="notes" rows="4" placeholder="Date: Nov 4, 2025&#10;Weather: Sunny, 24°C&#10;&#10;Planted tomatoes in bed 1. Soil is moist and well-prepared.&#10;Added compost tea to seedlings.&#10;Note: Need to stake tomatoes next week."></textarea>
+                                    <small class="text-muted">Keep a record of activities, weather, pest issues, and harvest notes</small>
                                 </div>
                             </div>
                         </div>
@@ -608,10 +892,54 @@
 // Global variables for dynamic content
 let calculationCounter = 0;
 let taskCounter = 0;
+let savedPlantCalculations = [];
 
 $(document).ready(function() {
     // Initialize dynamic content
     initializeDynamicElements();
+    
+    // Garden dimension calculator
+    $('#totalAreaLength, #totalAreaWidth, #numberOfBeds, #pathWidth').on('input', function() {
+        calculateGardenDimensions();
+    });
+
+    $('#bedLayout').on('change', function() {
+        calculateGardenDimensions();
+    });
+
+    // Plant type spacing suggestions
+    $('#calcPlantType').on('change', function() {
+        const selectedOption = $(this).find('option:selected');
+        const spacing = selectedOption.data('spacing');
+        const rowSpacing = selectedOption.data('row');
+        
+        if (spacing && rowSpacing) {
+            $('#calcPlantSpacing').val(spacing);
+            $('#calcRowSpacing').val(rowSpacing);
+        }
+    });
+
+    // Auto-calculate bed area
+    $('#calcAreaLength, #calcAreaWidth').on('input', function() {
+        const length = parseFloat($('#calcAreaLength').val()) || 0;
+        const width = parseFloat($('#calcAreaWidth').val()) || 0;
+        const totalArea = (length * width).toFixed(2);
+    });
+
+    // Calculate button
+    $('#calculateBtn').on('click', function() {
+        calculatePlants();
+    });
+
+    // Add to list button
+    $('#addToList').on('click', function() {
+        addCalculationToList();
+    });
+
+    // Use advanced calculator button
+    $('#useAdvancedCalc').on('click', function() {
+        window.open('{{ route("planting.calculator") }}', '_blank');
+    });
     
     // Save/Update plan
     $('#savePlanBtn').on('click', function() {
@@ -621,11 +949,6 @@ $(document).ready(function() {
     // Cancel editing
     $('#cancelBtn').on('click', function() {
         resetForm();
-    });
-
-    // Add calculation entry
-    $('#addCalculationBtn').on('click', function() {
-        addCalculationEntry();
     });
 
     // Add task entry
@@ -661,12 +984,172 @@ $(document).ready(function() {
     });
 });
 
-function initializeDynamicElements() {
-    // Add default calculation entry if none exist
-    if ($('#calculationsContainer').children().length === 0) {
-        addCalculationEntry();
+// Garden Dimensions Calculator
+function calculateGardenDimensions() {
+    const length = parseFloat($('#totalAreaLength').val()) || 0;
+    const width = parseFloat($('#totalAreaWidth').val()) || 0;
+    const numberOfBeds = parseInt($('#numberOfBeds').val()) || 1;
+    const pathWidth = parseFloat($('#pathWidth').val()) || 0;
+    const bedLayout = $('#bedLayout').val();
+
+    // Calculate total garden area
+    const totalArea = length * width;
+    $('#totalGardenArea').val(totalArea.toFixed(2) + ' m²');
+    $('#totalArea').val(totalArea.toFixed(2));
+
+    // Calculate path area based on layout
+    let pathArea = 0;
+    let plantingArea = 0;
+
+    if (bedLayout === 'raised-beds' || bedLayout === 'row-garden') {
+        // Assume paths between beds
+        const numberOfPaths = Math.max(0, numberOfBeds - 1);
+        pathArea = numberOfPaths * pathWidth * length;
+        plantingArea = totalArea - pathArea;
+    } else if (bedLayout === 'square-foot') {
+        // Square foot gardens have minimal paths
+        pathArea = totalArea * 0.15; // ~15% for paths
+        plantingArea = totalArea * 0.85;
+    } else {
+        // Single bed or container - minimal paths
+        pathArea = totalArea * 0.05;
+        plantingArea = totalArea * 0.95;
+    }
+
+    // Calculate efficiency
+    const efficiency = totalArea > 0 ? (plantingArea / totalArea * 100).toFixed(1) : 0;
+
+    // Update displays
+    $('#usablePlantingArea').text(plantingArea.toFixed(2) + ' m²');
+    $('#pathArea').text(pathArea.toFixed(2) + ' m²');
+    $('#spaceEfficiency').text(efficiency + '%');
+}
+
+// Plant Calculator Functions
+function calculatePlants() {
+    const plantType = $('#calcPlantType option:selected').text();
+    const variety = $('#plantVariety').val();
+    const pattern = $('#calcPattern').val();
+    const length = parseFloat($('#calcAreaLength').val());
+    const width = parseFloat($('#calcAreaWidth').val());
+    const plantSpacing = parseFloat($('#calcPlantSpacing').val());
+    const rowSpacing = parseFloat($('#calcRowSpacing').val());
+
+    // Validation
+    if (!plantType || plantType === 'Select or type plant name') {
+        alert('Please select a plant type');
+        return;
     }
     
+    if (!length || !width || !plantSpacing || !rowSpacing) {
+        alert('Please fill in all required fields (Bed dimensions and spacing values)');
+        return;
+    }
+
+    if (length <= 0 || width <= 0 || plantSpacing <= 0 || rowSpacing <= 0) {
+        alert('All measurements must be greater than zero');
+        return;
+    }
+
+    // Calculate based on pattern
+    let plantsPerRow, numberOfRows, totalPlants, density;
+
+    if (pattern === 'square') {
+        plantsPerRow = Math.floor(length / plantSpacing);
+        numberOfRows = Math.floor(width / rowSpacing);
+        totalPlants = plantsPerRow * numberOfRows;
+    } else if (pattern === 'triangular') {
+        plantsPerRow = Math.floor(length / plantSpacing);
+        const rowHeight = rowSpacing * Math.sqrt(3) / 2;
+        numberOfRows = Math.floor(width / rowHeight);
+        totalPlants = Math.floor((plantsPerRow * numberOfRows) + (plantsPerRow / 2 * (numberOfRows - 1)));
+    } else if (pattern === 'quincunx') {
+        plantsPerRow = Math.floor(length / plantSpacing);
+        const diagSpacing = plantSpacing * Math.sqrt(2);
+        numberOfRows = Math.floor(width / diagSpacing) * 2;
+        totalPlants = Math.floor((plantsPerRow * numberOfRows) / 2);
+    }
+
+    const effectiveArea = length * width;
+    density = (totalPlants / effectiveArea).toFixed(2);
+
+    // Display results
+    $('#resultTotalPlants').text(totalPlants);
+    $('#resultPlantsPerRow').text(plantsPerRow);
+    $('#resultRows').text(numberOfRows);
+    $('#resultDensity').text(density);
+    $('#calcResults').removeClass('d-none');
+
+    // Scroll to results smoothly
+    setTimeout(() => {
+        $('#calcResults')[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+}
+
+function addCalculationToList() {
+    const plantType = $('#calcPlantType option:selected').text();
+    const totalPlants = $('#resultTotalPlants').text();
+    const density = $('#resultDensity').text();
+    const pattern = $('#calcPattern option:selected').text();
+
+    if (totalPlants === '0' || !plantType) {
+        alert('Please calculate first before adding to the list');
+        return;
+    }
+
+    const calcData = {
+        plantType: plantType,
+        totalPlants: totalPlants,
+        density: density,
+        pattern: pattern,
+        length: $('#calcAreaLength').val(),
+        width: $('#calcAreaWidth').val(),
+        plantSpacing: $('#calcPlantSpacing').val(),
+        rowSpacing: $('#calcRowSpacing').val()
+    };
+
+    savedPlantCalculations.push(calcData);
+
+    const calcHtml = `
+        <div class="alert alert-success mb-2" data-calc-index="${savedPlantCalculations.length - 1}">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <strong>${plantType}</strong>
+                    <div class="small">
+                        <i class="fas fa-seedling me-1"></i>${totalPlants} plants | 
+                        <i class="fas fa-chart-pie me-1"></i>${density} plants/m² | 
+                        <i class="fas fa-th me-1"></i>${pattern}
+                    </div>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeCalculationFromList(${savedPlantCalculations.length - 1})">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    `;
+
+    $('#savedCalculations').append(calcHtml);
+
+    // Reset calculator for next entry
+    $('#calcPlantType').val('');
+    $('#calcAreaLength').val('');
+    $('#calcAreaWidth').val('');
+    $('#calcResults').addClass('d-none');
+}
+
+function removeCalculationFromList(index) {
+    savedPlantCalculations.splice(index, 1);
+    $(`[data-calc-index="${index}"]`).remove();
+    updatePlantCount();
+}
+
+function updatePlantCount() {
+    const count = savedPlantCalculations.length;
+    $('#plantCount').text(count);
+}
+
+function initializeDynamicElements() {
+    updatePlantCount();
     // Add default tasks if none exist
     if ($('#taskContainer').children().length === 0) {
         addTaskEntry('Prepare soil');
@@ -676,61 +1159,7 @@ function initializeDynamicElements() {
     }
 }
 
-function addCalculationEntry(data = null) {
-    calculationCounter++;
-    const calcId = 'calc_' + calculationCounter;
-    
-    const calcHtml = `
-        <div class="card border-light mb-3 calculation-entry" data-calc-id="${calcId}">
-            <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                <h6 class="mb-0"><i class="fas fa-calculator me-2"></i>Plant Calculation #${calculationCounter}</h6>
-                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeCalculation('${calcId}')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label small">Plant Type</label>
-                        <input type="text" class="form-control" name="calc_plant_type_${calcId}" value="${data?.plant_type || ''}" placeholder="e.g., Tomato">
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label small">Calculation Method</label>
-                        <select class="form-control" name="calc_method_${calcId}">
-                            <option value="square" ${data?.method === 'square' ? 'selected' : ''}>Square Planting</option>
-                            <option value="triangular" ${data?.method === 'triangular' ? 'selected' : ''}>Triangular</option>
-                            <option value="quincunx" ${data?.method === 'quincunx' ? 'selected' : ''}>Quincunx</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3 mb-2">
-                        <label class="form-label small">Area Length (m)</label>
-                        <input type="number" class="form-control" name="calc_length_${calcId}" value="${data?.area_length || ''}" step="0.1" min="0">
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <label class="form-label small">Area Width (m)</label>
-                        <input type="number" class="form-control" name="calc_width_${calcId}" value="${data?.area_width || ''}" step="0.1" min="0">
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <label class="form-label small">Plant Spacing (cm)</label>
-                        <input type="number" class="form-control" name="calc_spacing_${calcId}" value="${data?.plant_spacing || ''}" step="1" min="1">
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <label class="form-label small">Total Plants</label>
-                        <input type="number" class="form-control" name="calc_total_plants_${calcId}" value="${data?.total_plants || ''}" readonly>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    $('#calculationsContainer').append(calcHtml);
-}
 
-function removeCalculation(calcId) {
-    $(`.calculation-entry[data-calc-id="${calcId}"]`).remove();
-}
 
 function addTaskEntry(taskName = '', completed = false) {
     taskCounter++;
@@ -761,39 +1190,31 @@ function updateProgressBar() {
     const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
     
     $('#progressBar').css('width', percentage + '%').text(percentage + '%');
+    $('#taskProgress').text(`${completedTasks} / ${totalTasks}`);
+    
+    // Update progress bar color based on completion
+    $('#progressBar').removeClass('bg-success bg-warning bg-info');
+    if (percentage >= 75) {
+        $('#progressBar').addClass('bg-success');
+    } else if (percentage >= 50) {
+        $('#progressBar').addClass('bg-info');
+    } else {
+        $('#progressBar').addClass('bg-warning');
+    }
 }
 
 function collectFormData() {
     // Collect basic form data
     const formData = new FormData(document.getElementById('gardenPlanForm'));
     
-    // Collect layout data
-    const rows = parseInt($('#rows').val()) || 1;
-    const cols = parseInt($('#cols').val()) || 1;
-    const plantType = $('#plantType').val() || 'Plant';
-    const layout = {
-        rows: rows,
-        cols: cols,
-        defaultPlant: plantType,
-        grid: Array(rows).fill().map(() => Array(cols).fill(plantType))
-    };
-    formData.set('layout_data', JSON.stringify(layout));
-
-    // Collect calculations
-    const calculations = [];
-    $('.calculation-entry').each(function() {
-        const calcId = $(this).data('calc-id');
-        const calc = {
-            plant_type: $(`[name="calc_plant_type_${calcId}"]`).val(),
-            method: $(`[name="calc_method_${calcId}"]`).val(),
-            area_length: parseFloat($(`[name="calc_length_${calcId}"]`).val()) || 0,
-            area_width: parseFloat($(`[name="calc_width_${calcId}"]`).val()) || 0,
-            plant_spacing: parseFloat($(`[name="calc_spacing_${calcId}"]`).val()) || 0,
-            total_plants: parseInt($(`[name="calc_total_plants_${calcId}"]`).val()) || 0
-        };
-        if (calc.plant_type) calculations.push(calc);
-    });
-    formData.set('plant_calculations', JSON.stringify(calculations));
+    // Collect saved plant calculations
+    formData.set('plant_calculations', JSON.stringify(savedPlantCalculations));
+    
+    // Calculate total estimated plants from all calculations
+    const totalPlants = savedPlantCalculations.reduce((sum, calc) => {
+        return sum + parseInt(calc.totalPlants || 0);
+    }, 0);
+    formData.set('total_estimated_plants', totalPlants);
 
     // Collect seasonal schedule
     const seasonalSchedule = {
@@ -892,13 +1313,12 @@ function resetForm() {
     $('#cancelBtn').hide();
     
     // Reset dynamic content
-    $('#calculationsContainer').empty();
+    $('#savedCalculations').empty();
+    $('#calcResults').addClass('d-none');
     $('#taskContainer').empty();
+    savedPlantCalculations = [];
     calculationCounter = 0;
     taskCounter = 0;
-    
-    // Go back to first tab
-    $('.nav-tabs .nav-link').first().tab('show');
     
     // Reinitialize
     initializeDynamicElements();
@@ -936,14 +1356,37 @@ function loadPlan(planId) {
             }
 
             // Populate calculations
-            $('#calculationsContainer').empty();
-            calculationCounter = 0;
+            $('#savedCalculations').empty();
+            savedPlantCalculations = [];
             if (plan.plant_calculations && plan.plant_calculations.length > 0) {
-                plan.plant_calculations.forEach(calc => {
-                    addCalculationEntry(calc);
+                // Parse if it's a JSON string
+                const calculations = typeof plan.plant_calculations === 'string' 
+                    ? JSON.parse(plan.plant_calculations) 
+                    : plan.plant_calculations;
+                
+                // Load each calculation
+                calculations.forEach((calc, index) => {
+                    savedPlantCalculations.push(calc);
+                    
+                    const calcHtml = `
+                        <div class="alert alert-success mb-2" data-calc-index="${index}">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong>${calc.plantType}</strong>
+                                    <div class="small">
+                                        <i class="fas fa-seedling me-1"></i>${calc.totalPlants} plants | 
+                                        <i class="fas fa-chart-pie me-1"></i>${calc.density} plants/m² | 
+                                        <i class="fas fa-th me-1"></i>${calc.pattern}
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeCalculationFromList(${index})">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    $('#savedCalculations').append(calcHtml);
                 });
-            } else {
-                addCalculationEntry();
             }
 
             // Populate seasonal schedule
@@ -1075,6 +1518,11 @@ function displayPlanDetails(plan) {
 
     // Add more detailed sections if data exists
     if (plan.plant_calculations && plan.plant_calculations.length > 0) {
+        // Parse if it's a JSON string
+        const calculations = typeof plan.plant_calculations === 'string' 
+            ? JSON.parse(plan.plant_calculations) 
+            : plan.plant_calculations;
+            
         detailsHtml += `
             <h5 class="mt-4"><i class="fas fa-calculator me-2"></i>Plant Calculations</h5>
             <div class="table-responsive">
@@ -1082,23 +1530,25 @@ function displayPlanDetails(plan) {
                     <thead>
                         <tr>
                             <th>Plant Type</th>
-                            <th>Method</th>
+                            <th>Pattern</th>
                             <th>Area (m²)</th>
-                            <th>Spacing (cm)</th>
+                            <th>Spacing</th>
                             <th>Total Plants</th>
+                            <th>Density</th>
                         </tr>
                     </thead>
                     <tbody>
         `;
-        plan.plant_calculations.forEach(calc => {
-            const area = (calc.area_length * calc.area_width).toFixed(2);
+        calculations.forEach(calc => {
+            const area = (parseFloat(calc.length) * parseFloat(calc.width)).toFixed(2);
             detailsHtml += `
                 <tr>
-                    <td>${calc.plant_type}</td>
-                    <td>${calc.method.charAt(0).toUpperCase() + calc.method.slice(1)}</td>
+                    <td><strong>${calc.plantType}</strong></td>
+                    <td>${calc.pattern}</td>
                     <td>${area}</td>
-                    <td>${calc.plant_spacing}</td>
-                    <td>${calc.total_plants}</td>
+                    <td>${calc.plantSpacing}m × ${calc.rowSpacing}m</td>
+                    <td><strong>${calc.totalPlants}</strong></td>
+                    <td>${calc.density} plants/m²</td>
                 </tr>
             `;
         });
