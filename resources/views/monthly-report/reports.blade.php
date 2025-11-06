@@ -274,8 +274,8 @@
         <div class="row">
             <main class="main-content">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <a href="{{ route('dashboard') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back
                     </a>
                     <h1 class="h2">Monthly Report</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
@@ -318,7 +318,7 @@
                 </div>
 
                 <!-- Monthly Report Content -->
-                <div class="row">
+                <div class="row report-section">
                     <!-- Executive Summary -->
                     <div class="col-12 mb-4">
                         <div class="card">
@@ -491,19 +491,28 @@
             document.body.classList.add('dark-mode');
         }
 
-        // Toolbar PDF download functionality
+        // Toolbar PDF download functionality (clean version)
         const downloadBtn = document.getElementById('downloadPdf');
         if (downloadBtn) {
             downloadBtn.addEventListener('click', function() {
-                const element = document.querySelector('.main-content');
+                const toolbar = document.querySelector('.btn-toolbar');
+                const element = document.querySelector('.report-section');
+                        
+                // Hide toolbar temporarily
+                toolbar.style.display = 'none';
+
                 const opt = {
-                    margin:       0.5,
-                    filename:     'monthly-report.pdf',
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { scale: 2 },
-                    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                    margin: 0.5,
+                    filename: 'monthly-report.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
                 };
-                html2pdf().set(opt).from(element).save();
+
+                html2pdf().set(opt).from(element).save().then(() => {
+                    // Restore toolbar after saving
+                    toolbar.style.display = '';
+                });
             });
         }
 
