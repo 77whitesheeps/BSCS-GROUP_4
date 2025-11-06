@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Quincunx Planting System Calculator</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
+@extends('layouts.app')
+
+@section('title', 'Quincunx Planting Calculator')
+
+@push('styles')
+<style>
         :root {
             --primary-color: #2e7d32;
             --secondary-color: #4caf50;
@@ -19,44 +15,42 @@
         }
         
         body {
-            background-color: #f8f9fa;
-            color: #333;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
         
         .calculator-container {
-            background-color: white;
+            background-color: var(--card-bg);
             border-radius: 15px;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
-            margin: 2rem auto;
             padding: 2rem;
             max-width: 1000px;
+            margin: 0 auto;
             transition: all 0.3s ease;
         }
         
-        .header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        .page-header {
+            background: linear-gradient(135deg, var(--plant-green), var(--plant-green-dark));
             color: white;
             padding: 1.8rem;
             border-radius: 12px;
-            margin-bottom: 2rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
         }
         
-        .header h1 {
+        .page-header h1 {
             font-weight: 700;
             margin-bottom: 0.5rem;
         }
         
-        .header p {
+        .page-header p {
             opacity: 0.9;
             margin-bottom: 0;
         }
         
         .form-label {
             font-weight: 600;
-            color: var(--dark-color);
+            color: var(--primary-color);
             margin-bottom: 0.5rem;
         }
         
@@ -368,7 +362,8 @@
                 padding: 1.5rem;
                 margin: 1rem;
             }
-            .header {
+            
+            .page-header {
                 padding: 1.5rem;
             }
             .visualization {
@@ -423,85 +418,85 @@
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
         }
 
-        body.dark-theme .header {
+        .dark-theme .page-header {
             background: linear-gradient(135deg, #1b5e20, #2e7d32);
         }
 
-        body.dark-theme .form-label {
+        .dark-theme .form-label {
             color: #e0e0e0;
         }
 
-        body.dark-theme .form-control,
-        body.dark-theme .form-select {
+        .dark-theme .form-control,
+        .dark-theme .form-select {
             background-color: #2c2c2c;
             color: #e0e0e0;
             border-color: #444;
         }
 
-        body.dark-theme .form-control:focus,
-        body.dark-theme .form-select:focus {
+        .dark-theme .form-control:focus,
+        .dark-theme .form-select:focus {
             border-color: var(--accent-color);
             box-shadow: 0 0 0 0.25rem rgba(139, 195, 74, 0.3);
             background-color: #333;
         }
 
-        body.dark-theme .results-container {
+        .dark-theme .results-container {
             background-color: #2c2c2c;
             border-left-color: var(--accent-color);
         }
 
-        body.dark-theme .results-container h3 {
+        .dark-theme .results-container h3 {
             color: #fff;
             border-bottom-color: rgba(255, 255, 255, 0.1);
         }
 
-        body.dark-theme .result-value {
+        .dark-theme .result-value {
             color: var(--accent-color);
         }
 
-        body.dark-theme .visualization {
+        .dark-theme .visualization {
             background-color: #2c2c2c;
             border-color: #444;
         }
         
-        body.dark-theme .visualization .text-muted {
+        .dark-theme .visualization .text-muted {
              color: #a0a0a0 !important;
         }
 
-        body.dark-theme .grid-line {
+        .dark-theme .grid-line {
             background-color: rgba(255, 255, 255, 0.1);
         }
 
-        body.dark-theme .visualization-info {
+        .dark-theme .visualization-info {
             background: rgba(44, 44, 44, 0.9);
             color: #e0e0e0;
         }
 
-        body.dark-theme .btn-outline-light {
+        .dark-theme .btn-outline-light {
             color: #f8f9fa;
             border-color: #f8f9fa;
         }
 
-        body.dark-theme .btn-outline-light:hover {
+        .dark-theme .btn-outline-light:hover {
             color: #121212;
             background-color: #f8f9fa;
             border-color: #f8f9fa;
         }
         
-        body.dark-theme .pattern-info {
+        .dark-theme .pattern-info {
             background-color: #2c2c2c;
             border-left-color: var(--accent-color);
         }
         
-        body.dark-theme .pattern-info p, body.dark-theme .pattern-info h5 {
+        .dark-theme .pattern-info p, .dark-theme .pattern-info h5 {
             color: #e0e0e0;
         }
 
-        body.dark-theme .form-text {
+        .dark-theme .form-text {
             color: #a0a0a0;
         }
 
-        body.dark-theme .auto-border-info, body.dark-theme .form-check-label {
+        .dark-theme .auto-border-info, .dark-theme .form-check-label {
             color: #a0a0a0;
         }
 
@@ -536,25 +531,27 @@
             color: #ffffff !important;
             border-color: #555555 !important;
         }
-    </style>
-</head>
-<body class="{{ auth()->check() && auth()->user()->theme === 'dark' ? 'dark-theme' : '' }}">
-    <div class="container">
-        <div class="calculator-container">
-            <div class="header">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div>
-                        <h1 class="mb-2"><i class="fas fa-seedling me-2"></i>Quincunx Planting System Calculator</h1>
-                        <p class="mb-0">Optimize your planting layout with staggered quincunx pattern</p>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <button type="button" onclick="resetForm()" class="btn btn-outline-light">
-                            <i class="fas fa-redo-alt me-1"></i> Reset
-                        </button>
-                        <a href="{{ url()->previous() }}" class="btn btn-primary">Back</a>
-                    </div>
+        </style>
+@endpush
+
+@section('content')
+    <div class="calculator-container">
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h1 class="mb-2"><i class="fas fa-seedling me-2"></i>Quincunx Planting System Calculator</h1>
+                    <p class="mb-0">Maximize space efficiency with diagonal planting pattern</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="button" onclick="resetForm()" class="btn btn-outline-light">
+                        <i class="fas fa-redo-alt me-1"></i> Reset
+                    </button>
+                    <a href="{{ route('dashboard') }}" class="btn btn-light">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                    </a>
                 </div>
             </div>
+        </div>
             
             <div class="pattern-info">
                 <h5><i class="fas fa-info-circle me-2"></i>About Quincunx Planting</h5>
@@ -748,12 +745,11 @@
             </div>
         </div>
     </div>
-    
-    <footer>
-        <p>Quincunx Planting System Calculator &copy; 2023</p>
-    </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+@endsection
+
+@push('scripts')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script>
         // Plant type recommendations for quincunx pattern
         const plantRecommendations = {
@@ -1049,5 +1045,4 @@
             });
         });
     </script>
-</body>
-</html>
+@endpush

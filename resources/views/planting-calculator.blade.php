@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Square Planting System Calculator</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
+@extends('layouts.app')
+
+@section('title', 'Square Planting Calculator')
+
+@push('styles')
+<style>
         :root {
             --primary-color: #2e7d32;
             --secondary-color: #4caf50;
@@ -18,44 +15,42 @@
         }
         
         body {
-            background-color: #f8f9fa;
-            color: #333;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
         
         .calculator-container {
-            background-color: white;
+            background-color: var(--card-bg);
             border-radius: 15px;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
-            margin: 2rem auto;
             padding: 2rem;
             max-width: 1000px;
+            margin: 0 auto;
             transition: all 0.3s ease;
         }
         
-        .header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        .page-header {
+            background: linear-gradient(135deg, var(--plant-green), var(--plant-green-dark));
             color: white;
             padding: 1.8rem;
             border-radius: 12px;
-            margin-bottom: 2rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
         }
         
-        .header h1 {
-font-weight: 700;
+        .page-header h1 {
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
         
-        .header p {
+        .page-header p {
             opacity: 0.9;
 margin-bottom: 0;
         }
         
         .form-label {
             font-weight: 600;
-            color: var(--dark-color);
+            color: var(--primary-color);
             margin-bottom: 0.5rem;
         }
         
@@ -314,10 +309,9 @@ margin-bottom: 0;
         @media (max-width: 768px) {
             .calculator-container {
                 padding: 1.5rem;
-                margin: 1rem;
             }
             
-            .header {
+            .page-header {
                 padding: 1.5rem;
             }
             
@@ -366,75 +360,77 @@ margin-bottom: 0;
         }
     </style>
 
-    <!-- Dark Mode Styles -->
+    <!-- Dark Theme Styles -->
     <style>
-        .dark-mode {
+        .dark-theme {
             background-color: #121212;
             color: #ffffff;
         }
-        .dark-mode .calculator-container {
+        .dark-theme .calculator-container {
             background-color: #1e1e1e;
         }
-        .dark-mode .form-control, .dark-mode .form-select {
+        .dark-theme .form-control, .dark-theme .form-select {
             background-color: #333;
             color: #ffffff;
             border-color: #555;
         }
-        .dark-mode .form-label {
+        .dark-theme .form-label {
             color: #ffffff;
         }
-        .dark-mode .results-container {
+        .dark-theme .results-container {
             background-color: #333;
             border-left-color: var(--accent-color);
         }
-        .dark-mode .result-value {
+        .dark-theme .result-value {
             color: var(--accent-color);
         }
-        .dark-mode .results-container h3 {
+        .dark-theme .results-container h3 {
             color: #ffffff;
         }
-        .dark-mode .visualization {
+        .dark-theme .visualization {
             background-color: #333;
             border-color: #555;
         }
-        .dark-mode .visualization-info {
+        .dark-theme .visualization-info {
             background: rgba(0, 0, 0, 0.7);
             color: #ffffff;
         }
-        .dark-mode .header {
+        .dark-theme .page-header {
             background: linear-gradient(135deg, #1b5e20, #2e7d32);
         }
-        .dark-mode .text-muted {
+        .dark-theme .text-muted {
             color: #a0a0a0 !important;
         }
-        .dark-mode .layout-details {
+        .dark-theme .layout-details {
             background-color: rgba(0, 0, 0, 0.2);
         }
 
-        .dark-mode .input-group-text {
+        .dark-theme .input-group-text {
             background-color: #3d3d3d !important;
             color: #ffffff !important;
             border-color: #555555 !important;
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="calculator-container">
-            <div class="header">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div>
-                        <h1 class="mb-2">🌱 Square Planting System Calculator</h1>
-                        <p class="mb-0">Optimize your planting layout with square spacing pattern</p>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <button type="button" onclick="resetForm()" class="btn btn-outline-light">
-                            <i class="fas fa-redo-alt me-1"></i> Reset
-                        </button>
-                        <a href="{{ url()->previous() }}" class="btn btn-primary">Back</a>
-                    </div>
+</style>
+@endpush
+
+@section('content')
+    <div class="calculator-container">
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h1 class="mb-2">🌱 Square Planting System Calculator</h1>
+                    <p class="mb-0">Optimize your planting layout with square spacing pattern</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="button" onclick="resetForm()" class="btn btn-outline-light">
+                        <i class="fas fa-redo-alt me-1"></i> Reset
+                    </button>
+                    <a href="{{ route('dashboard') }}" class="btn btn-light">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                    </a>
                 </div>
             </div>
+        </div>
             
             <!-- Success/Error Messages -->
             <div class="alert alert-success alert-dismissible fade show d-none" role="alert" id="successAlert">
@@ -615,20 +611,13 @@ margin-bottom: 0;
             </div>
         </div>
     </div>
-    
-    <footer>
-        <p>Square Planting System Calculator &copy; 2023</p>
-    </footer>
 
+@endsection
+
+@push('scripts')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const theme = "{{ auth()->user()->theme ?? 'light' }}";
-            if (theme === 'dark') {
-                document.body.classList.add('dark-mode');
-            }
-        });
+        // Theme is already handled by app layout
 
         // Plant type recommendations
         const plantRecommendations = {
@@ -889,5 +878,5 @@ margin-bottom: 0;
             });
         });
     </script>
-</body>
-</html>
+@endpush
+

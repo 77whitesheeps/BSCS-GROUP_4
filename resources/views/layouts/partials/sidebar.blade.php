@@ -28,10 +28,9 @@
                 </li>
 
                 <li>
-                    <a href="#" data-bs-toggle="collapse" data-bs-target="#plantingCalculatorMenu" aria-expanded="{{ request()->routeIs('planting.calculator') || request()->routeIs('quincunx.calculator') || request()->routeIs('triangular.calculator') ? 'true' : 'false' }}">
-                        <i class="fas fa-calculator"></i>
-                        <span>Planting Calculator</span>
-                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    <a href="#" data-bs-toggle="collapse" data-bs-target="#plantingCalculatorMenu" aria-expanded="{{ request()->routeIs('planting.calculator') || request()->routeIs('quincunx.calculator') || request()->routeIs('triangular.calculator') ? 'true' : 'false' }}" class="d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-calculator"></i> Planting Calculator</span>
+                        <i class="fas fa-chevron-down" style="width: 12px; text-align: center;"></i>
                     </a>
                     <div class="collapse {{ request()->routeIs('planting.calculator') || request()->routeIs('quincunx.calculator') || request()->routeIs('triangular.calculator') ? 'show' : '' }}" id="plantingCalculatorMenu">
                         <ul class="list-unstyled ps-4">
@@ -45,10 +44,9 @@
 
 
                 <li>
-                    <a href="#" data-bs-toggle="collapse" data-bs-target="#calculationsMenu" aria-expanded="{{ request()->routeIs('calculations.*') ? 'true' : 'false' }}">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Calculations</span>
-                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    <a href="#" data-bs-toggle="collapse" data-bs-target="#calculationsMenu" aria-expanded="{{ request()->routeIs('calculations.*') ? 'true' : 'false' }}" class="d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-chart-line"></i> Calculations</span>
+                        <i class="fas fa-chevron-down" style="width: 12px; text-align: center;"></i>
                     </a>
                     <div class="collapse {{ request()->routeIs('calculations.*') ? 'show' : '' }}" id="calculationsMenu">
                         <ul class="list-unstyled ps-4">
@@ -60,10 +58,9 @@
                 </li>
 
                 <li>
-                    <a href="#" data-bs-toggle="collapse" data-bs-target="#reportsMenu" aria-expanded="false">
-                        <i class="fas fa-file-alt"></i>
-                        <span>Reports</span>
-                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    <a href="#" data-bs-toggle="collapse" data-bs-target="#reportsMenu" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-file-alt"></i> Reports</span>
+                        <i class="fas fa-chevron-down" style="width: 12px; text-align: center;"></i>
                     </a>
                     <div class="collapse" id="reportsMenu">
                         <ul class="list-unstyled ps-4">
@@ -80,10 +77,9 @@
                 </li>
 
                 <li>
-                    <a href="#" data-bs-toggle="collapse" data-bs-target="#toolsMenu" aria-expanded="{{ request()->routeIs('tools.*') ? 'true' : 'false' }}">
-                        <i class="fas fa-tools"></i>
-                        <span>Tools</span>
-                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    <a href="#" data-bs-toggle="collapse" data-bs-target="#toolsMenu" aria-expanded="{{ request()->routeIs('tools.*') ? 'true' : 'false' }}" class="d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-tools"></i> Tools</span>
+                        <i class="fas fa-chevron-down" style="width: 12px; text-align: center;"></i>
                     </a>
                     <div class="collapse {{ request()->routeIs('tools.*') ? 'show' : '' }}" id="toolsMenu">
                         <ul class="list-unstyled ps-4">
@@ -93,10 +89,9 @@
                 </li>
 
                 <li>
-                    <a href="#" data-bs-toggle="collapse" data-bs-target="#settingsMenu" aria-expanded="false">
-                        <i class="fas fa-cog"></i>
-                        <span>Settings</span>
-                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    <a href="#" data-bs-toggle="collapse" data-bs-target="#settingsMenu" aria-expanded="false" class="d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-cog"></i> Settings</span>
+                        <i class="fas fa-chevron-down" style="width: 12px; text-align: center;"></i>
                     </a>
                     <div class="collapse" id="settingsMenu">
                         <ul class="list-unstyled ps-4">
@@ -133,19 +128,71 @@
     margin: 0 10px;
 }
 
+.sidebar-menu li a[data-bs-toggle="collapse"] {
+    position: relative;
+}
+
 .sidebar-menu li a[data-bs-toggle="collapse"] .fa-chevron-down {
     transition: transform 0.3s ease;
+    font-size: 0.8rem;
 }
 
 .sidebar-menu li a[data-bs-toggle="collapse"][aria-expanded="true"] .fa-chevron-down {
     transform: rotate(180deg);
 }
 
+.sidebar-menu li a[data-bs-toggle="collapse"]:not(.collapsed) .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
 .user-panel {
     background: linear-gradient(135deg, var(--plant-green-light), #f8f9fa);
 }
+
+/* Dark theme support for sidebar */
+.dark-theme .sidebar-menu .collapse .list-unstyled a {
+    color: #a0a0a0;
+}
+
+.dark-theme .sidebar-menu .collapse .list-unstyled a:hover {
+    color: var(--plant-green);
+}
+
 @media (max-width: 991.98px) {
     .main-sidebar { width: var(--sidebar-width); max-width: 85%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
     .sidebar-menu li a { padding: 12px 16px; }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle collapse arrow rotation
+    const collapseToggles = document.querySelectorAll('[data-bs-toggle="collapse"]');
+    
+    collapseToggles.forEach(toggle => {
+        const targetId = toggle.getAttribute('data-bs-target');
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+            // Set initial state based on aria-expanded
+            const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                toggle.classList.remove('collapsed');
+            } else {
+                toggle.classList.add('collapsed');
+            }
+            
+            // Listen for collapse show/hide events
+            targetElement.addEventListener('show.bs.collapse', function() {
+                toggle.classList.remove('collapsed');
+                toggle.setAttribute('aria-expanded', 'true');
+            });
+            
+            targetElement.addEventListener('hide.bs.collapse', function() {
+                toggle.classList.add('collapsed');
+                toggle.setAttribute('aria-expanded', 'false');
+            });
+        }
+    });
+});
+</script>

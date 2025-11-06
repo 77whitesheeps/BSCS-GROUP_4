@@ -1,13 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Profile Settings')
-@section('page-title', 'Profile Settings')
-
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Profile</li>
-@endsection
-
 @section('content')
 <div class="container-fluid">
     <div class="row">

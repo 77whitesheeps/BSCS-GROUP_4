@@ -313,21 +313,6 @@
     <!-- Main Content -->
     <div class="main-content">
         <!-- Page Header -->
-        <div class="content-header mb-4">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h1 class="m-0">@yield('page-title', 'Dashboard')</h1>
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-end">
-                            @yield('breadcrumb')
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Flash Messages -->
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">

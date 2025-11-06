@@ -1,12 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Preferences Settings')
-@section('page-title', 'Preferences Settings')
-
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Preferences</li>
-@endsection
 
 @section('content')
 <div class="container-fluid">
